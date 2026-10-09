@@ -4,6 +4,7 @@ from alembic import context
 from app.core.config import get_settings
 from app.core.database import Base
 from app.modules.curriculum import models  # noqa: F401
+from app.modules.personal import models as personal_models  # noqa: F401
 
 target_metadata = Base.metadata
 
@@ -13,6 +14,12 @@ if context.is_offline_mode():
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+    )
+    with context.begin_transaction():
+        context.run_migrations()
+elif context.config.attributes.get("connection") is not None:
+    context.configure(
+        connection=context.config.attributes["connection"], target_metadata=target_metadata
     )
     with context.begin_transaction():
         context.run_migrations()
