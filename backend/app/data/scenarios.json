@@ -1,0 +1,100 @@
+[
+  {
+    "id": "padrao",
+    "name": "Trajetória padrão",
+    "current_period": 4,
+    "completed_ids": [
+      "mdc",
+      "ip",
+      "sdig",
+      "cad",
+      "calc1",
+      "edoo",
+      "acso",
+      "ds",
+      "avl",
+      "algo",
+      "ingles",
+      "libras"
+    ],
+    "planned_ids": [],
+    "trail_ids": []
+  },
+  {
+    "id": "estatistica",
+    "name": "Estatística pendente",
+    "current_period": 5,
+    "completed_ids": [
+      "mdc",
+      "ip",
+      "sdig",
+      "cad",
+      "calc1",
+      "edoo",
+      "acso",
+      "ds",
+      "avl",
+      "algo",
+      "bd",
+      "iesi",
+      "logica",
+      "isdrc",
+      "amcd"
+    ],
+    "planned_ids": [],
+    "trail_ids": []
+  },
+  {
+    "id": "desenvolvimento",
+    "name": "Desenvolvimento de Software pendente",
+    "current_period": 4,
+    "completed_ids": [
+      "mdc",
+      "ip",
+      "sdig",
+      "cad",
+      "calc1",
+      "edoo",
+      "acso",
+      "avl",
+      "algo",
+      "bd"
+    ],
+    "planned_ids": [],
+    "trail_ids": []
+  },
+  {
+    "id": "trilhaIA",
+    "name": "Trilha IA & Dados",
+    "current_period": 4,
+    "completed_ids": [
+      "mdc",
+      "ip",
+      "sdig",
+      "cad",
+      "calc1",
+      "edoo",
+      "acso",
+      "ds",
+      "avl",
+      "algo",
+      "bd",
+      "iesi"
+    ],
+    "planned_ids": [
+      "estat"
+    ],
+    "trail_ids": [
+      "ip",
+      "avl",
+      "calc1",
+      "estat",
+      "amcd",
+      "rn",
+      "aam",
+      "iap",
+      "visdados",
+      "iar"
+    ]
+  }
+]

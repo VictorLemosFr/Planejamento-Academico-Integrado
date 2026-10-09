@@ -1,0 +1,587 @@
+[
+  {
+    "id": "mdc",
+    "name": "Matemática Discreta para Computação",
+    "short_name": "Matemática Discreta",
+    "hours": 60,
+    "period": 1,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "ip",
+    "name": "Introdução à Programação",
+    "short_name": "Introdução à Programação",
+    "hours": 120,
+    "period": 1,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "sdig",
+    "name": "Sistemas Digitais",
+    "short_name": "Sistemas Digitais",
+    "hours": 60,
+    "period": 1,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "cad",
+    "name": "Concepção de Artefatos Digitais",
+    "short_name": "Concepção de Artefatos",
+    "hours": 60,
+    "period": 1,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "calc1",
+    "name": "Cálculo Diferencial e Integral 1",
+    "short_name": "Cálculo 1",
+    "hours": 60,
+    "period": 2,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "edoo",
+    "name": "Estruturas de Dados Orientadas a Objetos",
+    "short_name": "Estruturas de Dados",
+    "hours": 60,
+    "period": 2,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "ip"
+    ]
+  },
+  {
+    "id": "acso",
+    "name": "Arquitetura de Computadores e Sistemas Operacionais",
+    "short_name": "Arquitetura e SO",
+    "hours": 60,
+    "period": 2,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "sdig"
+    ]
+  },
+  {
+    "id": "ds",
+    "name": "Desenvolvimento de Software",
+    "short_name": "Desenvolvimento de Software",
+    "hours": 120,
+    "period": 2,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "ip"
+    ]
+  },
+  {
+    "id": "avl",
+    "name": "Álgebra Vetorial e Linear para Computação",
+    "short_name": "Álgebra Vetorial e Linear",
+    "hours": 60,
+    "period": 3,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "algo",
+    "name": "Algoritmos",
+    "short_name": "Algoritmos",
+    "hours": 60,
+    "period": 3,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "edoo"
+    ]
+  },
+  {
+    "id": "bd",
+    "name": "Banco de Dados",
+    "short_name": "Banco de Dados",
+    "hours": 60,
+    "period": 3,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "edoo"
+    ]
+  },
+  {
+    "id": "iesi",
+    "name": "Integração e Evolução de Sistemas de Informação",
+    "short_name": "Integração e Evolução de SI",
+    "hours": 120,
+    "period": 3,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "ds"
+    ]
+  },
+  {
+    "id": "estat",
+    "name": "Estatística e Probabilidade para Computação",
+    "short_name": "Estatística e Probabilidade",
+    "hours": 60,
+    "period": 4,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "calc1"
+    ]
+  },
+  {
+    "id": "logica",
+    "name": "Lógica para Computação",
+    "short_name": "Lógica para Computação",
+    "hours": 60,
+    "period": 4,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "mdc"
+    ]
+  },
+  {
+    "id": "isdrc",
+    "name": "Introdução a Sistemas Distribuídos e Redes de Computadores",
+    "short_name": "Sistemas Distribuídos e Redes",
+    "hours": 60,
+    "period": 4,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "acso"
+    ]
+  },
+  {
+    "id": "amcd",
+    "name": "Aprendizado de Máquina e Ciência de Dados",
+    "short_name": "Aprendizado de Máquina e CD",
+    "hours": 120,
+    "period": 4,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "ip",
+      "avl"
+    ]
+  },
+  {
+    "id": "empinf",
+    "name": "Empreendimentos em Informática",
+    "short_name": "Empreendimentos em Informática",
+    "hours": 60,
+    "period": 5,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "asesi",
+    "name": "Aspectos Sócio-econômicos de Sistemas de Informação",
+    "short_name": "Aspectos Sócio-econômicos",
+    "hours": 60,
+    "period": 5,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "admc",
+    "name": "Administração Contemporânea",
+    "short_name": "Administração Contemporânea",
+    "hours": 60,
+    "period": 5,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "arqemp",
+    "name": "Arquitetura Empresarial",
+    "short_name": "Arquitetura Empresarial",
+    "hours": 60,
+    "period": 6,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "gpn",
+    "name": "Gestão de Processos de Negócio",
+    "short_name": "Gestão de Processos",
+    "hours": 60,
+    "period": 6,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "estagio",
+    "name": "Estágio Obrigatório",
+    "short_name": "Estágio Obrigatório",
+    "hours": 75,
+    "period": 6,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "ctc",
+    "name": "Comunicação Técnica e Científica",
+    "short_name": "Comunicação Técnica",
+    "hours": 60,
+    "period": 7,
+    "type": "mandatory",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "apsi",
+    "name": "Análise e Projeto de Sistemas de Informação",
+    "short_name": "Análise e Projeto de SI",
+    "hours": 60,
+    "period": 7,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "tcc",
+    "name": "Trabalho de Conclusão de Curso",
+    "short_name": "Trabalho de Conclusão",
+    "hours": 75,
+    "period": 8,
+    "type": "mandatory",
+    "prerequisite_ids": [
+      "ctc"
+    ]
+  },
+  {
+    "id": "sad",
+    "name": "Sistemas de Apoio à Decisão",
+    "short_name": "Sistemas de Apoio à Decisão",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "iesi",
+      "estat"
+    ]
+  },
+  {
+    "id": "gdic",
+    "name": "Gestão de Dados, Informação e Conhecimento",
+    "short_name": "Gestão de Dados e Informação",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "sis",
+    "name": "Segurança de Informação e Sistemas",
+    "short_name": "Segurança da Informação",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "ds",
+      "isdrc"
+    ]
+  },
+  {
+    "id": "ihc",
+    "name": "Fundamentos em Interação Humano-Computador",
+    "short_name": "Interação Humano-Computador",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "cad"
+    ]
+  },
+  {
+    "id": "tsi",
+    "name": "Tendências em Sistemas de Informação",
+    "short_name": "Tendências em SI",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "ggti",
+    "name": "Governança e Gestão de Tecnologia da Informação",
+    "short_name": "Governança e Gestão de TI",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "gppti",
+    "name": "Gestão de Portfólio de Projetos de Tecnologia da Informação",
+    "short_name": "Portfólio de Projetos de TI",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "inovsi",
+    "name": "Inovação em SI",
+    "short_name": "Inovação em SI",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "nuvem",
+    "name": "Computação em Nuvem",
+    "short_name": "Computação em Nuvem",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "isdrc"
+    ]
+  },
+  {
+    "id": "ccg",
+    "name": "Contabilidade de Custos e Gerencial",
+    "short_name": "Contabilidade de Custos",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "ingles",
+    "name": "Língua Inglesa Instrumental",
+    "short_name": "Inglês Instrumental",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "libras",
+    "name": "Introdução a LIBRAS",
+    "short_name": "Introdução a LIBRAS",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "tslog",
+    "name": "Tecnologias para Suporte a Logística",
+    "short_name": "Tecnologias para Logística",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "gprod",
+    "name": "Gestão da Produção",
+    "short_name": "Gestão da Produção",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "gpe",
+    "name": "Gestão de Pessoas e Equipes",
+    "short_name": "Gestão de Pessoas e Equipes",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "findig",
+    "name": "Finanças Digitais",
+    "short_name": "Finanças Digitais",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "asesi"
+    ]
+  },
+  {
+    "id": "aear",
+    "name": "Análise e Especificação Avançada de Requisitos de Sistemas",
+    "short_name": "Requisitos Avançados",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "er"
+    ]
+  },
+  {
+    "id": "er",
+    "name": "Engenharia de Requisitos",
+    "short_name": "Engenharia de Requisitos",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "ip"
+    ]
+  },
+  {
+    "id": "fts",
+    "name": "Fundamentos de Teste de Software",
+    "short_name": "Teste de Software",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "ds"
+    ]
+  },
+  {
+    "id": "mgp",
+    "name": "Metodologias de Gerenciamento de Projeto",
+    "short_name": "Gerenciamento de Projeto",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "iesi"
+    ]
+  },
+  {
+    "id": "pgqs",
+    "name": "Planejamento e Gestão da Qualidade de Software",
+    "short_name": "Qualidade de Software",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "ds",
+      "iesi"
+    ]
+  },
+  {
+    "id": "pnt",
+    "name": "Programação com Novas Tecnologias",
+    "short_name": "Programação com Novas Tecnologias",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "ds"
+    ]
+  },
+  {
+    "id": "cc",
+    "name": "Criatividade Computacional",
+    "short_name": "Criatividade Computacional",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "rn",
+    "name": "Redes Neurais",
+    "short_name": "Redes Neurais",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "amcd"
+    ]
+  },
+  {
+    "id": "bdnc",
+    "name": "Bancos de Dados Não-Convencionais",
+    "short_name": "Bancos de Dados Não-Convencionais",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "bd"
+    ]
+  },
+  {
+    "id": "aam",
+    "name": "Aplicações de Aprendizagem de Máquina",
+    "short_name": "Aplicações de Aprendizagem de Máquina",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "amcd"
+    ]
+  },
+  {
+    "id": "visdados",
+    "name": "Visualização de Dados",
+    "short_name": "Visualização de Dados",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "ip",
+      "estat"
+    ]
+  },
+  {
+    "id": "iap",
+    "name": "Introdução à Aprendizagem Profunda",
+    "short_name": "Aprendizagem Profunda",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "amcd"
+    ]
+  },
+  {
+    "id": "iar",
+    "name": "Introdução à Aprendizagem por Reforço",
+    "short_name": "Aprendizagem por Reforço",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": [
+      "ip",
+      "avl",
+      "estat"
+    ]
+  },
+  {
+    "id": "tdei",
+    "name": "Tecnologia, Diversidade, Equidade e Inclusão",
+    "short_name": "Diversidade, Equidade e Inclusão",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  },
+  {
+    "id": "eajc",
+    "name": "Ética e Aspectos Jurídicos da Computação",
+    "short_name": "Ética e Aspectos Jurídicos",
+    "hours": 60,
+    "period": null,
+    "type": "elective",
+    "prerequisite_ids": []
+  }
+]
