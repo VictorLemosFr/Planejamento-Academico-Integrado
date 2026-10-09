@@ -3,7 +3,7 @@
 **Planejamento Acadêmico Integrado · IESI**  
 **Prof. Paulemir Gonçalves Campos**
 
-Este registro foi organizado a partir da proposta fornecida pelo autor do projeto. As figuras originais não foram anexadas; os diagramas Mermaid abaixo representam a descrição textual e podem ser refinados quando as figuras forem disponibilizadas. Toda esta arquitetura é proposta, ainda não implementada.
+Este registro foi organizado a partir da proposta fornecida pelo autor do projeto. As figuras originais não foram anexadas; os diagramas Mermaid abaixo representam a descrição textual e podem ser refinados quando as figuras forem disponibilizadas. As Seções 1–8 registram a proposta completa; a Seção 9 identifica as escolhas aprovadas e o estágio da implementação.
 
 ## 1. Introdução
 
@@ -137,7 +137,7 @@ flowchart TB
 | Hospedagem | PaaS gerenciado. | Custo operacional baixo e dispensa administração de infraestrutura própria. |
 | Integração SIGAA | Importação periódica, por job agendado. | Histórico não exige atualização a cada minuto; disponibilidade de API não está assegurada. |
 
-Nenhum framework, linguagem, produto de banco ou provedor específico foi escolhido nesta proposta. A integração depende de um meio de acesso autorizado ao histórico; a existência de uma API do SIGAA não é presumida.
+O documento original não especificava frameworks, linguagem ou produto de banco. As escolhas posteriores estão na Seção 9; o provedor permanece a definir. A integração depende de um meio de acesso autorizado ao histórico; a existência de uma API do SIGAA não é presumida.
 
 ## 7. Justificativa
 
@@ -165,3 +165,17 @@ Disciplinas, dependências e ofertas por período têm relações explícitas. A
 ## 8. Conclusão
 
 A proposta traduz o escopo funcional em um monolito com módulos por responsabilidade, dados centralizados com origens distintas e integração limitada ao histórico do SIGAA. Prioriza simplicidade operacional e permite evolução futura para outros cursos ou instituições, se necessária.
+
+## 9. Decisões técnicas da primeira implementação
+
+Stack aprovada: **Python + FastAPI**, **React + TypeScript + Vite + Tailwind CSS** e **PostgreSQL**. React Router organiza a navegação entre mapa e plano; TanStack Query gerencia os dados da API; Pydantic valida contratos; SQLAlchemy e Psycopg acessam o banco; Alembic versiona o esquema. pytest, Playwright e Ruff apoiam a verificação.
+
+Frontend e backend ficam no mesmo repositório. A API permanece um serviço único, com módulos internos para grade curricular, pré-requisitos, progressão e planejamento. O módulo de grade oferece a leitura dos dados necessários ao primeiro fluxo e será usado pela futura administração. Oferta e Administrativo ainda não possuem fluxos implementados.
+
+O primeiro fluxo é: **PostgreSQL → leitura da grade pela API → mapa React → ação de simulação → validação no backend → atualização do mapa**. A API recebe o estado hipotético e devolve os estados recalculados, sem alterar histórico ou persistir planos. Conclusões e planos dependentes são removidos em cascata quando uma aprovação simulada é desfeita.
+
+As 56 disciplinas e os quatro cenários vieram do protótipo como dados demonstrativos; não constituem validação da matriz oficial. Os cenários são arquivos locais do backend, enquanto disciplinas e pré-requisitos são carregados no banco por seed explícito. O frontend consome os cenários pela API e não implementa regras de elegibilidade.
+
+O Compose fornece somente o PostgreSQL de desenvolvimento. API e frontend são executados separadamente durante o desenvolvimento. Isso não representa definição da topologia de produção; hospedagem e implantação conjunta continuam pendentes.
+
+Planos salvos, histórico importado, autenticação, gestão de oferta, administração e previsão de conclusão ficam para etapas posteriores. A previsão heurística do HTML original não foi portada para a aplicação.

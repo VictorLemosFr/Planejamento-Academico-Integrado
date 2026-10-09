@@ -42,13 +42,21 @@ O mapeamento exato fornecido pela proposta é: F1 em Progressão; F2 e F7 em Pr�
 - Previsões dependentes de ofertas não confirmadas devem apresentar essa condição ao estudante.
 - O sistema não replica a administração acadêmica completa do SIGAA.
 
+## Primeira implementação
+
+A aplicação React/Tailwind consulta disciplinas e pré-requisitos persistidos no PostgreSQL por meio do FastAPI. O backend calcula estados, dependentes e criticidade, valida ações de planejamento e aprovação e remove conclusões e planos dependentes ao desfazer uma aprovação simulada.
+
+O usuário pode consultar o mapa, buscar e filtrar disciplinas, explorar detalhes e montar um plano do próximo semestre com carga horária total. Trocar de cenário ou recarregar a página descarta as alterações. O plano não é salvo no banco nesta etapa.
+
+Ainda não há estado “em andamento”, ofertas, autenticação, histórico importado, planos persistentes, administração, recomendação personalizada, comparação lado a lado ou previsão de conclusão. A tabela acima continua descrevendo o protótipo HTML preservado, não o estágio da aplicação nova.
+
 ## Decisões ainda abertas
 
 | Tema | Informação necessária |
 | --- | --- |
 | Funções e necessidades | Entregas 1 e 2, com F1–F10, necessidades e processos AS-IS/TO-BE. |
 | Diagramas originais | Figuras de contexto, containers e componentes mencionadas na proposta. |
-| Stack | Framework da SPA, linguagem/framework da API, banco e PaaS. |
+| Hospedagem | Provedor PaaS e configuração de implantação; stack de aplicação já aprovada. |
 | Integração | Forma autorizada de obter o histórico, formato e frequência de importação. |
 | Identidade e acesso | Autenticação e permissões de estudante e coordenação. |
 | Regras acadêmicas | Matriz validada, equivalências, requisitos de integralização, carga máxima e demais restrições aplicáveis. |
