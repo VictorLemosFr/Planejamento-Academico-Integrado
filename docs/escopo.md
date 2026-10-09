@@ -42,13 +42,13 @@ O mapeamento exato fornecido pela proposta é: F1 em Progressão; F2 e F7 em Pr�
 - Previsões dependentes de ofertas não confirmadas devem apresentar essa condição ao estudante.
 - O sistema não replica a administração acadêmica completa do SIGAA.
 
-## Primeira implementação
+## Primeira entrega funcional
 
-A aplicação React/Tailwind consulta disciplinas e pré-requisitos persistidos no PostgreSQL por meio do FastAPI. O backend calcula estados, dependentes e criticidade, valida ações de planejamento e aprovação e remove conclusões e planos dependentes ao desfazer uma aprovação simulada.
+A aplicação React/Tailwind consulta o FastAPI e persiste dados no PostgreSQL. Contas locais provisionadas pela coordenação permitem acessar histórico importado por JSON, progressão, alternativas de um semestre e simulações. Aprovação oficial, aprovação hipotética e andamento têm estados distintos.
 
-O usuário pode consultar o mapa, buscar e filtrar disciplinas, explorar detalhes e montar um plano do próximo semestre com carga horária total. Trocar de cenário ou recarregar a página descarta as alterações. O plano não é salvo no banco nesta etapa.
+Planos são rascunhos até salvar. Nome, semestre, escolhas e hipóteses são persistidos por estudante, com controle de versão e revisão do histórico. Uma importação substitui o histórico vigente atomicamente, conserva suas versões e revalida os planos sem apagar escolhas. Planos incompatíveis ficam acessíveis para ajuste ou exclusão. A coordenação usa endpoints documentados e CLI, sem interface administrativa nova.
 
-Ainda não há estado “em andamento”, ofertas, autenticação, histórico importado, planos persistentes, administração, recomendação personalizada, comparação lado a lado ou previsão de conclusão. A tabela acima continua descrevendo o protótipo HTML preservado, não o estágio da aplicação nova.
+A grade continua demonstrativa e a validação considera apenas pré-requisitos. Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, recomendação personalizada, comparação lado a lado e previsão de conclusão permanecem fora desta entrega. A tabela anterior descreve o protótipo HTML preservado.
 
 ## Decisões ainda abertas
 
@@ -57,7 +57,7 @@ Ainda não há estado “em andamento”, ofertas, autenticação, histórico im
 | Funções e necessidades | Entregas 1 e 2, com F1–F10, necessidades e processos AS-IS/TO-BE. |
 | Diagramas originais | Figuras de contexto, containers e componentes mencionadas na proposta. |
 | Hospedagem | Provedor PaaS e configuração de implantação; stack de aplicação já aprovada. |
-| Integração | Forma autorizada de obter o histórico, formato e frequência de importação. |
+| Integração | Forma autorizada de integração automática e frequência de atualização; a entrega atual aceita JSON completo fornecido pela coordenação. |
 | Identidade e acesso | Autenticação e permissões de estudante e coordenação. |
 | Regras acadêmicas | Matriz validada, equivalências, requisitos de integralização, carga máxima e demais restrições aplicáveis. |
 | Planejamento | Critérios de recomendação, comparação, previsão e tratamento de ofertas incertas. |
