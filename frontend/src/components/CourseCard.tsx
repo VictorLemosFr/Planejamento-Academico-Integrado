@@ -9,6 +9,16 @@ export const statusMeta: Record<
     icon: "✓",
     style: "border-emerald-200 bg-emerald-50 text-emerald-800",
   },
+  simulated: {
+    label: "Aprovação simulada",
+    icon: "◇",
+    style: "border-teal-300 bg-teal-50 text-teal-800",
+  },
+  in_progress: {
+    label: "Em andamento",
+    icon: "◷",
+    style: "border-sky-200 bg-sky-50 text-sky-800",
+  },
   available: {
     label: "Disponível",
     icon: "●",

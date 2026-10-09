@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("trocar de cenário descarta as alterações da demonstração anterior", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("/demo");
   await page
     .getByLabel("Cenário demonstrativo")
     .selectOption("desenvolvimento");
