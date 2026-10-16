@@ -1,3 +1,4 @@
+import type { DragEventHandler } from "react";
 import type { Course, Status } from "../types";
 
 export const statusMeta: Record<
@@ -46,16 +47,25 @@ export function CourseCard({
   selected,
   related,
   onSelect,
+  draggable = false,
+  onDragStart,
+  onDragEnd,
 }: {
   course: Course;
   selected: boolean;
   related: boolean;
   onSelect: () => void;
+  draggable?: boolean;
+  onDragStart?: DragEventHandler<HTMLButtonElement>;
+  onDragEnd?: DragEventHandler<HTMLButtonElement>;
 }) {
   const meta = statusMeta[course.status];
   return (
     <button
       type="button"
+      draggable={draggable}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
       aria-label={course.name}
       aria-pressed={selected}
       onClick={onSelect}

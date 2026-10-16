@@ -83,6 +83,7 @@ class Plan(Base):
     target_term: Mapped[str] = mapped_column(String(6))
     planned_ids: Mapped[list] = mapped_column(JSON, default=list)
     hypothetical_ids: Mapped[list] = mapped_column(JSON, default=list)
+    course_layout: Mapped[dict] = mapped_column(JSON, default=dict)
     version: Mapped[int] = mapped_column(default=1)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)

@@ -828,3 +828,109 @@ button:not(.course-card):not(:disabled):hover {
     max-width: none;
   }
 }
+
+/* Alternative-specific placement, with native drag and keyboard/touch controls. */
+.map-edit-hint {
+  margin: 0 0 14px;
+  border: 1px solid #cbdcf1;
+  border-radius: 12px;
+  padding: 11px 14px;
+  background: #eef5ffd6;
+  color: #4b6a91;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.period-column {
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+.period-cards {
+  min-height: 120px;
+  padding-bottom: 30px;
+}
+.empty-period {
+  border: 1px dashed #c5d4e4;
+  border-radius: 12px;
+  padding: 22px 12px;
+  text-align: center;
+  color: #7c90a6;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.movable-course {
+  position: relative;
+  min-width: 0;
+  border-radius: 14px;
+}
+.movable-course .course-card[draggable="true"] {
+  cursor: grab;
+}
+.movable-course.is-dragging {
+  opacity: 0.4;
+}
+.is-arranging .course-card {
+  transform: none;
+}
+.drop-active {
+  background: #d7e8f880;
+  box-shadow: inset 0 0 0 2px #80a6dc;
+}
+.drop-before::before {
+  content: "";
+  position: absolute;
+  height: 3px;
+  top: -7px;
+  inset-inline: 0;
+  border-radius: 10px;
+  background: #5087d5;
+  box-shadow: 0 0 8px #5087d56b;
+}
+.card-move-control {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 5px;
+  padding: 2px 5px;
+  background: #ffffff70;
+  border-radius: 8px;
+  border: 1px solid #ffffff9c;
+  color: #6c85a0;
+}
+.card-move-control > span {
+  font-size: 18px;
+  line-height: 1;
+}
+.card-move-control select {
+  min-width: 0;
+  width: 100%;
+  min-height: 30px;
+  border-radius: 6px;
+  background: transparent;
+  color: #5a7290;
+  font-size: 10px;
+  padding: 4px 2px;
+}
+.placement-warning {
+  font-size: 10px;
+  line-height: 1.5;
+  border-left: 2px solid #d6a655;
+  margin: 6px 0;
+  padding-left: 7px;
+  color: #8f6b29;
+}
+.elective-catalog {
+  border-radius: 16px;
+  transition:
+    box-shadow 0.2s,
+    background-color 0.2s;
+}
+@media (max-width: 700px) {
+  .card-move-control select {
+    min-height: 40px;
+    font-size: 11px;
+  }
+  .map-edit-hint {
+    font-size: 10px;
+  }
+}

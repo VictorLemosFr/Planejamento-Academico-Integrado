@@ -88,3 +88,18 @@ Uma nova importação não edita planos. Consultas recalculam sua validade e apo
 `401`: sessão inválida/expirada ou credenciais inválidas. `403`: papel, origem ou CSRF insuficiente. `404`: recurso ausente/de outro estudante ou demonstração desativada. `409`: versão/revisão concorrente. `422`: entrada inválida. `503`: banco indisponível.
 
 `GET /api/curriculum` e `GET /api/health` continuam públicos. `GET /api/scenarios` e `POST /api/simulations` preservam os contratos demonstrativos antigos apenas com `DEMO_ENABLED=true`, desativado por padrão. A interface demonstrativa é `/demo` com `VITE_DEMO_ENABLED=true`; seus dados não são históricos oficiais e não são persistidos.
+
+
+### Distribuição de disciplinas por alternativa
+
+Os pedidos de simulação e salvamento aceitam `course_layout`, um objeto por ID de disciplina:
+
+```json
+{"course_layout": {"ip": {"period": 3, "order": 0}}}
+```
+
+`period` aceita inteiros de 1 a 20; `order`, de 0 a 500. IDs desconhecidos são rejeitados. A resposta de cada alternativa inclui essa distribuição. Clientes antigos que omitirem o campo preservam a distribuição salva. Um objeto vazio restaura a disposição padrão, exceto pelas eletivas planejadas, que continuam no mapa.
+
+A distribuição é visual e exclusiva da alternativa: não altera o período recomendado da grade, o histórico oficial ou as regras de aprovação. Os pré-requisitos continuam sendo validados pelas ações de planejamento e simulação. A interface sinaliza pré-requisitos posicionados no mesmo período ou em um período posterior, como orientação visual; esse aviso não impede salvar a distribuição.
+
+Eletivas planejadas sem posição entram no período seguinte ao período atual (limitado ao 20º). A distribuição e a ordem dos cards são persistidas ao clicar em **Salvar**, com os mesmos controles de versão e isolamento por estudante. Devolver uma eletiva planejada ao catálogo também a remove do planejamento. A carga horária exibida em cada coluna soma as disciplinas distribuídas ali, independentemente dos filtros.

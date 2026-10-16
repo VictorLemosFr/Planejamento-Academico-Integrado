@@ -91,6 +91,7 @@ export const savePlan = (plan: Plan) =>
       history_revision: plan.history_revision,
       planned_ids: plan.planned_ids,
       hypothetical_ids: plan.hypothetical_ids,
+      course_layout: plan.course_layout,
     }),
   );
 export const deletePlan = (id: string, version: number) =>

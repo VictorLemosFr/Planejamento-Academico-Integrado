@@ -43,7 +43,13 @@ class NewPlan(StrictModel):
         return value.strip()
 
 
+class CoursePosition(StrictModel):
+    period: int = Field(ge=1, le=20, strict=True)
+    order: int = Field(ge=0, le=500, strict=True)
+
+
 class Draft(StrictModel):
+    course_layout: dict[CourseId, CoursePosition] | None = Field(default=None, max_length=500)
     hypothetical_ids: list[CourseId] = Field(default_factory=list, max_length=500)
     planned_ids: list[CourseId] = Field(default_factory=list, max_length=500)
 

@@ -175,6 +175,11 @@ def simulation(plan_id: str, payload: EvaluateDraft, identity: Identity, session
             payload.hypothetical_ids,
             payload.planned_ids,
             payload.action.model_dump() if payload.action else None,
+            course_layout=(
+                {cid: position.model_dump() for cid, position in payload.course_layout.items()}
+                if payload.course_layout is not None
+                else plan.course_layout
+            ),
         )
     except ValueError as error:
         raise HTTPException(422, str(error)) from error
@@ -188,7 +193,15 @@ def save_plan(plan_id: str, payload: SavePlan, identity: Identity, session: Data
     courses = list_courses(session)
     try:
         evaluated = evaluate(
-            courses, history_view(session, student), payload.hypothetical_ids, payload.planned_ids
+            courses,
+            history_view(session, student),
+            payload.hypothetical_ids,
+            payload.planned_ids,
+            course_layout=(
+                {cid: position.model_dump() for cid, position in payload.course_layout.items()}
+                if payload.course_layout is not None
+                else plan.course_layout
+            ),
         )
     except ValueError as error:
         raise HTTPException(422, str(error)) from error
@@ -199,6 +212,7 @@ def save_plan(plan_id: str, payload: SavePlan, identity: Identity, session: Data
         evaluated["hypothetical_ids"],
         evaluated["planned_ids"],
     )
+    plan.course_layout = evaluated["course_layout"]
     plan.version += 1
     plan.updated_at = now()
     result = plan_view(session, student, plan, courses)

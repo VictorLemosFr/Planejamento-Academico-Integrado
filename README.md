@@ -9,6 +9,7 @@ Projeto da disciplina **Integração e Evolução de Sistemas de Informação (I
 A aplicação entrega **login → histórico importado → progressão → simulação → plano salvo → recuperação após novo acesso**, com contas locais provisionadas e dados pessoais no PostgreSQL.
 
 - Mapa curricular por período, busca, filtros e detalhes de pré-requisitos.
+- Distribuição de cards por arraste, ordem e eletivas dentro do mapa, salva por alternativa; controles de movimentação também disponíveis no celular.
 - Aprovações oficiais somente leitura, disciplinas em andamento e aprovações hipotéticas distintas.
 - Importação JSON completa pela coordenação, transacional, versionada e idempotente.
 - Várias alternativas para um semestre, com rascunhos locais, salvamento explícito, renomeação e exclusão.
@@ -116,7 +117,7 @@ TEST_DATABASE_URL=postgresql+psycopg://pai:pai@127.0.0.1:54329/pai npm test
 
 Os testes criam esquemas aleatórios e removem somente esses esquemas ao terminar. Cobrem banco vazio e grade existente, seed repetido, dois salvamentos concorrentes, importações simultâneas idênticas e reconexão do pool. Sem `TEST_DATABASE_URL`, os testes específicos de PostgreSQL são marcados como ignorados; a suíte de API usa SQLite em memória. Os testes de navegador incluem o fluxo persistido, duas alternativas, novo login, sessão expirada, conflito, histórico ausente e tela móvel, além das demonstrações antigas.
 
-Na execução desta entrega, os testes isolados, Ruff, formatação e build/TypeScript passaram. A validação do Compose passou, mas o sandbox impediu acesso ao Docker, inicialização/conexão PostgreSQL e abertura das portas necessárias ao Playwright. **Os critérios de aceite em PostgreSQL real e navegador ainda precisam dessa execução fora do ambiente restrito.**
+Na validação local desta entrega, os 54 testes do backend passaram com PostgreSQL real, incluindo migrações, concorrência e preservação de dados. Os 3 testes de componentes e os 12 testes de navegador também passaram, com persistência em PostgreSQL. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem a distribuição de disciplinas e eletivas por alternativa, a ordem dos cards e a recuperação após novo login.
 
 ## Executar somente o protótipo original
 

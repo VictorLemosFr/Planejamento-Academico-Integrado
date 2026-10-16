@@ -115,11 +115,14 @@ def import_history(session, student, author, payload, courses):
     return {"revision": revision, "warnings": warnings, "unchanged": False}
 
 
-def evaluate(courses, history, hypothetical_ids=(), planned_ids=(), action=None):
+def evaluate(
+    courses, history, hypothetical_ids=(), planned_ids=(), action=None, course_layout=None
+):
     graph = CurriculumGraph(courses)
     official, ongoing = official_sets(history)
     hypothetical, planned = set(hypothetical_ids), set(planned_ids)
-    graph.require_known(hypothetical | planned)
+    layout = {cid: dict(position) for cid, position in (course_layout or {}).items()}
+    graph.require_known(hypothetical | planned | layout.keys())
     if action:
         course_id, kind = action["course_id"], action["kind"]
         graph.require_known({course_id})
@@ -141,6 +144,19 @@ def evaluate(courses, history, hypothetical_ids=(), planned_ids=(), action=None)
             planned -= affected
         elif kind == "unplan":
             planned.discard(course_id)
+    # Placement is a visual arrangement; it never grants academic completion.
+    by_id = {course["id"]: course for course in courses}
+    if action and action["kind"] == "unplan" and by_id[action["course_id"]]["type"] == "elective":
+        layout.pop(action["course_id"], None)
+    next_period = min(history["current_period"] + 1, 20)
+    next_order = (
+        max((pos["order"] for pos in layout.values() if pos["period"] == next_period), default=-1)
+        + 1
+    )
+    for cid in sorted(planned):
+        if by_id[cid]["type"] == "elective" and cid not in layout:
+            layout[cid] = {"period": next_period, "order": next_order}
+            next_order += 1
     completed = official | hypothetical
     problems = {}
     for cid in hypothetical | planned:
@@ -176,6 +192,7 @@ def evaluate(courses, history, hypothetical_ids=(), planned_ids=(), action=None)
             }
         )
     return {
+        "course_layout": layout,
         "current_period": history["current_period"],
         "history_revision": history["revision"],
         "awaiting_import": history["awaiting_import"],
@@ -213,6 +230,10 @@ def plan_view(session, student, plan, courses):
         "created_at": plan.created_at,
         "updated_at": plan.updated_at,
         **evaluate(
-            courses, history_view(session, student), plan.hypothetical_ids, plan.planned_ids
+            courses,
+            history_view(session, student),
+            plan.hypothetical_ids,
+            plan.planned_ids,
+            course_layout=plan.course_layout,
         ),
     }

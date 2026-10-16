@@ -6,6 +6,7 @@ import type { ActionKind, Identity, Plan, Status } from "./types";
 import DemoApp from "./DemoApp";
 import { CurriculumMap } from "./components/CurriculumMap";
 import { CourseDetails } from "./components/CourseDetails";
+import { moveCourse } from "./courseLayout";
 
 const input =
   "glass-input mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900";
@@ -14,7 +15,15 @@ const button =
 const primary = `${button} primary-button border-blue-700! bg-blue-700! text-white hover:bg-blue-800!`;
 const snapshot = (p: Plan | null) =>
   p &&
-  JSON.stringify([p.name, p.target_term, p.planned_ids, p.hypothetical_ids]);
+  JSON.stringify([
+    p.name,
+    p.target_term,
+    p.planned_ids,
+    p.hypothetical_ids,
+    Object.entries(p.course_layout ?? {}).sort(([a], [b]) =>
+      a.localeCompare(b),
+    ),
+  ]);
 
 export default function App() {
   const [identity, setIdentity] = useState<Identity | null>(null);
@@ -317,11 +326,42 @@ function Student({
         history_revision: draft.history_revision,
         planned_ids: draft.planned_ids,
         hypothetical_ids: draft.hypothetical_ids,
+        course_layout: draft.course_layout,
         action: { kind, course_id: selectedId },
       });
       setDraft({ ...draft, ...result });
       setNotice("Rascunho recalculado. Clique em Salvar para persistir.");
     });
+  }
+  function move(courseId: string, period: number | null, beforeId?: string) {
+    if (!draft || busy) return;
+    const course_layout = moveCourse(
+      draft.courses,
+      draft.course_layout,
+      courseId,
+      period,
+      beforeId,
+    );
+    if (course_layout === draft.course_layout) return;
+    if (period === null && draft.planned_ids.includes(courseId)) {
+      void run(async () => {
+        const result = await api.evaluatePlan(draft.id, {
+          version: draft.version,
+          history_revision: draft.history_revision,
+          planned_ids: draft.planned_ids,
+          hypothetical_ids: draft.hypothetical_ids,
+          course_layout,
+          action: { kind: "unplan", course_id: courseId },
+        });
+        setDraft({ ...draft, ...result });
+        setNotice(
+          "Eletiva devolvida ao catálogo. Clique em Salvar para persistir.",
+        );
+      });
+      return;
+    }
+    setDraft({ ...draft, course_layout });
+    setNotice("Distribuição alterada. Clique em Salvar para persistir.");
   }
   const visible =
     data?.courses.filter(
@@ -648,6 +688,7 @@ function Student({
                                   {
                                     version: draft.version,
                                     history_revision: draft.history_revision,
+                                    course_layout: draft.course_layout,
                                     planned_ids: draft.planned_ids.filter(
                                       (x) => x !== id,
                                     ),
@@ -723,7 +764,12 @@ function Student({
             {data && (
               <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
                 <CurriculumMap
+                  key={draft?.id ?? "official"}
                   courses={visible}
+                  allCourses={data.courses}
+                  layout={draft?.course_layout}
+                  editable={!!draft && !busy}
+                  onMove={move}
                   selectedId={selectedId}
                   relatedIds={
                     new Set(

@@ -66,7 +66,10 @@ export interface History {
   } | null;
   warnings: { message: string; course_id: string; academic_term: string }[];
 }
+export type CourseLayout = Record<string, { period: number; order: number }>;
+
 export interface Progression extends Simulation {
+  course_layout: CourseLayout;
   official_completed_ids: string[];
   hypothetical_ids: string[];
   in_progress_ids: string[];
@@ -84,6 +87,7 @@ export interface Plan extends Progression {
   updated_at: string;
 }
 export interface Draft {
+  course_layout?: CourseLayout;
   planned_ids: string[];
   hypothetical_ids: string[];
   version: number;

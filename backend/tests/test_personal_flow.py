@@ -395,3 +395,180 @@ def test_old_in_progress_attempt_does_not_override_later_failure(accounts):
     assert progress["in_progress_ids"] == []
     assert progress["official_completed_ids"] == []
     assert next(c for c in progress["courses"] if c["id"] == "data")["status"] == "locked"
+
+
+def test_course_layout_is_saved_per_alternative_and_survives_login(accounts):
+    headers = login(accounts)
+    first = accounts.post(
+        "/api/plans", headers=headers, json={"name": "Layout A", "target_term": "2026.2"}
+    ).json()
+    second = accounts.post(
+        "/api/plans", headers=headers, json={"name": "Layout B", "target_term": "2026.2"}
+    ).json()
+    layout = {"intro": {"period": 3, "order": 1}, "data": {"period": 3, "order": 0}}
+    path = "/api/plans/" + first["id"]
+    payload = {
+        "name": first["name"],
+        "target_term": first["target_term"],
+        "version": 1,
+        "history_revision": 0,
+        "planned_ids": [],
+        "hypothetical_ids": [],
+        "course_layout": layout,
+    }
+    preview = accounts.post(
+        path + "/simulations",
+        headers=headers,
+        json={k: v for k, v in payload.items() if k not in {"name", "target_term"}},
+    )
+    assert preview.status_code == 200, preview.text
+    assert preview.json()["course_layout"] == layout
+    assert accounts.get(path).json()["course_layout"] == {}
+    saved = accounts.put(path, headers=headers, json=payload)
+    assert saved.status_code == 200, saved.text
+    assert saved.json()["course_layout"] == layout
+    assert saved.json()["planned_ids"] == []
+    assert accounts.get("/api/plans/" + second["id"]).json()["course_layout"] == {}
+    assert accounts.put(path, headers=headers, json=payload).status_code == 409
+    accounts.post("/api/auth/logout", headers=headers)
+    headers = login(accounts)
+    assert accounts.get(path).json()["course_layout"] == layout
+    payload.pop("course_layout")
+    payload["version"] = 2
+    assert accounts.put(path, headers=headers, json=payload).json()["course_layout"] == layout
+    login(accounts, "b@example.org")
+    assert accounts.get(path).status_code == 404
+
+
+@pytest.mark.parametrize(
+    "layout",
+    [
+        {"unknown": {"period": 2, "order": 0}},
+        {"intro": {"period": 0, "order": 0}},
+        {"intro": {"period": 21, "order": 0}},
+        {"intro": {"period": 2, "order": -1}},
+        {"intro": {"period": True, "order": 0}},
+    ],
+)
+def test_course_layout_rejects_invalid_positions_without_changing_saved_plan(accounts, layout):
+    headers = login(accounts)
+    plan = accounts.post(
+        "/api/plans", headers=headers, json={"name": "Layout", "target_term": "2026.2"}
+    ).json()
+    path = "/api/plans/" + plan["id"]
+    response = accounts.put(
+        path,
+        headers=headers,
+        json={
+            "name": plan["name"],
+            "target_term": plan["target_term"],
+            "version": 1,
+            "history_revision": 0,
+            "course_layout": layout,
+        },
+    )
+    assert response.status_code == 422, response.text
+    assert accounts.get(path).json()["version"] == 1
+    assert accounts.get(path).json()["course_layout"] == {}
+
+
+def test_planning_elective_places_it_in_map_and_unplanning_returns_it_to_catalog(accounts):
+    from app.core.database import get_session
+    from app.main import app
+    from app.modules.curriculum.models import Course
+
+    with next(app.dependency_overrides[get_session]()) as db:
+        db.add(
+            Course(
+                id="elective",
+                name="Eletiva",
+                short_name="Eletiva",
+                hours=60,
+                period=None,
+                type="elective",
+            )
+        )
+        db.commit()
+    headers = login(accounts)
+    plan = accounts.post(
+        "/api/plans", headers=headers, json={"name": "Eletivas", "target_term": "2026.2"}
+    ).json()
+    path = "/api/plans/" + plan["id"]
+    result = accounts.post(
+        path + "/simulations",
+        headers=headers,
+        json={
+            "version": 1,
+            "history_revision": 0,
+            "action": {"kind": "plan", "course_id": "elective"},
+        },
+    )
+    assert result.status_code == 200, result.text
+    draft = result.json()
+    assert draft["course_layout"]["elective"]["period"] == 2
+    assert draft["planned_ids"] == ["elective"]
+    saved = accounts.put(
+        path,
+        headers=headers,
+        json={
+            "name": plan["name"],
+            "target_term": plan["target_term"],
+            "version": 1,
+            "history_revision": 0,
+            "planned_ids": draft["planned_ids"],
+            "hypothetical_ids": [],
+            "course_layout": draft["course_layout"],
+        },
+    )
+    assert saved.status_code == 200, saved.text
+    result = accounts.post(
+        path + "/simulations",
+        headers=headers,
+        json={
+            "version": 2,
+            "history_revision": 0,
+            "planned_ids": ["elective"],
+            "course_layout": draft["course_layout"],
+            "action": {"kind": "unplan", "course_id": "elective"},
+        },
+    ).json()
+    assert "elective" not in result["course_layout"]
+    assert result["planned_ids"] == []
+
+
+def test_course_layout_migration_preserves_existing_plan(tmp_path):
+    from pathlib import Path
+
+    from alembic.config import Config
+    from sqlalchemy import create_engine, text
+
+    from alembic import command
+
+    engine = create_engine(f"sqlite:///{tmp_path / 'migration.db'}")
+    config = Config("alembic.ini")
+    config.set_main_option("script_location", str(Path(__file__).parents[1] / "alembic"))
+    with engine.begin() as connection:
+        config.attributes["connection"] = connection
+        # Model the existing plans table; older migrations require PostgreSQL.
+        connection.execute(
+            text(
+                "CREATE TABLE plans (id VARCHAR(36) PRIMARY KEY, student_id VARCHAR(36), "
+                "name VARCHAR(120), target_term VARCHAR(6), planned_ids JSON, "
+                "hypothetical_ids JSON, version INTEGER, created_at DATETIME, updated_at DATETIME)"
+            )
+        )
+        command.stamp(config, "0003")
+        connection.execute(
+            text(
+                "INSERT INTO plans (id, student_id, name, target_term, planned_ids, "
+                "hypothetical_ids, version, created_at, updated_at) VALUES "
+                "('legacy', 'student', 'Legado', '2026.2', '[]', '[]', "
+                "4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
+            )
+        )
+        command.upgrade(config, "head")
+        result = connection.execute(
+            text("SELECT name, version, course_layout FROM plans WHERE id='legacy'")
+        ).one()
+        assert result == ("Legado", 4, "{}")
+    engine.dispose()
