@@ -102,8 +102,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-dvh font-sans">
-      <header className="border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
+    <div className="app-shell demo-shell min-h-dvh font-sans">
+      <header className="app-header border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-5">
           <div>
             <p className="mb-1 text-[11px] font-medium tracking-widest text-slate-500 uppercase">

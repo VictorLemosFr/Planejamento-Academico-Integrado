@@ -1,34 +1,816 @@
 @import "tailwindcss";
-
 @theme {
   --font-sans:
-    "Inter", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+    "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
 }
-
+:root {
+  font-family: var(--font-sans);
+  color: #20334e;
+  background: #edf3f9;
+  font-synthesis: none;
+  --glass: #ffffffad;
+  --panel-shadow: 0 12px 40px -20px #35598430, inset 0 1px 0 #fff;
+}
 body {
   margin: 0;
-  background: #f7f8fa;
-  color: #111827;
   -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 0% 5%, #cddff6, transparent 48%),
+    radial-gradient(ellipse at 100% 38%, #ccece5, transparent 46%),
+    radial-gradient(ellipse at 40% 100%, #e0dff5, transparent 45%), #edf3f9;
 }
 button,
 select,
 input,
 a {
   -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 button:not(:disabled),
 select {
   cursor: pointer;
 }
 button:disabled {
-  cursor: wait;
-  opacity: 0.55;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 :focus-visible {
-  outline: 2px solid #2563eb;
-  outline-offset: 3px;
+  outline: 3px solid #466ed5;
+  outline-offset: 4px;
+}
+::selection {
+  background: #cbdcfc;
+  color: #193970;
+}
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+input,
+select {
+  min-height: 42px;
+}
+input::placeholder {
+  color: #8897ab;
+}
+input:hover,
+select:hover {
+  border-color: #9caecb;
+}
+input:focus,
+select:focus {
+  border-color: #6c91df;
+  box-shadow: 0 0 0 4px #608ce514;
+}
+button:not(.course-card):not(:disabled):hover {
+  box-shadow: 0 5px 14px -8px #25457465;
+}
+.glass-panel,
+.app-header,
+.curriculum-board,
+.details-panel,
+.metric-card {
+  background: var(--glass);
+  border-color: #ffffffe0;
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  box-shadow: var(--panel-shadow);
+}
+.glass-input {
+  background: #ffffffb8;
+  border: 1px solid #cbd7e5;
+  border-radius: 12px;
+  padding: 10px 13px;
+}
+.glass-button {
+  border-color: #d0dcea;
+  background: linear-gradient(160deg, #ffffffed, #f2f7fcb8);
+  border-radius: 12px;
+  padding: 10px 17px;
+  color: #324a69;
+}
+.primary-button {
+  background: linear-gradient(135deg, #466fdb, #3155b7) !important;
+  border-color: #4d73cf !important;
+  color: white;
+  box-shadow:
+    0 6px 18px -6px #4269cc75,
+    inset 0 1px 0 #ffffff40;
+}
+.primary-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #547ee8, #3c64cd) !important;
+  transform: translateY(-2px);
+}
+.eyebrow {
+  color: #58728e;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.19em;
+}
+/* A continuous trajectory connects the entrance to the academic workspace. */
+.login-layout {
+  min-height: 100dvh;
+  max-width: 1280px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  align-items: center;
+  gap: 100px;
+  padding: 56px 48px;
+}
+.login-story {
+  min-width: 0;
+}
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #526c87;
+}
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 21px;
+  background: #ffffff8c;
+  border: 1px solid white;
+  box-shadow: var(--panel-shadow);
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.08em;
+  color: #365ac0;
+}
+.brand-mark span {
+  color: #319a94;
+}
+.login-headline {
+  margin-top: 76px;
+}
+.login-headline h2 {
+  font-size: clamp(38px, 4.5vw, 62px);
+  line-height: 1.12;
+  letter-spacing: -0.055em;
+  font-weight: 650;
+  margin: 18px 0 22px;
+}
+.login-headline em {
+  font-family: Georgia, serif;
+  color: #3a67b7;
+  font-weight: 400;
+}
+.login-headline > p:last-child {
+  max-width: 360px;
+  font-size: 15px;
+  color: #60738c;
+  line-height: 1.8;
+}
+.trajectory-art {
+  position: relative;
+  margin-top: 15px;
+  padding-bottom: 16px;
+}
+.trajectory-art svg {
+  width: 100%;
+  overflow: visible;
+}
+.trajectory-shadow {
+  stroke: #ffffff80;
+  stroke-width: 30;
+}
+.trajectory-line {
+  stroke: url(#trajectory);
+  stroke-width: 2;
+  stroke-dasharray: 7 5;
+  animation: path-flow 25s linear infinite;
+}
+.trajectory-note {
+  position: absolute;
+  padding: 9px 13px;
+  border-radius: 10px;
+  border: 1px solid white;
+  background: #ffffffa3;
+  box-shadow: var(--panel-shadow);
+  font-size: 10px;
+  color: #56708e;
+}
+.note-start {
+  left: 4%;
+  bottom: 4%;
+}
+.note-end {
+  right: -4%;
+  top: 30%;
+}
+.login-caption {
+  color: #6f8299;
+  font-size: 11px;
+  margin-top: 34px;
+}
+.login-caption span {
+  padding: 0 12px;
+}
+.login-panel {
+  border: 1px solid white;
+  border-radius: 28px;
+  padding: 42px 36px;
+  position: relative;
+  animation: surface-enter 0.65s ease both;
+}
+.login-panel::before {
+  content: "";
+  position: absolute;
+  height: 4px;
+  top: 0;
+  left: 36px;
+  right: 36px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(90deg, #5d85d7, #7ac9b9);
+}
+.login-badge {
+  display: inline-flex;
+  color: #47796e;
+  background: #e1f2eb;
+  border: 1px solid #cce5db;
+  font-size: 9px;
+  letter-spacing: 0.13em;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+.login-title {
+  font-size: 28px;
+  line-height: 1.25;
+  letter-spacing: -0.045em;
+  font-weight: 650;
+  margin-top: 24px;
+}
+.login-panel label {
+  color: #4b607a;
+  font-weight: 500;
+}
+.login-panel .primary-button {
+  min-height: 47px;
+  margin-top: 26px;
+}
+.login-panel > p:last-child {
+  border-top: 1px solid #dbe4ee;
+  padding-top: 20px;
+  margin-top: 24px;
+}
+.app-shell {
+  padding: 18px;
+  max-width: 1960px;
+  margin: auto;
+}
+.app-header {
+  position: relative;
+  border: 1px solid white;
+  border-radius: 22px;
+  padding: 23px 30px 0;
+}
+.app-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  letter-spacing: -0.035em;
+}
+.brand-dot {
+  display: inline-grid;
+  place-items: center;
+  color: white;
+  background: linear-gradient(135deg, #567cce, #69bcb5);
+  height: 31px;
+  width: 31px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px #587cc633;
+  font-weight: 400;
+}
+.main-nav {
+  gap: 8px;
+  margin-top: 23px;
+  padding-bottom: 10px;
+}
+.main-nav a {
+  padding: 10px 17px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #657993;
+  font-weight: 600;
+}
+.main-nav a:hover {
+  background: #ffffffa6;
+  color: #3155a8;
+}
+.main-nav a[aria-current="page"] {
+  color: #345dbb;
+  background: #ffffffc9;
+  box-shadow:
+    0 3px 9px #2545740e,
+    inset 0 0 0 1px #dae4f7;
+}
+.institution-note {
+  font-size: 10px;
+  border: 0;
+  padding-top: 12px;
+  padding-bottom: 0;
+  color: #74849a;
+}
+.workspace {
+  padding-top: 0;
+}
+.workspace-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 38px 5px 34px;
+  gap: 24px;
+}
+.workspace-intro h2 {
+  font-size: clamp(27px, 3vw, 40px);
+  line-height: 1.2;
+  letter-spacing: -0.045em;
+  font-weight: 600;
+  margin: 10px 0 12px;
+}
+.workspace-intro h2 span {
+  color: #60809d;
+}
+.workspace-intro > div > p:last-child {
+  font-size: 12px;
+  color: #6a8098;
+}
+.progress-orbit {
+  flex-shrink: 0;
+  margin-right: 26px;
+  border-radius: 50%;
+  width: 136px;
+  height: 136px;
+  padding: 6px;
+  background: conic-gradient(
+    from 210deg,
+    #519baf 0%,
+    #5074cd var(--progress),
+    #ffffff95 var(--progress),
+    #ffffff95 100%
+  );
+  box-shadow:
+    0 8px 30px -10px #5e859d35,
+    0 0 0 10px #ffffff2e;
+}
+.progress-orbit > div {
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #edf4fa;
+  border: 4px solid #f9fcff;
+}
+.progress-orbit strong {
+  font-size: 37px;
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  color: #42649a;
+}
+.progress-orbit small {
+  font-size: 17px;
+}
+.progress-orbit span {
+  font-size: 9px;
+  color: #70849c;
+}
+.alternatives-panel {
+  border-radius: 20px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+.alternatives-panel::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 25px;
+  width: 3px;
+  height: 22px;
+  border-radius: 0 4px 4px 0;
+  background: #6c9ec9;
+}
+.alternatives-panel h2 {
+  letter-spacing: -0.025em;
+}
+.alternatives-panel form > label {
+  flex: 1 1 180px;
+}
+.alternatives-panel form > label:nth-child(2) {
+  flex: 0 1 160px;
+}
+.metrics-grid {
+  gap: 14px;
+}
+.metric-card {
+  position: relative;
+  border-radius: 18px;
+  padding: 20px 22px;
+  overflow: hidden;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+.metric-card::after {
+  content: "";
+  position: absolute;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  top: -15px;
+  right: -14px;
+  background: #8ec7b923;
+}
+.metric-card:nth-child(2)::after {
+  background: #999be822;
+}
+.metric-card:nth-child(3)::after {
+  background: #86bee829;
+}
+.metric-card:nth-child(4)::after {
+  background: #ceace525;
+}
+.metric-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 12px 26px -18px #35598475,
+    inset 0 1px 0 white;
+}
+.metric-card > p:first-child {
+  color: #3e6f79;
+  font-size: 30px;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+}
+.metric-card:nth-child(2) > p:first-child {
+  color: #7970a8;
+}
+.metric-card:nth-child(3) > p:first-child {
+  color: #467da7;
+}
+.metric-card:nth-child(4) > p:first-child {
+  color: #7b689f;
+}
+.metric-card > p:last-child {
+  font-size: 11px;
+}
+.filter-bar {
+  align-items: end;
+  gap: 14px;
+  padding: 6px 0 10px;
+}
+.filter-bar > label {
+  color: #5c728c;
+}
+.filter-bar > label:first-child {
+  flex: 1;
+  max-width: 390px;
+}
+.curriculum-board {
+  border-radius: 20px;
+  padding: 20px;
+  scrollbar-width: thin;
+  scrollbar-color: #a7bfd5 transparent;
+}
+.curriculum-map > div:first-child h2 {
+  letter-spacing: -0.035em;
+}
+.period-column {
+  border-radius: 12px;
+  padding: 0 3px;
+}
+.period-column > div:first-child {
+  border-color: #cfddeb;
+  padding: 3px 5px 14px;
+}
+.period-column h3 {
+  color: #486484;
+  font-size: 12px;
+}
+.course-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  padding: 13px;
+  isolation: isolate;
+  min-height: 139px;
+  box-shadow:
+    0 2px 3px #294d7610,
+    inset 0 1px 0 #ffffffb3;
+  transition:
+    transform 0.23s,
+    box-shadow 0.23s,
+    border-color 0.23s;
+}
+.course-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(125deg, #ffffff85, #ffffff10 60%, #ffffff40);
+  pointer-events: none;
+}
+.course-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-130%);
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    #ffffff70 50%,
+    transparent 80%
+  );
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 10px 20px -10px #37557e5c,
+    inset 0 1px 0 white;
+}
+.course-card:hover::after {
+  transform: translateX(130%);
+}
+.course-card[aria-pressed="true"] {
+  box-shadow:
+    0 0 0 2px #688ad7,
+    0 8px 22px -8px #557ac878;
+  outline: 3px solid #ffffffbd;
+  outline-offset: 2px;
+  transform: translateY(-3px);
+}
+.course-card[data-related="true"] {
+  outline: 2px dashed #89a4bd;
+  outline-offset: 1px;
+}
+.course-card[data-status="locked"] {
+  background: #edf1f6a8;
+  color: #708198;
+  border-color: #d9e2ec;
+}
+.course-card[data-status="completed"] {
+  background: #e3f3ecca;
+  border-color: #baded1;
+  color: #317460;
+}
+.course-card[data-status="available"] {
+  background: #e6eefeca;
+  border-color: #c3d5f3;
+  color: #3e63a8;
+}
+.course-card[data-status="planned"] {
+  background: #ece9f9ca;
+  border-color: #d5caec;
+  color: #71609a;
+}
+.course-card h3 {
+  letter-spacing: -0.015em;
+}
+.course-card > div:first-child {
+  font-size: 10px;
+}
+.details-panel {
+  border-radius: 21px;
+  padding: 24px;
+}
+.details-panel > div:first-child > span {
+  display: inline-grid;
+  place-items: center;
+  height: 64px;
+  width: 64px;
+  border-radius: 21px;
+  background: linear-gradient(140deg, #e1edf8, #e2f3ec);
+  color: #79a2b7;
+  font-size: 30px;
+  border: 1px solid white;
+}
+.details-panel h2 {
+  letter-spacing: -0.03em;
+}
+.details-panel button:not([aria-label="Fechar detalhes"]):hover {
+  background-color: #f5f9ff;
+}
+[role="alert"] {
+  border-radius: 12px;
+  background: #fff1f0df;
+  padding: 12px 16px;
+}
+.workspace > [role="status"] {
+  border: 1px solid #b9dbd4;
+  background: #effcf8dc;
+  color: #367166;
+  border-radius: 12px;
+  padding: 12px 16px;
+  animation: surface-enter 0.25s ease both;
+}
+.demo-shell .app-header {
+  padding-bottom: 20px;
+}
+.demo-shell nav a[aria-current="page"] {
+  text-decoration: underline;
+  text-underline-offset: 7px;
+}
+@keyframes surface-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes path-flow {
+  to {
+    stroke-dashoffset: -240;
+  }
+}
+@media (max-width: 1023px) {
+  .details-panel {
+    border-radius: 24px 24px 0 0;
+    background: #f5f9fff2;
+  }
+  .login-layout {
+    gap: 45px;
+    padding: 35px;
+  }
+  .login-panel {
+    padding: 34px 28px;
+  }
+  .login-headline h2 {
+    font-size: 43px;
+  }
+}
+@media (max-width: 700px) {
+  .login-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding: 30px 20px;
+    align-items: stretch;
+    justify-content: center;
+  }
+  .login-story .brand-lockup {
+    gap: 12px;
+  }
+  .brand-mark {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    font-size: 22px;
+  }
+  .login-headline {
+    margin-top: 30px;
+  }
+  .login-headline h2 {
+    font-size: 38px;
+  }
+  .login-headline h2 br {
+    display: none;
+  }
+  .login-headline > p:last-child {
+    font-size: 13px;
+    max-width: none;
+  }
+  .trajectory-art,
+  .login-caption {
+    display: none;
+  }
+  .login-panel {
+    padding: 30px 24px;
+    border-radius: 24px;
+  }
+  .login-title {
+    font-size: 25px;
+  }
+  .app-shell {
+    padding: 10px;
+  }
+  .app-header {
+    padding: 19px 17px 0;
+    border-radius: 18px;
+  }
+  .app-title {
+    font-size: 17px;
+    line-height: 1.35;
+    align-items: start;
+  }
+  .brand-dot {
+    flex-shrink: 0;
+  }
+  .app-header > div > div:last-child {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .app-header > div > div:last-child > span {
+    font-size: 11px;
+  }
+  .main-nav {
+    gap: 3px;
+    margin-top: 14px;
+  }
+  .main-nav a {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+  .institution-note {
+    padding: 12px 8px 0;
+    font-size: 9px;
+    line-height: 1.65;
+  }
+  .workspace {
+    padding: 0 4px 20px;
+  }
+  .workspace-intro {
+    padding: 28px 3px 24px;
+    gap: 12px;
+  }
+  .workspace-intro h2 {
+    font-size: 26px;
+  }
+  .workspace-intro > div > p:last-child {
+    font-size: 11px;
+    line-height: 1.7;
+    max-width: 220px;
+  }
+  .eyebrow {
+    font-size: 8px;
+    letter-spacing: 0.13em;
+  }
+  .progress-orbit {
+    height: 90px;
+    width: 90px;
+    padding: 4px;
+    margin-right: 4px;
+  }
+  .progress-orbit > div {
+    border-width: 2px;
+  }
+  .progress-orbit strong {
+    font-size: 27px;
+  }
+  .progress-orbit small {
+    font-size: 12px;
+  }
+  .progress-orbit span {
+    font-size: 7px;
+  }
+  .alternatives-panel {
+    padding: 19px 16px;
+    border-radius: 17px;
+  }
+  .alternatives-panel form > label,
+  .alternatives-panel form > label:nth-child(2) {
+    flex: 1 1 130px;
+  }
+  .alternatives-panel form > button {
+    width: 100%;
+  }
+  .metrics-grid {
+    gap: 10px;
+  }
+  .metric-card {
+    padding: 16px;
+    border-radius: 15px;
+  }
+  .metric-card > p:first-child {
+    font-size: 26px;
+  }
+  .filter-bar {
+    gap: 10px;
+  }
+  .filter-bar > label {
+    flex: 1 1 130px;
+  }
+  .curriculum-board {
+    padding: 15px;
+    border-radius: 17px;
+  }
+  .curriculum-map > div:first-child > div > p {
+    font-size: 10px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -36,5 +818,13 @@ button:disabled {
   *::after {
     scroll-behavior: auto !important;
     transition: none !important;
+    animation: none !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .filter-bar > label:first-child {
+    flex: 1 1 100%;
+    max-width: none;
   }
 }

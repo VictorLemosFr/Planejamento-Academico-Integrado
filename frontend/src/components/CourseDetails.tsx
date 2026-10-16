@@ -69,7 +69,7 @@ export function CourseDetails({
       )}
       <aside
         aria-label="Detalhes da disciplina"
-        className={`${course ? "fixed inset-x-0 bottom-0 z-50 max-h-[78dvh] rounded-t-2xl" : "hidden"} overflow-y-auto border border-slate-200 bg-white p-5 shadow-lg lg:sticky lg:top-5 lg:z-auto lg:block lg:max-h-[calc(100dvh-40px)] lg:self-start lg:rounded-xl lg:shadow-sm`}
+        className={`details-panel ${course ? "fixed inset-x-0 bottom-0 z-50 max-h-[78dvh] rounded-t-2xl" : "hidden"} overflow-y-auto border border-slate-200 bg-white p-5 shadow-lg lg:sticky lg:top-5 lg:z-auto lg:block lg:max-h-[calc(100dvh-40px)] lg:self-start lg:rounded-xl lg:shadow-sm`}
       >
         {!course ? (
           <div className="py-8">

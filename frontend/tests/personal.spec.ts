@@ -18,7 +18,7 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
 }) => {
   await signIn(page);
   await expect(
-    page.getByText("Histórico oficial", { exact: true }),
+    page.getByRole("heading", { name: "Histórico oficial", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Introdução à Programação", exact: true })
@@ -46,7 +46,7 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     .getByRole("button", { name: "Simular aprovação", exact: true })
     .click();
   await expect(
-    page.getByText("Alterações pendentes", { exact: true }),
+    page.getByText("Alterações pendentes", { exact: false }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
   await expect(page.getByRole("status")).toContainText("Plano salvo");
@@ -55,8 +55,11 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     .getByLabel("Alternativa salva")
     .selectOption({ label: "Alternativa A · 2026.2" });
   await expect(
-    page.getByText("Aprovação simulada", { exact: true }).first(),
-  ).toBeVisible();
+    page.getByRole("button", {
+      name: "Estruturas de Dados Orientadas a Objetos",
+      exact: true,
+    }),
+  ).toContainText("Aprovação simulada");
   await page.getByLabel("Nome da alternativa").fill("Alternativa B");
   await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
@@ -69,8 +72,11 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     .getByLabel("Alternativa salva")
     .selectOption({ label: "Alternativa A · 2026.2" });
   await expect(
-    page.getByText("Aprovação simulada", { exact: true }).first(),
-  ).toBeVisible();
+    page.getByRole("button", {
+      name: "Estruturas de Dados Orientadas a Objetos",
+      exact: true,
+    }),
+  ).toContainText("Aprovação simulada");
 });
 
 test("the official map directs pending courses to an alternative", async ({
@@ -98,8 +104,11 @@ test("the official map directs pending courses to an alternative", async ({
     .getByRole("button", { name: "Simular aprovação", exact: true })
     .click();
   await expect(
-    page.getByText("Aprovação simulada", { exact: true }).first(),
-  ).toBeVisible();
+    page.getByRole("button", {
+      name: "Matemática Discreta para Computação",
+      exact: true,
+    }),
+  ).toContainText("Aprovação simulada");
 });
 
 test("empty history, student isolation and mobile layout", async ({
@@ -141,7 +150,7 @@ test("save failure and conflict do not claim success or discard draft", async ({
   await expect(page.getByRole("alert")).toContainText("O plano mudou");
   await expect(page.getByLabel("Nome do plano")).toHaveValue("Rascunho local");
   await expect(
-    page.getByText("Alterações pendentes", { exact: true }),
+    page.getByText("Alterações pendentes", { exact: false }),
   ).toBeVisible();
   page.once("dialog", (dialog) => dialog.dismiss());
   await page.getByRole("button", { name: "Sair", exact: true }).click();
@@ -161,6 +170,6 @@ test("expired session clears personal content", async ({ page }) => {
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await expect(page.getByLabel("E-mail")).toBeVisible();
   await expect(
-    page.getByText("Histórico oficial", { exact: true }),
+    page.getByRole("heading", { name: "Histórico oficial", exact: true }),
   ).toHaveCount(0);
 });

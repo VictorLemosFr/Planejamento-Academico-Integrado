@@ -8,10 +8,10 @@ import { CurriculumMap } from "./components/CurriculumMap";
 import { CourseDetails } from "./components/CourseDetails";
 
 const input =
-  "mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900";
+  "glass-input mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900";
 const button =
-  "rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50";
-const primary = `${button} border-blue-700! bg-blue-700! text-white hover:bg-blue-800!`;
+  "glass-button rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50";
+const primary = `${button} primary-button border-blue-700! bg-blue-700! text-white hover:bg-blue-800!`;
 const snapshot = (p: Plan | null) =>
   p &&
   JSON.stringify([p.name, p.target_term, p.planned_ids, p.hypothetical_ids]);
@@ -100,9 +100,76 @@ function Login({
   const [failure, setFailure] = useState("");
   const [busy, setBusy] = useState(false);
   return (
-    <main className="mx-auto flex min-h-dvh max-w-md items-center px-5">
+    <main className="login-layout">
+      <section className="login-story" aria-label="Sua trajetória acadêmica">
+        <div className="brand-lockup">
+          <span className="brand-mark" aria-hidden="true">
+            p<span>ai</span>
+          </span>
+          <span>
+            Seu próximo passo,
+            <br />
+            com mais clareza.
+          </span>
+        </div>
+        <div className="login-headline">
+          <p className="eyebrow">SUA TRAJETÓRIA, SUAS POSSIBILIDADES</p>
+          <h2>
+            Um novo olhar
+            <br />
+            para o seu <em>futuro.</em>
+          </h2>
+          <p>
+            Conecte o que você já conquistou às possibilidades do próximo
+            semestre.
+          </p>
+        </div>
+        <div className="trajectory-art" aria-hidden="true">
+          <svg viewBox="0 0 600 240" fill="none">
+            <defs>
+              <linearGradient id="trajectory" x1="0" y1="240" x2="600" y2="0">
+                <stop stopColor="#22a69b" />
+                <stop offset="1" stopColor="#5072df" />
+              </linearGradient>
+            </defs>
+            <path
+              className="trajectory-shadow"
+              d="M20 205 C130 205 90 135 205 135 S310 185 365 95 S475 40 580 25"
+            />
+            <path
+              className="trajectory-line"
+              d="M20 205 C130 205 90 135 205 135 S310 185 365 95 S475 40 580 25"
+            />
+            {[
+              [20, 205],
+              [205, 135],
+              [365, 95],
+              [580, 25],
+            ].map(([x, y], i) => (
+              <g key={x}>
+                <circle cx={x} cy={y} r="15" fill="white" />
+                <circle
+                  cx={x}
+                  cy={y}
+                  r="6"
+                  fill={i === 3 ? "#5072df" : "#22a69b"}
+                />
+              </g>
+            ))}
+          </svg>
+          <span className="trajectory-note note-start">
+            Cada conquista conta
+          </span>
+          <span className="trajectory-note note-end">
+            O próximo passo é seu ↗
+          </span>
+        </div>
+        <p className="login-caption">
+          Sistemas de Informação <span>·</span> CIn / UFPE
+        </p>
+      </section>
       <form
-        className="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+        className="login-panel glass-panel"
         onSubmit={async (event) => {
           event.preventDefault();
           setBusy(true);
@@ -117,12 +184,8 @@ function Login({
           }
         }}
       >
-        <p className="text-xs text-slate-500">
-          Sistemas de Informação · CIn/UFPE
-        </p>
-        <h1 className="mt-2 text-xl font-semibold">
-          Planejamento Acadêmico Integrado
-        </h1>
+        <span className="login-badge">PORTAL DO ESTUDANTE</span>
+        <h1 className="login-title">Planejamento Acadêmico Integrado</h1>
         <p className="mt-3 text-sm text-slate-600">
           Acesse seu histórico e suas alternativas para o semestre.
         </p>
@@ -154,7 +217,7 @@ function Login({
           />
         </label>
         <button className={`${primary} mt-5 w-full`} disabled={busy}>
-          Entrar
+          {busy ? "Entrando…" : "Entrar"}
         </button>
         <p className="mt-4 text-xs leading-5 text-slate-500">
           Contas e redefinição de senha são fornecidas pela coordenação.
@@ -269,14 +332,17 @@ function Student({
           .includes(search.toLocaleLowerCase("pt-BR")),
     ) ?? [];
   return (
-    <div className="min-h-dvh">
-      <header className="border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
+    <div className="app-shell min-h-dvh">
+      <header className="app-header border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs text-slate-500">
               Sistemas de Informação · CIn/UFPE
             </p>
-            <h1 className="mt-1 text-xl font-semibold">
+            <h1 className="app-title mt-1 text-xl font-semibold">
+              <span className="brand-dot" aria-hidden="true">
+                ↗
+              </span>
               Planejamento Acadêmico Integrado
             </h1>
           </div>
@@ -301,7 +367,7 @@ function Student({
         </div>
         {isStudent && (
           <nav
-            className="mt-5 flex gap-5 text-sm"
+            className="main-nav mt-5 flex gap-5 text-sm"
             aria-label="Navegação principal"
           >
             <NavLink to="/">Mapa curricular</NavLink>
@@ -309,11 +375,50 @@ function Student({
           </nav>
         )}
       </header>
-      <div className="border-b border-slate-200 px-5 py-2 text-xs text-slate-500 sm:px-8">
+      <div className="institution-note border-b border-slate-200 px-5 py-2 text-xs text-slate-500 sm:px-8">
         Grade demonstrativa, pendente de validação institucional · a matrícula
         oficial continua no SIGAA · a validação considera apenas pré-requisitos.
       </div>
-      <main className="mx-auto max-w-[1920px] px-4 py-5 sm:px-8">
+      <main className="workspace mx-auto max-w-[1920px] px-4 py-5 sm:px-8">
+        {isStudent && (
+          <section
+            className="workspace-intro"
+            aria-label="Resumo da trajetória"
+          >
+            <div>
+              <p className="eyebrow">SEU PERCURSO ACADÊMICO</p>
+              <h2>
+                Planeje possibilidades.
+                <br />
+                <span>Construa sua trajetória.</span>
+              </h2>
+              <p>
+                Explore a grade, conecte disciplinas e prepare seu próximo
+                semestre.
+              </p>
+            </div>
+            <div
+              className="progress-orbit"
+              style={
+                {
+                  "--progress": `${data?.courses.length ? (data.counts.completed / data.courses.length) * 100 : 0}%`,
+                } as React.CSSProperties
+              }
+            >
+              <div>
+                <strong>
+                  {data?.courses.length
+                    ? Math.round(
+                        (data.counts.completed / data.courses.length) * 100,
+                      )
+                    : 0}
+                  <small>%</small>
+                </strong>
+                <span>da grade concluída</span>
+              </div>
+            </div>
+          </section>
+        )}
         {failure && (
           <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
             <p role="alert" className="text-sm text-red-800">
@@ -354,7 +459,7 @@ function Student({
             )}
             <section
               id="alternatives"
-              className="mb-5 scroll-mt-5 rounded-xl border border-slate-200 bg-white p-4"
+              className="alternatives-panel glass-panel mb-5 scroll-mt-5 rounded-xl border border-slate-200 bg-white p-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="font-semibold">
@@ -565,7 +670,7 @@ function Student({
                 </div>
               )}
             </section>
-            <div className="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="metrics-grid mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
               {[
                 ["Aprovações oficiais", data?.counts.completed],
                 ["Aprovações simuladas", data?.counts.simulated],
@@ -574,14 +679,14 @@ function Student({
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="rounded-lg border border-slate-200 bg-white p-4"
+                  className="metric-card rounded-lg border border-slate-200 bg-white p-4"
                 >
                   <p className="text-2xl font-semibold">{value ?? "—"}</p>
                   <p className="mt-1 text-xs text-slate-500">{label}</p>
                 </div>
               ))}
             </div>
-            <div className="mb-5 flex flex-wrap gap-3">
+            <div className="filter-bar mb-5 flex flex-wrap gap-3">
               <label className="text-xs">
                 Buscar disciplina
                 <input
