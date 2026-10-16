@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test("planejar não desbloqueia dependentes; aprovação e restauração usam a API", async ({
   page,
 }, testInfo) => {
-  await page.goto("/");
+  await page.goto("/demo");
   await expect(
     page.getByRole("heading", { name: "Planejamento Acadêmico Integrado" }),
   ).toBeVisible();
@@ -45,7 +45,7 @@ test("filtros, troca de cenário e detalhes funcionam em tela pequena", async ({
   page,
 }, testInfo) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("/demo");
   await page
     .getByLabel("Cenário demonstrativo")
     .selectOption("desenvolvimento");
@@ -76,7 +76,7 @@ test("filtros, troca de cenário e detalhes funcionam em tela pequena", async ({
 
 test("falha da API apresenta recuperação", async ({ page }) => {
   await page.route("**/api/scenarios", (route) => route.abort());
-  await page.goto("/");
+  await page.goto("/demo");
   await expect(page.getByRole("alert")).toContainText("Não foi possível");
   await page.unroute("**/api/scenarios");
   await page.getByRole("button", { name: "Tentar novamente" }).click();

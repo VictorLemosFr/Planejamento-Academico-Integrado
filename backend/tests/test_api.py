@@ -1,54 +1,7 @@
 import pytest
-from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from sqlalchemy.pool import StaticPool
 
-from app.core.database import Base, get_session
+from app.core.database import get_session
 from app.main import app
-from app.modules.curriculum.models import Course, Prerequisite
-
-
-@pytest.fixture
-def client():
-    engine = create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
-    Base.metadata.create_all(engine)
-    with Session(engine) as session:
-        session.add_all(
-            [
-                Course(
-                    id="intro",
-                    name="Introdução",
-                    short_name="Introdução",
-                    hours=60,
-                    period=1,
-                    type="mandatory",
-                ),
-                Course(
-                    id="data",
-                    name="Estruturas",
-                    short_name="Estruturas",
-                    hours=60,
-                    period=2,
-                    type="mandatory",
-                ),
-            ]
-        )
-        session.flush()
-        session.add(Prerequisite(course_id="data", prerequisite_id="intro"))
-        session.commit()
-
-    def sessions():
-        with Session(engine) as session:
-            yield session
-
-    app.dependency_overrides[get_session] = sessions
-    with TestClient(app) as test_client:
-        yield test_client
-    app.dependency_overrides.clear()
-    engine.dispose()
 
 
 def test_catalog_returns_persisted_prerequisites(client):

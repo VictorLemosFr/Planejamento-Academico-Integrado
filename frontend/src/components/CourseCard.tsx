@@ -9,6 +9,16 @@ export const statusMeta: Record<
     icon: "✓",
     style: "border-emerald-200 bg-emerald-50 text-emerald-800",
   },
+  simulated: {
+    label: "Aprovação simulada",
+    icon: "◇",
+    style: "border-teal-300 bg-teal-50 text-teal-800",
+  },
+  in_progress: {
+    label: "Em andamento",
+    icon: "◷",
+    style: "border-sky-200 bg-sky-50 text-sky-800",
+  },
   available: {
     label: "Disponível",
     icon: "●",
@@ -49,7 +59,9 @@ export function CourseCard({
       aria-label={course.name}
       aria-pressed={selected}
       onClick={onSelect}
-      className={`w-full rounded-lg border p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${meta.style} ${selected ? "ring-2 ring-blue-600 ring-offset-2" : related ? "ring-1 ring-slate-400" : ""}`}
+      data-status={course.status}
+      data-related={related || undefined}
+      className={`course-card w-full rounded-lg border p-3 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md ${meta.style} ${selected ? "ring-2 ring-blue-600 ring-offset-2" : related ? "ring-1 ring-slate-400" : ""}`}
     >
       <div className="mb-2 flex items-center justify-between gap-2 text-[11px]">
         <span>

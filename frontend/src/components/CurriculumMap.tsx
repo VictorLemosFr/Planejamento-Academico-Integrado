@@ -25,7 +25,7 @@ export function CurriculumMap({
   );
 
   return (
-    <div className="min-w-0">
+    <div className="curriculum-map min-w-0">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold tracking-tight">
@@ -38,7 +38,7 @@ export function CurriculumMap({
         <span className="shrink-0 text-xs text-slate-500">8 períodos</span>
       </div>
       <div
-        className="overflow-x-auto rounded-xl border border-slate-200 bg-white p-4"
+        className="curriculum-board overflow-x-auto rounded-xl border border-slate-200 bg-white p-4"
         aria-label="Disciplinas por período"
         tabIndex={0}
       >
@@ -46,7 +46,11 @@ export function CurriculumMap({
           {periods.map((period) => {
             const items = courses.filter((course) => course.period === period);
             return (
-              <section key={period} aria-label={`${period}º período`}>
+              <section
+                className="period-column"
+                key={period}
+                aria-label={`${period}º período`}
+              >
                 <div className="mb-4 border-b border-slate-200 pb-3">
                   <h3 className="text-sm font-semibold">{period}º período</h3>
                   <p className="mt-1 text-[11px] text-slate-500">

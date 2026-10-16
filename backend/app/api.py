@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
+from app.core.config import get_settings
 from app.core.database import get_session
 from app.modules.curriculum.repository import list_courses
 from app.modules.planning.schemas import (
@@ -33,11 +34,15 @@ def curriculum(session: Database):
 
 @router.get("/scenarios", response_model=list[Scenario], tags=["Demonstração"])
 def scenarios():
+    if not get_settings().demo_enabled:
+        raise HTTPException(404, "Demonstração desativada.")
     return json.loads((Path(__file__).parent / "data" / "scenarios.json").read_text())
 
 
 @router.post("/simulations", response_model=SimulationResponse, tags=["Planejamento"])
 def simulation(payload: SimulationRequest, session: Database):
+    if not get_settings().demo_enabled:
+        raise HTTPException(404, "Demonstração desativada.")
     courses = list_courses(session)
     if not courses:
         raise HTTPException(503, "A grade está vazia. Carregue os dados de demonstração no banco.")

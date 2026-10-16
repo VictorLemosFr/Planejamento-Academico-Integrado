@@ -9,10 +9,16 @@ export function CourseDetails({
   onAction,
   onSelect,
   onClose,
+  readOnly = false,
+  official = false,
+  planned = false,
 }: {
   course: Course | undefined;
   courses: Course[];
   busy: boolean;
+  readOnly?: boolean;
+  official?: boolean;
+  planned?: boolean;
   onAction: (kind: ActionKind) => void;
   onSelect: (id: string) => void;
   onClose: () => void;
@@ -63,7 +69,7 @@ export function CourseDetails({
       )}
       <aside
         aria-label="Detalhes da disciplina"
-        className={`${course ? "fixed inset-x-0 bottom-0 z-50 max-h-[78dvh] rounded-t-2xl" : "hidden"} overflow-y-auto border border-slate-200 bg-white p-5 shadow-lg lg:sticky lg:top-5 lg:z-auto lg:block lg:max-h-[calc(100dvh-40px)] lg:self-start lg:rounded-xl lg:shadow-sm`}
+        className={`details-panel ${course ? "fixed inset-x-0 bottom-0 z-50 max-h-[78dvh] rounded-t-2xl" : "hidden"} overflow-y-auto border border-slate-200 bg-white p-5 shadow-lg lg:sticky lg:top-5 lg:z-auto lg:block lg:max-h-[calc(100dvh-40px)] lg:self-start lg:rounded-xl lg:shadow-sm`}
       >
         {!course ? (
           <div className="py-8">
@@ -163,50 +169,78 @@ export function CourseDetails({
               </p>
             )}
             <div className="mt-6 space-y-2">
-              {course.status !== "completed" && course.status !== "locked" && (
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => onAction("approve")}
-                  className={`${buttonStyle} border-blue-700! bg-blue-700! text-white hover:bg-blue-800!`}
-                >
-                  Simular aprovação
-                </button>
+              {official && (
+                <p className="text-sm text-emerald-800">
+                  Aprovação oficial · somente leitura
+                </p>
               )}
-              {["available", "pending"].includes(course.status) && (
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => onAction("plan")}
-                  className={buttonStyle}
-                >
-                  Planejar para próximo semestre
-                </button>
-              )}
-              {course.status === "planned" && (
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => onAction("unplan")}
-                  className={buttonStyle}
-                >
-                  Remover do planejamento
-                </button>
-              )}
-              {course.status === "completed" && (
-                <>
-                  <p className="text-xs leading-5 text-slate-500">
-                    Desfazer também remove aprovações e planos que dependam
-                    desta disciplina.
+              {readOnly && !official && (
+                <div className="rounded-lg bg-blue-50 p-3">
+                  <p className="text-sm leading-6 text-slate-700">
+                    Para simular a conclusão desta disciplina, crie ou abra uma
+                    alternativa. Depois selecione a disciplina e clique em
+                    “Simular aprovação”.
                   </p>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => onAction("revoke")}
-                    className={`${buttonStyle} text-amber-800`}
+                  <a
+                    href="#alternatives"
+                    onClick={onClose}
+                    className={`${buttonStyle} mt-3 block text-center text-blue-700`}
                   >
-                    Desfazer aprovação simulada
-                  </button>
+                    Criar ou abrir alternativa
+                  </a>
+                </div>
+              )}
+              {!readOnly && (
+                <>
+                  {!["completed", "simulated", "locked"].includes(
+                    course.status,
+                  ) && (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => onAction("approve")}
+                      className={`${buttonStyle} border-blue-700! bg-blue-700! text-white hover:bg-blue-800!`}
+                    >
+                      Simular aprovação
+                    </button>
+                  )}
+                  {["available", "pending"].includes(course.status) && (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => onAction("plan")}
+                      className={buttonStyle}
+                    >
+                      Planejar para próximo semestre
+                    </button>
+                  )}
+                  {(course.status === "planned" || planned) && (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => onAction("unplan")}
+                      className={buttonStyle}
+                    >
+                      Remover do planejamento
+                    </button>
+                  )}
+                  {(course.status === "simulated" ||
+                    (course.status === "completed" && !official)) && (
+                    <>
+                      <p className="text-xs leading-5 text-slate-500">
+                        Desfazer também remove aprovações e planos que dependam
+                        desta disciplina.
+                      </p>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => onAction("revoke")}
+                        className={`${buttonStyle} text-amber-800`}
+                      >
+                        Desfazer aprovação simulada
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </div>
