@@ -6,17 +6,18 @@ Projeto da disciplina **Integração e Evolução de Sistemas de Informação (I
 
 ## Estado atual
 
-A aplicação entrega **login → histórico importado → progressão → simulação → plano salvo → recuperação após novo acesso**, com contas locais provisionadas e dados pessoais no PostgreSQL.
+A aplicação entrega **cadastro ou login → histórico informado pelo estudante → progressão → simulação → plano salvo → recuperação após novo acesso**, com dados pessoais no PostgreSQL.
 
 - Mapa curricular por período, busca, filtros e detalhes de pré-requisitos.
 - Distribuição de cards por arraste, ordem e eletivas dentro do mapa, salva por alternativa; controles de movimentação também disponíveis no celular.
-- Aprovações oficiais somente leitura, disciplinas em andamento e aprovações hipotéticas distintas.
-- Importação JSON completa pela coordenação, transacional, versionada e idempotente.
+- Disciplinas aprovadas, em andamento e reprovadas informadas pelo estudante; aprovações hipotéticas ficam separadas nos planos.
+- Edição do próprio histórico por disciplina e semestre, transacional, versionada e idempotente. A importação JSON pela coordenação permanece para contas provisionadas anteriormente.
 - Várias alternativas para um semestre, com rascunhos locais, salvamento explícito, renomeação e exclusão.
 - Controle de versão para evitar sobrescritas; novas importações revalidam planos sem apagar escolhas.
 - Sessões opacas de oito horas, senhas Argon2, proteção de origem/CSRF e isolamento por estudante.
+- Cadastro público de estudantes com escolha entre CC, SI, IA e EC, semestre de ingresso e período atual, sem aprovação manual da matrícula.
 
-A grade de 56 disciplinas continua demonstrativa até validação institucional. A validação considera apenas pré-requisitos. Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, previsão e recomendações ficam para entregas posteriores. O protótipo HTML original permanece em `prototipo/`; a demonstração antiga exige configuração explícita.
+A grade de 56 disciplinas de SI continua demonstrativa até validação institucional. CC, IA e EC podem ser escolhidos no cadastro, mas ainda não possuem grade ou planejamento. A validação considera apenas pré-requisitos. Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, previsão e recomendações ficam para entregas posteriores. O protótipo HTML original permanece em `prototipo/`; a demonstração antiga exige configuração explícita.
 
 ## Stack
 
@@ -63,7 +64,7 @@ Acesse **http://127.0.0.1:5173**. O Vite encaminha `/api` para o FastAPI na port
 
 Encerre API e frontend com `Ctrl+C`. Pare o banco com `docker compose stop db`; os dados permanecem no volume.
 
-## Provisionar contas e importar histórico
+## Cadastro e histórico
 
 Após as migrações, provisione contas locais pelo terminal do backend:
 
@@ -74,9 +75,11 @@ uv run python -m app.accounts reset-password --email estudante@example.org
 uv run python -m app.accounts deactivate --email estudante@example.org
 ```
 
-Criação e redefinição solicitam a senha duas vezes, sem argumentos nem exibição. E-mail é normalizado para minúsculas; e-mail e matrícula são únicos. Senhas são protegidas com `pwdlib[argon2]`, conforme a [documentação do FastAPI](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/). Redefinição e desativação revogam todas as sessões. Não há cadastro público ou recuperação por e-mail nesta entrega.
+Criação e redefinição pela CLI solicitam a senha duas vezes, sem argumentos nem exibição. O estudante também pode criar uma conta pela tela inicial, informando e-mail, senha, matrícula, semestre de ingresso, período atual e curso; entra automaticamente após o cadastro. E-mail é normalizado para minúsculas; e-mail e matrícula são únicos. Senhas são protegidas com `pwdlib[argon2]`, conforme a [documentação do FastAPI](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/). Redefinição e desativação revogam todas as sessões. Não há confirmação ou recuperação por e-mail nesta entrega.
 
-A coordenação faz login e envia o JSON completo para `PUT /api/admin/students/{registration}/history`, com cookie, `Origin` permitido e `X-CSRF-Token`. Consulte [contratos e exemplo JSON](docs/api.md). O estudante entra na aplicação, vê o histórico oficial, cria alternativas e salva explicitamente os rascunhos. Dados fictícios de contas só são criados pelo servidor de testes, nunca pelo seed da grade.
+O estudante de SI edita o próprio histórico, registrando cadeira, semestre e situação (aprovada, cursando ou reprovada). Esses dados são autodeclarados, usados somente no planejamento e não alteram nem verificam o SIGAA. A importação administrativa legada aceita apenas contas criadas pela coordenação, para evitar vincular dados institucionais a uma matrícula autodeclarada. Para CC, IA e EC, a aplicação informa que a grade ainda não foi cadastrada e não permite planejar com a grade de SI.
+
+O endpoint administrativo legado continua disponível para contas provisionadas pela coordenação. Consulte [contratos e exemplo JSON](docs/api.md). O estudante entra na aplicação, registra suas tentativas, cria alternativas e salva explicitamente os rascunhos. Dados fictícios de contas só são criados pelo servidor de testes, nunca pelo seed da grade.
 
 Frontend e API devem compartilhar a origem pública. Configure `ALLOWED_ORIGINS` com essa origem e `ENVIRONMENT=production` em produção para cookies `Secure`; use HTTPS. Em desenvolvimento o proxy do Vite mantém a mesma origem. Para usar o Swagger local autenticado, inclua sua origem em `ALLOWED_ORIGINS` e envie o token CSRF nos pedidos de escrita.
 
@@ -117,7 +120,7 @@ TEST_DATABASE_URL=postgresql+psycopg://pai:pai@127.0.0.1:54329/pai npm test
 
 Os testes criam esquemas aleatórios e removem somente esses esquemas ao terminar. Cobrem banco vazio e grade existente, seed repetido, dois salvamentos concorrentes, importações simultâneas idênticas e reconexão do pool. Sem `TEST_DATABASE_URL`, os testes específicos de PostgreSQL são marcados como ignorados; a suíte de API usa SQLite em memória. Os testes de navegador incluem o fluxo persistido, duas alternativas, novo login, sessão expirada, conflito, histórico ausente e tela móvel, além das demonstrações antigas.
 
-Na validação local desta entrega, os 54 testes do backend passaram com PostgreSQL real, incluindo migrações, concorrência e preservação de dados. Os 3 testes de componentes e os 12 testes de navegador também passaram, com persistência em PostgreSQL. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem a distribuição de disciplinas e eletivas por alternativa, a ordem dos cards e a recuperação após novo login.
+Na validação local desta entrega, os 63 testes do backend passaram com PostgreSQL real, incluindo migrações, concorrência, cadastro e edição do histórico pelo estudante. Os 3 testes de componentes e os 14 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem o cadastro, a atualização do histórico, a distribuição de disciplinas e eletivas por alternativa, a ordem dos cards e a recuperação após novo login.
 
 ## Executar somente o protótipo original
 

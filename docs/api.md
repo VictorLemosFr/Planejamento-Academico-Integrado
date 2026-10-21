@@ -4,17 +4,35 @@ O contrato OpenAPI completo está em `/docs` e `/openapi.json`. A grade atual é
 
 ## Sessão e acesso
 
-- `POST /api/auth/login`: `{ "email": "aluno@example.org", "password": "senha" }`. Retorna `{ "user": { "id", "email", "role" }, "csrf_token" }` e cookie `pai_session`.
+- `POST /api/auth/login`: `{ "email": "aluno@example.org", "password": "senha" }`. Retorna `{ "user": { "id", "email", "role" }, "student": { "program" }, "csrf_token" }` e cookie `pai_session`. Para a coordenação, `student` é `null`.
+- `POST /api/auth/register`: `{ "email", "password", "registration", "start_term", "current_period", "program" }`, com `start_term` no formato `AAAA.1` ou `AAAA.2`, `program` igual a `CC`, `SI`, `IA` ou `EC` e `current_period` entre 1 e 20. Cria estudante sem aprovação manual da matrícula e retorna `201`, identidade e sessão. E-mail ou matrícula repetidos retornam `409`.
 - `GET /api/auth/me`: mesma resposta de identidade, sem renovar a expiração.
 - `POST /api/auth/logout`: revoga a sessão e limpa o cookie.
 
-Login exige `Origin` exatamente igual a uma entrada de `ALLOWED_ORIGINS`. Escritas autenticadas exigem também `X-CSRF-Token` retornado pelo login ou `/auth/me`. Clientes da coordenação devem guardar o cookie e enviar ambos os cabeçalhos. Swagger e scripts não recebem exceção a essas regras. Nenhum bearer token ou conclusão oficial enviada pelo cliente é aceito.
+Login e cadastro exigem `Origin` exatamente igual a uma entrada de `ALLOWED_ORIGINS`. Escritas autenticadas exigem também `X-CSRF-Token` retornado pelo login ou `/auth/me`. Clientes da coordenação devem guardar o cookie e enviar ambos os cabeçalhos. Swagger e scripts não recebem exceção a essas regras. Nenhum bearer token é aceito.
 
 As sessões duram oito horas. O banco armazena apenas SHA-256 do identificador aleatório da sessão. Cookies usam `HttpOnly`, `SameSite=Lax`, caminho `/` e `Secure` quando `ENVIRONMENT=production`. Respostas da API têm `Cache-Control: no-store`. Redefinição de senha e desativação pela CLI revogam todas as sessões da conta.
 
-## Histórico completo
+## Histórico informado pelo estudante
 
-`PUT /api/admin/students/{registration}/history` exige papel `coordination` e matrícula já provisionada. Exemplo fictício:
+`PUT /api/me/history` grava o histórico da própria sessão. O aluno informa semestre de ingresso, período atual e tentativas por cadeira; pode registrar aprovação, andamento e reprovação, inclusive tentativas da mesma cadeira em semestres diferentes. Exemplo:
+
+```json
+{
+  "start_term": "2024.1",
+  "current_period": 3,
+  "records": [
+    { "course_id": "ip", "academic_term": "2024.1", "status": "failed" },
+    { "course_id": "ip", "academic_term": "2024.2", "status": "completed" }
+  ]
+}
+```
+
+As tentativas devem pertencer à grade disponível e não podem anteceder o semestre de ingresso. O salvamento substitui a versão vigente; repetir o mesmo conteúdo é idempotente. Os dados são **autodeclarados** e servem apenas ao planejamento: não alteram nem comprovam o histórico do SIGAA. O semestre de ingresso também pode ser informado por contas antigas na primeira edição.
+
+## Importação administrativa legada
+
+`PUT /api/admin/students/{registration}/history` exige papel `coordination` e conta de estudante criada administrativamente. O endpoint não vincula dados institucionais a matrículas autodeclaradas no cadastro público. Para CC, IA e EC, a importação aguarda a grade do curso. Exemplo fictício:
 
 ```json
 {
@@ -34,12 +52,12 @@ Retorna `{ "revision": 1, "warnings": [], "unchanged": false }`. Campos extras, 
 
 Todo o arquivo é validado antes de mudar qualquer dado, e a troca é transacional. As versões anteriores são preservadas com autor, data, payload, registros e hash canônico SHA-256. Repetir o conteúdo vigente, inclusive com outra ordem dos registros, não cria versão. Reimportar um conteúdo antigo após outra versão cria uma revisão nova para restaurá-lo. A matrícula serializa importações e salvamentos concorrentes.
 
-Ausência de aprovação anterior de pré-requisito no histórico oficial gera aviso, sem rejeitar o arquivo. Aprovação prevalece sobre tentativas reprovadas ou em andamento. Na ausência de aprovação, o andamento é derivado da tentativa mais recente. Reprovações e disciplinas em andamento não liberam dependentes. Um histórico sem registros aparece como aguardando importação, mesmo se houver metadados de arquivo vazio.
+Ausência de aprovação anterior de pré-requisito no histórico gera aviso, sem rejeitar o arquivo. Aprovação prevalece sobre tentativas reprovadas ou em andamento. Na ausência de aprovação, o andamento é derivado da tentativa mais recente. Reprovações e disciplinas em andamento não liberam dependentes. Um histórico sem registros aparece como sem cadeiras registradas.
 
-- `GET /api/me/history`: `revision`, `awaiting_import`, `current_period`, `records`, `import` (autor, data, fonte, referência, hash) e `warnings`.
+- `GET /api/me/history`: `revision`, `awaiting_import` (sem tentativas), `start_term`, `current_period`, `records`, `import` (autor, data, fonte, referência, hash) e `warnings`.
 - `GET /api/me/progression`: mapa calculado a partir do histórico vigente, sem hipótese.
 
-O JSON representa uma importação da coordenação; não comprova integração automática com SIGAA.
+Nenhum dos dois caminhos comprova integração automática com SIGAA. A resposta identifica a fonte vigente em `import.source`.
 
 ## Alternativas do semestre
 
@@ -60,7 +78,7 @@ Todos os recursos são do estudante identificado pela sessão. Recursos de outra
 }
 ```
 
-`action` é opcional; `kind` aceita `approve`, `revoke`, `plan` e `unplan`. Aprovação oficial é somente leitura. Aprovações hipotéticas precisam de pré-requisitos coerentes; planejar não libera dependentes. `revoke` remove aprovações hipotéticas e escolhas planejadas dependentes, sem tocar no histórico.
+`action` é opcional; `kind` aceita `approve`, `revoke`, `plan` e `unplan`. Aprovações registradas no histórico são somente leitura dentro de uma alternativa; o aluno as altera no editor do histórico. Aprovações hipotéticas precisam de pré-requisitos coerentes; planejar não libera dependentes. `revoke` remove aprovações hipotéticas e escolhas planejadas dependentes, sem tocar no histórico.
 
 - `PUT /api/plans/{id}` grava o estado completo:
 
@@ -79,7 +97,7 @@ Retorna versão incrementada apenas após commit. Rascunho inválido recebe `422
 
 - `DELETE /api/plans/{id}?version=2`: exige versão atual e continua disponível para planos incompatíveis.
 
-Plano: `id`, `name`, `target_term`, `version`, `created_at`, `updated_at`, e avaliação contendo `current_period`, `history_revision`, `awaiting_import`, `official_completed_ids`, `in_progress_ids`, `hypothetical_ids`, `completed_ids` (união somente para exibição), `planned_ids`, `planned_hours`, `courses`, `counts`, `warnings`, `valid`, `problems` por disciplina. Estados do mapa: `completed` (oficial), `simulated`, `in_progress`, `planned`, `available`, `pending`, `locked`.
+Plano: `id`, `name`, `target_term`, `version`, `created_at`, `updated_at`, e avaliação contendo `current_period`, `history_revision`, `awaiting_import`, `official_completed_ids` (nome legado para aprovações registradas no histórico, inclusive autodeclaradas), `in_progress_ids`, `hypothetical_ids`, `completed_ids` (união somente para exibição), `planned_ids`, `planned_hours`, `courses`, `counts`, `warnings`, `valid`, `problems` por disciplina. Estados do mapa: `completed` (informada no histórico), `simulated`, `in_progress`, `planned`, `available`, `pending`, `locked`.
 
 Uma nova importação não edita planos. Consultas recalculam sua validade e apontam escolhas já concluídas, em andamento ou sem requisitos satisfeitos. Simulações aceitam esses rascunhos para permitir ajustes; somente um estado inteiro válido pode ser salvo. O frontend mantém alterações locais até “Salvar” e permite recarregar após conflitos, com aviso antes de descartar o rascunho.
 

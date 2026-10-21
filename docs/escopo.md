@@ -44,9 +44,9 @@ O mapeamento exato fornecido pela proposta é: F1 em Progressão; F2 e F7 em Pr�
 
 ## Primeira entrega funcional
 
-A aplicação React/Tailwind consulta o FastAPI e persiste dados no PostgreSQL. Contas locais provisionadas pela coordenação permitem acessar histórico importado por JSON, progressão, alternativas de um semestre e simulações. Aprovação oficial, aprovação hipotética e andamento têm estados distintos.
+A aplicação React/Tailwind consulta o FastAPI e persiste dados no PostgreSQL. Estudantes podem criar contas para CC, SI, IA e EC e informar seu histórico sem aprovação manual da matrícula. A grade demonstrativa e o planejamento estão disponíveis apenas para SI nesta entrega. Aprovações informadas, aprovações hipotéticas e andamento têm estados distintos.
 
-Planos são rascunhos até salvar. Nome, semestre, escolhas e hipóteses são persistidos por estudante, com controle de versão e revisão do histórico. Uma importação substitui o histórico vigente atomicamente, conserva suas versões e revalida os planos sem apagar escolhas. Planos incompatíveis ficam acessíveis para ajuste ou exclusão. A coordenação usa endpoints documentados e CLI, sem interface administrativa nova.
+Planos são rascunhos até salvar. Nome, semestre, escolhas e hipóteses são persistidos por estudante, com controle de versão e revisão do histórico. Cada salvamento do histórico informado substitui a versão vigente atomicamente, conserva versões anteriores e revalida os planos sem apagar escolhas. Planos incompatíveis ficam acessíveis para ajuste ou exclusão. A importação pela coordenação permanece apenas para contas criadas administrativamente.
 
 A grade continua demonstrativa e a validação considera apenas pré-requisitos. Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, recomendação personalizada, comparação lado a lado e previsão de conclusão permanecem fora desta entrega. A tabela anterior descreve o protótipo HTML preservado.
 
