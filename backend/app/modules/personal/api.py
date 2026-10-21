@@ -3,11 +3,20 @@ from secrets import token_urlsafe
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
 from sqlalchemy import delete, select
+from sqlalchemy.exc import IntegrityError
 
 from app.core.config import get_settings
 from app.modules.curriculum.repository import list_courses
 from app.modules.personal.models import LoginSession, Plan, Student, User, now
-from app.modules.personal.schemas import EvaluateDraft, HistoryPayload, Login, NewPlan, SavePlan
+from app.modules.personal.schemas import (
+    EvaluateDraft,
+    HistoryPayload,
+    Login,
+    NewPlan,
+    Register,
+    SavePlan,
+    SelfHistoryPayload,
+)
 from app.modules.personal.security import (
     COOKIE,
     DUMMY_HASH,
@@ -22,17 +31,25 @@ from app.modules.personal.service import evaluate, history_view, import_history,
 router = APIRouter(prefix="/api", tags=["Identidade, histórico e planos"])
 
 
-def user_view(user, login):
+def user_view(session, user, login):
+    student = session.scalar(select(Student).where(Student.user_id == user.id))
     return {
         "user": {"id": user.id, "email": user.email, "role": user.role},
+        "student": {
+            "program": student.program,
+        }
+        if student
+        else None,
         "csrf_token": login.csrf_token,
     }
 
 
-def student_for(session, user):
+def student_for(session, user, require_curriculum=True):
     student = session.scalar(select(Student).where(Student.user_id == user.id).with_for_update())
     if student is None:
         raise HTTPException(403, "Esta conta não possui perfil de estudante.")
+    if require_curriculum and student.program != "SI":
+        raise HTTPException(409, "A grade deste curso ainda não foi cadastrada.")
     return student
 
 
@@ -53,15 +70,7 @@ def require_version(plan, student, version, revision=None):
         )
 
 
-@router.post("/auth/login")
-def login(payload: Login, request: Request, response: Response, session: Database):
-    require_origin(request)
-    user = session.scalar(
-        select(User).where(User.email == payload.email.strip().lower()).with_for_update()
-    )
-    valid = passwords.verify(payload.password, user.password_hash if user else DUMMY_HASH)
-    if not valid or user is None or not user.active:
-        raise HTTPException(401, "E-mail ou senha inválidos.")
+def start_session(session, user, request, response):
     # Rotate any existing session in this browser, including a different account.
     session.execute(
         delete(LoginSession).where(
@@ -87,13 +96,53 @@ def login(payload: Login, request: Request, response: Response, session: Databas
         path="/",
     )
     response.headers["Cache-Control"] = "no-store"
-    return user_view(user, login_session)
+    return user_view(session, user, login_session)
+
+
+@router.post("/auth/register", status_code=201)
+def register(payload: Register, request: Request, response: Response, session: Database):
+    require_origin(request)
+    user = User(
+        email=payload.email,
+        password_hash=passwords.hash(payload.password),
+        role="student",
+    )
+    session.add(user)
+    try:
+        session.flush()
+        session.add(
+            Student(
+                user_id=user.id,
+                registration=payload.registration,
+                current_period=payload.current_period,
+                start_term=payload.start_term,
+                program=payload.program,
+                coordination_managed=False,
+            )
+        )
+        session.flush()
+    except IntegrityError as error:
+        session.rollback()
+        raise HTTPException(409, "E-mail ou matrícula já cadastrados.") from error
+    return start_session(session, user, request, response)
+
+
+@router.post("/auth/login")
+def login(payload: Login, request: Request, response: Response, session: Database):
+    require_origin(request)
+    user = session.scalar(
+        select(User).where(User.email == payload.email.strip().lower()).with_for_update()
+    )
+    valid = passwords.verify(payload.password, user.password_hash if user else DUMMY_HASH)
+    if not valid or user is None or not user.active:
+        raise HTTPException(401, "E-mail ou senha inválidos.")
+    return start_session(session, user, request, response)
 
 
 @router.get("/auth/me")
-def me(identity: Identity, response: Response):
+def me(identity: Identity, response: Response, session: Database):
     response.headers["Cache-Control"] = "no-store"
-    return user_view(*identity)
+    return user_view(session, *identity)
 
 
 @router.post("/auth/logout")
@@ -112,7 +161,21 @@ def logout(identity: Identity, session: Database, response: Response):
 
 @router.get("/me/history")
 def history(identity: Identity, session: Database):
-    return history_view(session, student_for(session, identity[0]))
+    return history_view(session, student_for(session, identity[0], require_curriculum=False))
+
+
+@router.put("/me/history")
+def save_own_history(payload: SelfHistoryPayload, identity: Identity, session: Database):
+    student = student_for(session, identity[0])
+    imported = HistoryPayload(
+        schema_version=1,
+        source="Informado pelo estudante",
+        source_reference="manual",
+        start_term=payload.start_term,
+        current_period=payload.current_period,
+        records=payload.records,
+    )
+    return import_history(session, student, identity[0], imported, list_courses(session))
 
 
 @router.get("/me/progression")
@@ -131,6 +194,10 @@ def upload_history(
     )
     if student is None:
         raise HTTPException(404, "Matrícula não provisionada.")
+    if not student.coordination_managed:
+        raise HTTPException(409, "Esta conta usa histórico informado pelo estudante.")
+    if student.program != "SI":
+        raise HTTPException(409, "A grade deste curso ainda não foi cadastrada.")
     return import_history(session, student, identity[0], payload, list_courses(session))
 
 

@@ -32,10 +32,14 @@ class Student(Base):
     __table_args__ = (
         CheckConstraint("current_period BETWEEN 1 AND 20", name="student_period"),
         CheckConstraint("history_revision >= 0", name="student_revision"),
+        CheckConstraint("program IN ('CC', 'SI', 'IA', 'EC')", name="student_program"),
     )
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=identifier)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), unique=True)
     registration: Mapped[str] = mapped_column(String(80), unique=True)
+    program: Mapped[str] = mapped_column(String(2), default="SI")
+    start_term: Mapped[str | None] = mapped_column(String(6), nullable=True)
+    coordination_managed: Mapped[bool] = mapped_column(default=True)
     current_period: Mapped[int] = mapped_column(default=1)
     history_revision: Mapped[int] = mapped_column(default=0)
 

@@ -1,6 +1,14 @@
+import re
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StringConstraints,
+    field_validator,
+    model_validator,
+)
 
 from app.modules.planning.schemas import SimulationAction
 
@@ -17,6 +25,31 @@ class Login(StrictModel):
     password: str = Field(min_length=1, max_length=1024)
 
 
+class Register(StrictModel):
+    email: str = Field(min_length=3, max_length=254)
+    password: str = Field(min_length=8, max_length=1024)
+    registration: str = Field(min_length=1, max_length=80)
+    current_period: int = Field(ge=1, le=20)
+    start_term: Term
+    program: Literal["CC", "SI", "IA", "EC"]
+
+    @field_validator("email")
+    @classmethod
+    def valid_email(cls, value):
+        value = value.strip().lower()
+        if not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", value):
+            raise ValueError("E-mail inválido.")
+        return value
+
+    @field_validator("registration")
+    @classmethod
+    def valid_registration(cls, value):
+        value = value.strip()
+        if not value:
+            raise ValueError("Informe a matrícula.")
+        return value
+
+
 class Record(StrictModel):
     course_id: CourseId
     academic_term: Term
@@ -28,7 +61,20 @@ class HistoryPayload(StrictModel):
     source: str = Field(min_length=1, max_length=120)
     source_reference: str = Field(min_length=1, max_length=255)
     current_period: int = Field(ge=1, le=20)
+    start_term: Term | None = None
     records: list[Record] = Field(max_length=2000)
+
+
+class SelfHistoryPayload(StrictModel):
+    start_term: Term
+    current_period: int = Field(ge=1, le=20)
+    records: list[Record] = Field(max_length=2000)
+
+    @model_validator(mode="after")
+    def attempts_after_entry(self):
+        if any(record.academic_term < self.start_term for record in self.records):
+            raise ValueError("O semestre da tentativa não pode ser anterior ao ingresso.")
+        return self
 
 
 class NewPlan(StrictModel):

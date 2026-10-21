@@ -566,7 +566,7 @@ def test_course_layout_migration_preserves_existing_plan(tmp_path):
                 "4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
             )
         )
-        command.upgrade(config, "head")
+        command.upgrade(config, "0004")
         result = connection.execute(
             text("SELECT name, version, course_layout FROM plans WHERE id='legacy'")
         ).one()

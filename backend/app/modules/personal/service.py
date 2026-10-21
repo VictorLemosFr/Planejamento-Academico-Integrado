@@ -24,6 +24,7 @@ def history_view(session, student):
         "revision": student.history_revision,
         "awaiting_import": imported is None or not imported.payload["records"],
         "current_period": student.current_period,
+        "start_term": student.start_term,
         "records": imported.payload["records"] if imported else [],
         "import": {
             "id": imported.id,
@@ -54,7 +55,7 @@ def official_sets(history):
 
 
 def import_history(session, student, author, payload, courses):
-    data = payload.model_dump()
+    data = payload.model_dump(exclude_none=True)
     graph = CurriculumGraph(courses)
     seen = set()
     for index, record in enumerate(data["records"]):
@@ -99,6 +100,8 @@ def import_history(session, student, author, payload, courses):
             )
     student.history_revision += 1
     student.current_period = data["current_period"]
+    if data.get("start_term") is not None:
+        student.start_term = data["start_term"]
     imported = HistoryImport(
         student_id=student.id,
         revision=student.history_revision,
@@ -162,9 +165,9 @@ def evaluate(
     for cid in hypothetical | planned:
         issues = []
         if cid in official:
-            issues.append("Disciplina já concluída no histórico oficial.")
+            issues.append("Disciplina já concluída no histórico registrado.")
         if cid in planned & ongoing:
-            issues.append("Disciplina em andamento no histórico oficial.")
+            issues.append("Disciplina em andamento no histórico registrado.")
         if cid in hypothetical & planned:
             issues.append("Disciplina simultaneamente planejada e aprovada na hipótese.")
         if graph.missing(cid, completed):
