@@ -4,6 +4,17 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.database import Base
 
 
+class Curriculum(Base):
+    __tablename__ = "curricula"
+    __table_args__ = (
+        CheckConstraint("program IN ('CC', 'SI', 'IA', 'EC')", name="curriculum_program"),
+    )
+    id: Mapped[str] = mapped_column(String(32), primary_key=True)
+    program: Mapped[str] = mapped_column(String(2))
+    valid_from: Mapped[str] = mapped_column(String(6))
+    source_url: Mapped[str] = mapped_column(String(512))
+
+
 class Course(Base):
     __tablename__ = "courses"
     __table_args__ = (
@@ -14,8 +25,15 @@ class Course(Base):
             "OR (type = 'elective' AND period IS NULL)",
             name="course_period",
         ),
+        CheckConstraint(
+            "prerequisite_status IN ('verified', 'unverified')",
+            name="course_prerequisite_status",
+        ),
     )
     id: Mapped[str] = mapped_column(String(40), primary_key=True)
+    curriculum_id: Mapped[str] = mapped_column(ForeignKey("curricula.id"), default="SI-demo")
+    source_code: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    prerequisite_status: Mapped[str] = mapped_column(String(12), default="unverified")
     name: Mapped[str] = mapped_column(String(255))
     short_name: Mapped[str] = mapped_column(String(100))
     hours: Mapped[int]

@@ -10,7 +10,7 @@ from sqlalchemy.pool import StaticPool
 
 from app.core.database import Base, get_session
 from app.main import app
-from app.modules.curriculum.models import Course, Prerequisite
+from app.modules.curriculum.models import Course, Curriculum, Prerequisite
 
 
 @pytest.fixture
@@ -52,6 +52,15 @@ def client(monkeypatch):
     if not url:
         Base.metadata.create_all(engine)
     with Session(engine) as session:
+        if session.get(Curriculum, "SI-demo") is None:
+            session.add(
+                Curriculum(
+                    id="SI-demo",
+                    program="SI",
+                    valid_from="0000.1",
+                    source_url="app/data/curriculum.json",
+                )
+            )
         session.add_all(
             [
                 Course(

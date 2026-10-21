@@ -42,11 +42,13 @@ def test_migrations_preserve_catalog_and_seed_is_idempotent(preexisting):
         if preexisting:
             with engine.begin() as connection:
                 config.attributes["connection"] = connection
-                command.upgrade(config, "0002")
-            with Session(engine) as db:
-                seed(db)
-                db.get(Course, "ip").name = "Institutional custom name"
-                db.commit()
+                command.upgrade(config, "0006")
+                connection.execute(
+                    text(
+                        "INSERT INTO courses (id, name, short_name, hours, period, type) "
+                        "VALUES ('ip', 'Institutional custom name', 'IP', 120, 1, 'mandatory')"
+                    )
+                )
         with engine.begin() as connection:
             config.attributes["connection"] = connection
             command.upgrade(config, "head")
