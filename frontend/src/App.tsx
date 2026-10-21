@@ -6,6 +6,7 @@ import type { ActionKind, Identity, Plan, Status } from "./types";
 import DemoApp from "./DemoApp";
 import { CurriculumMap } from "./components/CurriculumMap";
 import { CourseDetails } from "./components/CourseDetails";
+import { HistoryEditor } from "./components/HistoryEditor";
 import { moveCourse } from "./courseLayout";
 
 const input =
@@ -83,6 +84,18 @@ export default function App() {
         }}
       />
     );
+  if (identity.student && identity.student.program !== "SI")
+    return (
+      <PendingProgram
+        identity={identity}
+        onLogout={() => {
+          api.setCsrf("");
+          client.clear();
+          setIdentity(null);
+          setError("");
+        }}
+      />
+    );
   return (
     <Student
       key={identity.user.id}
@@ -97,6 +110,67 @@ export default function App() {
   );
 }
 
+const programNames: Record<"CC" | "SI" | "IA" | "EC", string> = {
+  CC: "Ciência da Computação",
+  SI: "Sistemas de Informação",
+  IA: "Inteligência Artificial",
+  EC: "Engenharia da Computação",
+};
+
+function PendingProgram({
+  identity,
+  onLogout,
+}: {
+  identity: Identity;
+  onLogout: () => void;
+}) {
+  const [failure, setFailure] = useState("");
+  const program = identity.student!.program;
+  return (
+    <div className="app-shell min-h-dvh">
+      <header className="app-header flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
+        <div>
+          <p className="text-xs text-slate-500">{programNames[program]}</p>
+          <h1 className="app-title mt-1 text-xl font-semibold">
+            Planejamento Acadêmico Integrado
+          </h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-slate-600">{identity.user.email}</span>
+          <button
+            className={button}
+            onClick={() =>
+              void api
+                .logout()
+                .then(onLogout)
+                .catch((error) => setFailure(error.message))
+            }
+          >
+            Sair
+          </button>
+        </div>
+      </header>
+      <main className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
+        {failure && (
+          <p role="alert" className="mb-4 text-sm text-red-700">
+            {failure}
+          </p>
+        )}
+        <section className="glass-panel rounded-xl p-7 sm:p-10">
+          <p className="eyebrow">{programNames[program]}</p>
+          <h2 className="mt-3 text-2xl font-semibold">
+            Grade de {program} ainda não cadastrada
+          </h2>
+          <p className="mt-3 text-slate-600">
+            A grade e o planejamento deste curso estarão disponíveis após o
+            cadastro da matriz curricular.
+          </p>
+        </section>
+      </main>
+    </div>
+  );
+}
+
 function Login({
   error,
   onLogin,
@@ -106,6 +180,12 @@ function Login({
 }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [registration, setRegistration] = useState("");
+  const [startTerm, setStartTerm] = useState("");
+  const [currentPeriod, setCurrentPeriod] = useState("1");
+  const [program, setProgram] = useState<"CC" | "SI" | "IA" | "EC">("SI");
+  const [registering, setRegistering] = useState(false);
   const [failure, setFailure] = useState("");
   const [busy, setBusy] = useState(false);
   return (
@@ -174,7 +254,7 @@ function Login({
           </span>
         </div>
         <p className="login-caption">
-          Sistemas de Informação <span>·</span> CIn / UFPE
+          CC <span>·</span> SI <span>·</span> IA <span>·</span> EC
         </p>
       </section>
       <form
@@ -184,8 +264,26 @@ function Login({
           setBusy(true);
           setFailure("");
           try {
-            onLogin(await api.login(email, password));
+            if (registering) {
+              if (password !== confirmPassword) {
+                setFailure("As senhas não coincidem.");
+                return;
+              }
+              onLogin(
+                await api.register({
+                  email,
+                  password,
+                  registration,
+                  start_term: startTerm,
+                  current_period: Number(currentPeriod),
+                  program,
+                }),
+              );
+            } else {
+              onLogin(await api.login(email, password));
+            }
             setPassword("");
+            setConfirmPassword("");
           } catch (error) {
             setFailure((error as Error).message);
           } finally {
@@ -196,7 +294,9 @@ function Login({
         <span className="login-badge">PORTAL DO ESTUDANTE</span>
         <h1 className="login-title">Planejamento Acadêmico Integrado</h1>
         <p className="mt-3 text-sm text-slate-600">
-          Acesse seu histórico e suas alternativas para o semestre.
+          {registering
+            ? "Crie sua conta e escolha seu curso para começar."
+            : "Acesse seu histórico e suas alternativas para o semestre."}
         </p>
         {(failure || error) && (
           <p role="alert" className="mt-4 text-sm text-red-700">
@@ -208,7 +308,7 @@ function Login({
           <input
             className={input}
             type="email"
-            autoComplete="username"
+            autoComplete="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -219,17 +319,97 @@ function Login({
           <input
             className={input}
             type="password"
-            autoComplete="current-password"
+            autoComplete={registering ? "new-password" : "current-password"}
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
+        {registering && (
+          <>
+            <label className="mt-4 block text-sm">
+              Confirmar senha
+              <input
+                className={input}
+                type="password"
+                autoComplete="new-password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </label>
+            <label className="mt-4 block text-sm">
+              Matrícula
+              <input
+                className={input}
+                required
+                maxLength={80}
+                value={registration}
+                onChange={(e) => setRegistration(e.target.value)}
+              />
+            </label>
+            <label className="mt-4 block text-sm">
+              Semestre de ingresso
+              <input
+                className={input}
+                required
+                placeholder="AAAA.1 ou AAAA.2"
+                pattern="[0-9]{4}\.[12]"
+                value={startTerm}
+                onChange={(e) => setStartTerm(e.target.value)}
+              />
+            </label>
+            <label className="mt-4 block text-sm">
+              Período atual
+              <input
+                className={input}
+                type="number"
+                min="1"
+                max="20"
+                required
+                value={currentPeriod}
+                onChange={(e) => setCurrentPeriod(e.target.value)}
+              />
+            </label>
+            <label className="mt-4 block text-sm">
+              Curso
+              <select
+                className={input}
+                value={program}
+                onChange={(e) => setProgram(e.target.value as typeof program)}
+              >
+                {Object.entries(programNames).map(([code, name]) => (
+                  <option key={code} value={code}>
+                    {code} · {name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        )}
         <button className={`${primary} mt-5 w-full`} disabled={busy}>
-          {busy ? "Entrando…" : "Entrar"}
+          {busy
+            ? registering
+              ? "Cadastrando…"
+              : "Entrando…"
+            : registering
+              ? "Cadastrar"
+              : "Entrar"}
+        </button>
+        <button
+          type="button"
+          className="mt-4 w-full text-sm font-medium text-blue-700"
+          onClick={() => {
+            setRegistering(!registering);
+            setFailure("");
+          }}
+        >
+          {registering ? "Já tenho conta" : "Criar conta"}
         </button>
         <p className="mt-4 text-xs leading-5 text-slate-500">
-          Contas e redefinição de senha são fornecidas pela coordenação.
+          {registering
+            ? "Após entrar, informe as cadeiras que você já cursou."
+            : "A redefinição de senha é feita pela coordenação."}
         </p>
       </form>
     </main>
@@ -254,6 +434,7 @@ function Student({
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
+  const [editingHistory, setEditingHistory] = useState(false);
   const isStudent = identity.user.role === "student";
   const history = useQuery({
     queryKey: ["history"],
@@ -377,7 +558,10 @@ function Student({
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs text-slate-500">
-              Sistemas de Informação · CIn/UFPE
+              {identity.student
+                ? programNames[identity.student.program]
+                : "Coordenação"}{" "}
+              · CIn/UFPE
             </p>
             <h1 className="app-title mt-1 text-xl font-semibold">
               <span className="brand-dot" aria-hidden="true">
@@ -416,8 +600,8 @@ function Student({
         )}
       </header>
       <div className="institution-note border-b border-slate-200 px-5 py-2 text-xs text-slate-500 sm:px-8">
-        Grade demonstrativa, pendente de validação institucional · a matrícula
-        oficial continua no SIGAA · a validação considera apenas pré-requisitos.
+        Grade demonstrativa, pendente de validação institucional · o histórico é
+        informado pelo estudante · a matrícula oficial continua no SIGAA.
       </div>
       <main className="workspace mx-auto max-w-[1920px] px-4 py-5 sm:px-8">
         {isStudent && (
@@ -488,13 +672,41 @@ function Student({
             {history.isLoading && <p role="status">Carregando histórico…</p>}
             {history.data?.awaiting_import && (
               <section className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4">
-                <h2 className="font-semibold">
-                  Aguardando importação do histórico
-                </h2>
+                <h2 className="font-semibold">Nenhuma cadeira registrada</h2>
                 <p className="mt-1 text-sm">
-                  Ainda não há registros acadêmicos. Aguarde a importação da
-                  coordenação. O mapa não contém aprovações oficiais.
+                  Informe as cadeiras que já cursou para atualizar seu mapa.
                 </p>
+              </section>
+            )}
+            {history.data && progression.data && (
+              <section className="mb-5">
+                {!editingHistory ? (
+                  <button
+                    className={button}
+                    onClick={() => {
+                      if (discard()) setEditingHistory(true);
+                    }}
+                  >
+                    Editar histórico
+                  </button>
+                ) : (
+                  <HistoryEditor
+                    history={history.data}
+                    courses={progression.data.courses}
+                    onCancel={() => setEditingHistory(false)}
+                    onSave={async (payload) => {
+                      await api.saveHistory(payload);
+                      open(null);
+                      await Promise.all([
+                        history.refetch(),
+                        progression.refetch(),
+                        plans.refetch(),
+                      ]);
+                      setEditingHistory(false);
+                      setNotice("Histórico salvo.");
+                    }}
+                  />
+                )}
               </section>
             )}
             <section
@@ -503,7 +715,7 @@ function Student({
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="font-semibold">
-                  {draft ? "Cenário hipotético" : "Histórico oficial"}
+                  {draft ? "Cenário hipotético" : "Histórico informado"}
                 </h2>
                 <span className="text-xs text-slate-500">
                   Revisão {data?.history_revision ?? "—"} ·{" "}
@@ -512,12 +724,15 @@ function Student({
               </div>
               {history.data?.import && (
                 <p className="mt-2 text-xs text-slate-500">
-                  Importado pela coordenação em{" "}
+                  Atualizado em{" "}
                   {new Date(history.data.import.created_at).toLocaleString(
                     "pt-BR",
                   )}{" "}
-                  · {history.data.import.source} · referência{" "}
-                  {history.data.import.source_reference}
+                  · {history.data.import.source}
+                  {history.data.import.source !==
+                    "Informado pelo estudante" && (
+                    <> · referência {history.data.import.source_reference}</>
+                  )}
                 </p>
               )}
               {history.data?.warnings.map((warning, i) => (
@@ -540,7 +755,7 @@ function Student({
                     );
                   }}
                 >
-                  <option value="">Histórico oficial</option>
+                  <option value="">Histórico informado</option>
                   {plans.data?.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.name} · {p.target_term}
@@ -746,7 +961,7 @@ function Student({
                 >
                   {[
                     ["all", "Todas"],
-                    ["completed", "Aprovação oficial"],
+                    ["completed", "Aprovação informada"],
                     ["simulated", "Aprovação simulada"],
                     ["in_progress", "Em andamento"],
                     ["planned", "Planejadas"],

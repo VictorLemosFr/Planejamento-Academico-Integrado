@@ -171,7 +171,7 @@ export function CourseDetails({
             <div className="mt-6 space-y-2">
               {official && (
                 <p className="text-sm text-emerald-800">
-                  Aprovação oficial · somente leitura
+                  Aprovação informada · somente leitura
                 </p>
               )}
               {readOnly && !official && (

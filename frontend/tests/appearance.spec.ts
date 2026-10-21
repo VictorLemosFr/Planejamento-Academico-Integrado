@@ -25,7 +25,7 @@ test("academic overview reflects official progression and stays usable on mobile
   await page.getByLabel("Senha", { exact: true }).fill("fictional-secret");
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
   await expect(
-    page.getByRole("heading", { name: "Histórico oficial", exact: true }),
+    page.getByRole("heading", { name: "Histórico informado", exact: true }),
   ).toBeVisible();
   const response = await page.request.get("/api/me/progression");
   expect(response.ok()).toBe(true);

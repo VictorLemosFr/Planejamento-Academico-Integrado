@@ -18,7 +18,7 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
 }) => {
   await signIn(page);
   await expect(
-    page.getByRole("heading", { name: "Histórico oficial", exact: true }),
+    page.getByRole("heading", { name: "Histórico informado", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("button", { name: "Introdução à Programação", exact: true })
@@ -117,7 +117,7 @@ test("empty history, student isolation and mobile layout", async ({
   await page.setViewportSize({ width: 390, height: 844 });
   await signIn(page, "student-b@example.test");
   await expect(
-    page.getByText("Aguardando importação do histórico", { exact: true }),
+    page.getByText("Nenhuma cadeira registrada", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByLabel("Alternativa salva").locator("option"),
@@ -170,6 +170,6 @@ test("expired session clears personal content", async ({ page }) => {
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await expect(page.getByLabel("E-mail")).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Histórico oficial", exact: true }),
+    page.getByRole("heading", { name: "Histórico informado", exact: true }),
   ).toHaveCount(0);
 });

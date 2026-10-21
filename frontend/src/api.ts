@@ -4,6 +4,7 @@ import type {
   SimulationRequest,
   Identity,
   History,
+  HistoryUpdate,
   Plan,
   Progression,
   Draft,
@@ -54,6 +55,7 @@ export async function request<T>(
     if (
       response.status === 401 &&
       path !== "/auth/login" &&
+      path !== "/auth/register" &&
       path !== "/auth/me"
     ) {
       window.dispatchEvent(new Event("session-expired"));
@@ -72,8 +74,18 @@ export const simulate = (payload: SimulationRequest) =>
 export const getMe = () => request<Identity>("/auth/me");
 export const login = (email: string, password: string) =>
   request<Identity>("/auth/login", body("POST", { email, password }));
+export const register = (payload: {
+  email: string;
+  password: string;
+  registration: string;
+  current_period: number;
+  start_term: string;
+  program: "CC" | "SI" | "IA" | "EC";
+}) => request<Identity>("/auth/register", body("POST", payload));
 export const logout = () => request("/auth/logout", body("POST"));
 export const getHistory = () => request<History>("/me/history");
+export const saveHistory = (payload: HistoryUpdate) =>
+  request<{ revision: number }>("/me/history", body("PUT", payload));
 export const getProgression = () => request<Progression>("/me/progression");
 export const getPlans = () => request<Plan[]>("/plans");
 export const getPlan = (id: string) => request<Plan>(`/plans/${id}`);

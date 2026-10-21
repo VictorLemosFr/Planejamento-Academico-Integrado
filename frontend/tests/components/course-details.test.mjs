@@ -58,7 +58,7 @@ test("official approvals remain read only and do not offer revocation", () => {
     course: { ...course, status: "completed" },
     official: true,
   });
-  assert.match(html, /Aprovação oficial/);
+  assert.match(html, /Aprovação informada/);
   assert.doesNotMatch(html, /Desfazer aprovação simulada/);
   assert.doesNotMatch(html, /Criar ou abrir alternativa/);
 });

@@ -47,12 +47,16 @@ export interface Simulation extends SimulationRequest {
 
 export interface Identity {
   user: { id: string; email: string; role: "student" | "coordination" };
+  student: {
+    program: "CC" | "SI" | "IA" | "EC";
+  } | null;
   csrf_token: string;
 }
 export interface History {
   revision: number;
   awaiting_import: boolean;
   current_period: number;
+  start_term: string | null;
   records: {
     course_id: string;
     academic_term: string;
@@ -65,6 +69,12 @@ export interface History {
     content_hash: string;
   } | null;
   warnings: { message: string; course_id: string; academic_term: string }[];
+}
+export type HistoryRecord = History["records"][number];
+export interface HistoryUpdate {
+  start_term: string;
+  current_period: number;
+  records: HistoryRecord[];
 }
 export type CourseLayout = Record<string, { period: number; order: number }>;
 
