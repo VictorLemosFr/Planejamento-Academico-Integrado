@@ -17,7 +17,7 @@ A aplicação entrega **cadastro ou login → histórico informado pelo estudant
 - Sessões opacas de oito horas, senhas Argon2, proteção de origem/CSRF e isolamento por estudante.
 - Cadastro público de estudantes com escolha entre CC, SI, IA e EC, semestre de ingresso e período atual, sem aprovação manual da matrícula.
 
-A grade de 56 disciplinas de SI continua demonstrativa até validação institucional. CC, IA e EC podem ser escolhidos no cadastro, mas ainda não possuem grade ou planejamento. A validação considera apenas pré-requisitos. Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, previsão e recomendações ficam para entregas posteriores. O protótipo HTML original permanece em `prototipo/`; a demonstração antiga exige configuração explícita.
+A grade de 56 disciplinas de SI continua demonstrativa. Foram transcritas as matrizes públicas atuais do CIn para CC (101 disciplinas), IA (70) e EC (147), incluindo obrigatórias e eletivas. CC e EC atendem ingressantes desde 2024.1; IA, desde 2025.1. Turmas anteriores podem criar conta, mas não recebem uma matriz inadequada. A transcrição ainda depende de conferência institucional. Os pré-requisitos de CC, IA e EC não estão confirmados nas fontes consultadas; o planejador sinaliza essa limitação e não comprova elegibilidade. Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, previsão e recomendações ficam para entregas posteriores. O protótipo HTML original permanece em `prototipo/`; a demonstração antiga exige configuração explícita.
 
 ## Stack
 
@@ -50,7 +50,7 @@ uv run python -m app.seed
 uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-O seed insere os dados demonstrativos ausentes, sem substituir registros existentes. Não o utilize como rotina de atualização de uma grade oficial. A API oferece documentação interativa em `http://127.0.0.1:8000/docs`.
+O seed insere as disciplinas ausentes das quatro matrizes, sem substituir registros existentes. Não o utilize como rotina de atualização de uma grade oficial. A API oferece documentação interativa em `http://127.0.0.1:8000/docs`.
 
 Em outro terminal, inicie o frontend:
 
@@ -77,7 +77,9 @@ uv run python -m app.accounts deactivate --email estudante@example.org
 
 Criação e redefinição pela CLI solicitam a senha duas vezes, sem argumentos nem exibição. O estudante também pode criar uma conta pela tela inicial, informando e-mail, senha, matrícula, semestre de ingresso, período atual e curso; entra automaticamente após o cadastro. E-mail é normalizado para minúsculas; e-mail e matrícula são únicos. Senhas são protegidas com `pwdlib[argon2]`, conforme a [documentação do FastAPI](https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/). Redefinição e desativação revogam todas as sessões. Não há confirmação ou recuperação por e-mail nesta entrega.
 
-O estudante de SI edita o próprio histórico, registrando cadeira, semestre e situação (aprovada, cursando ou reprovada). Esses dados são autodeclarados, usados somente no planejamento e não alteram nem verificam o SIGAA. A importação administrativa legada aceita apenas contas criadas pela coordenação, para evitar vincular dados institucionais a uma matrícula autodeclarada. Para CC, IA e EC, a aplicação informa que a grade ainda não foi cadastrada e não permite planejar com a grade de SI.
+O estudante de qualquer curso com matriz atendida edita o próprio histórico, registrando cadeira, semestre e situação (aprovada, cursando ou reprovada). Esses dados são autodeclarados, usados somente no planejamento e não alteram nem verificam o SIGAA. A importação administrativa legada aceita apenas contas criadas pela coordenação, para evitar vincular dados institucionais a uma matrícula autodeclarada. A API restringe histórico e planos às disciplinas da matriz do estudante.
+
+As fontes das matrizes atuais são as páginas do CIn para [CC](https://portal.cin.ufpe.br/graduacao/ciencia-da-computacao/), [IA](https://portal.cin.ufpe.br/graduacao/inteligencia-artificial/) e [EC](https://portal.cin.ufpe.br/graduacao/engenharia-da-computacao/). A página de IA não informa a carga horária de CIN0134; o valor de 60h foi conferido no [registro público de disciplinas do SIGAA](https://sigaa.ufpe.br/sigaa/public/docente/disciplinas.jsf?siape=1039616). A página de IA também repete o código CIN0123 para cadeiras diferentes, por isso os IDs internos são distintos. Nenhum pré-requisito dessas três matrizes foi inferido a partir da ordem dos períodos.
 
 O endpoint administrativo legado continua disponível para contas provisionadas pela coordenação. Consulte [contratos e exemplo JSON](docs/api.md). O estudante entra na aplicação, registra suas tentativas, cria alternativas e salva explicitamente os rascunhos. Dados fictícios de contas só são criados pelo servidor de testes, nunca pelo seed da grade.
 
@@ -120,7 +122,7 @@ TEST_DATABASE_URL=postgresql+psycopg://pai:pai@127.0.0.1:54329/pai npm test
 
 Os testes criam esquemas aleatórios e removem somente esses esquemas ao terminar. Cobrem banco vazio e grade existente, seed repetido, dois salvamentos concorrentes, importações simultâneas idênticas e reconexão do pool. Sem `TEST_DATABASE_URL`, os testes específicos de PostgreSQL são marcados como ignorados; a suíte de API usa SQLite em memória. Os testes de navegador incluem o fluxo persistido, duas alternativas, novo login, sessão expirada, conflito, histórico ausente e tela móvel, além das demonstrações antigas.
 
-Na validação local desta entrega, os 63 testes do backend passaram com PostgreSQL real, incluindo migrações, concorrência, cadastro e edição do histórico pelo estudante. Os 3 testes de componentes e os 14 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem o cadastro, a atualização do histórico, a distribuição de disciplinas e eletivas por alternativa, a ordem dos cards e a recuperação após novo login.
+Na validação local desta entrega, os 69 testes do backend passaram com PostgreSQL real, incluindo migrações, concorrência, isolamento entre matrizes, cadastro e edição do histórico pelo estudante. Os 3 testes de componentes e os 17 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem cadastro, histórico e planos nos quatro cursos, distribuição de disciplinas e eletivas por alternativa, ordem dos cards e recuperação após novo login.
 
 ## Executar somente o protótipo original
 

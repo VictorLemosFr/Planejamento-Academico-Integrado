@@ -1,13 +1,15 @@
 # API: identidade, histórico e planos
 
-O contrato OpenAPI completo está em `/docs` e `/openapi.json`. A grade atual é demonstrativa e ainda depende de validação institucional. A validação considera **somente pré-requisitos**, sem oferta, horários ou limites institucionais de carga.
+O contrato OpenAPI completo está em `/docs` e `/openapi.json`. SI usa grade demonstrativa; CC, IA e EC usam transcrições das matrizes atuais publicadas pelo CIn. Todas ainda dependem de conferência institucional. O planejamento considera apenas pré-requisitos cadastrados; os das três novas matrizes ainda não foram confirmados. Não há validação de oferta, horários ou limites institucionais de carga.
 
 ## Sessão e acesso
 
-- `POST /api/auth/login`: `{ "email": "aluno@example.org", "password": "senha" }`. Retorna `{ "user": { "id", "email", "role" }, "student": { "program" }, "csrf_token" }` e cookie `pai_session`. Para a coordenação, `student` é `null`.
+- `POST /api/auth/login`: `{ "email": "aluno@example.org", "password": "senha" }`. Retorna `{ "user": { "id", "email", "role" }, "student": { "program", "curriculum": { "available", "id", "valid_from", "source_url" } }, "csrf_token" }` e cookie `pai_session`. Para a coordenação, `student` é `null`.
 - `POST /api/auth/register`: `{ "email", "password", "registration", "start_term", "current_period", "program" }`, com `start_term` no formato `AAAA.1` ou `AAAA.2`, `program` igual a `CC`, `SI`, `IA` ou `EC` e `current_period` entre 1 e 20. Cria estudante sem aprovação manual da matrícula e retorna `201`, identidade e sessão. E-mail ou matrícula repetidos retornam `409`.
 - `GET /api/auth/me`: mesma resposta de identidade, sem renovar a expiração.
 - `POST /api/auth/logout`: revoga a sessão e limpa o cookie.
+
+CC e EC selecionam a matriz para ingressos a partir de `2024.1`; IA, a partir de `2025.1`. SI conserva a grade demonstrativa. Para turmas anteriores ou matriz ainda não carregada, `student.curriculum.available` é `false`; leitura de histórico continua possível, mas escrita e planejamento retornam `409`.
 
 Login e cadastro exigem `Origin` exatamente igual a uma entrada de `ALLOWED_ORIGINS`. Escritas autenticadas exigem também `X-CSRF-Token` retornado pelo login ou `/auth/me`. Clientes da coordenação devem guardar o cookie e enviar ambos os cabeçalhos. Swagger e scripts não recebem exceção a essas regras. Nenhum bearer token é aceito.
 
@@ -28,11 +30,11 @@ As sessões duram oito horas. O banco armazena apenas SHA-256 do identificador a
 }
 ```
 
-As tentativas devem pertencer à grade disponível e não podem anteceder o semestre de ingresso. O salvamento substitui a versão vigente; repetir o mesmo conteúdo é idempotente. Os dados são **autodeclarados** e servem apenas ao planejamento: não alteram nem comprovam o histórico do SIGAA. O semestre de ingresso também pode ser informado por contas antigas na primeira edição.
+As tentativas devem pertencer à matriz do estudante e não podem anteceder o semestre de ingresso. O salvamento substitui a versão vigente; repetir o mesmo conteúdo é idempotente. Os dados são **autodeclarados** e servem apenas ao planejamento: não alteram nem comprovam o histórico do SIGAA. O semestre de ingresso também pode ser informado por contas antigas na primeira edição.
 
 ## Importação administrativa legada
 
-`PUT /api/admin/students/{registration}/history` exige papel `coordination` e conta de estudante criada administrativamente. O endpoint não vincula dados institucionais a matrículas autodeclaradas no cadastro público. Para CC, IA e EC, a importação aguarda a grade do curso. Exemplo fictício:
+`PUT /api/admin/students/{registration}/history` exige papel `coordination` e conta de estudante criada administrativamente. O endpoint não vincula dados institucionais a matrículas autodeclaradas no cadastro público e aceita apenas IDs da matriz do estudante. Exemplo fictício de SI:
 
 ```json
 {
