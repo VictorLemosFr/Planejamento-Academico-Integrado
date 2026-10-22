@@ -6,6 +6,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 
 from app.core.config import get_settings
+from app.modules.curriculum.models import Curriculum
 from app.modules.curriculum.repository import list_courses
 from app.modules.personal.models import LoginSession, Plan, Student, User, now
 from app.modules.personal.schemas import (
@@ -37,6 +38,7 @@ def user_view(session, user, login):
         "user": {"id": user.id, "email": user.email, "role": user.role},
         "student": {
             "program": student.program,
+            "curriculum": curriculum_view(session, student),
         }
         if student
         else None,
@@ -44,13 +46,55 @@ def user_view(session, user, login):
     }
 
 
+def student_curriculum(session, student):
+    if student.start_term is None and student.program != "SI":
+        return None
+    return session.scalar(
+        select(Curriculum)
+        .where(
+            Curriculum.program == student.program,
+            Curriculum.valid_from <= (student.start_term or "0000.1"),
+        )
+        .order_by(Curriculum.valid_from.desc())
+    )
+
+
+def curriculum_view(session, student):
+    curriculum = student_curriculum(session, student)
+    if curriculum:
+        return {
+            "available": True,
+            "id": curriculum.id,
+            "valid_from": curriculum.valid_from,
+            "source_url": curriculum.source_url,
+        }
+    earliest = session.scalar(
+        select(Curriculum)
+        .where(Curriculum.program == student.program)
+        .order_by(Curriculum.valid_from)
+    )
+    return {
+        "available": False,
+        "id": None,
+        "valid_from": earliest.valid_from if earliest else None,
+        "source_url": None,
+    }
+
+
 def student_for(session, user, require_curriculum=True):
     student = session.scalar(select(Student).where(Student.user_id == user.id).with_for_update())
     if student is None:
         raise HTTPException(403, "Esta conta não possui perfil de estudante.")
-    if require_curriculum and student.program != "SI":
-        raise HTTPException(409, "A grade deste curso ainda não foi cadastrada.")
+    if require_curriculum and student_curriculum(session, student) is None:
+        raise HTTPException(409, "Não há matriz curricular para este curso e semestre de ingresso.")
     return student
+
+
+def courses_for(session, student):
+    curriculum = student_curriculum(session, student)
+    if curriculum is None:
+        raise HTTPException(409, "Não há matriz curricular para este curso e semestre de ingresso.")
+    return list_courses(session, curriculum.id)
 
 
 def own_plan(session, student, plan_id):
@@ -175,12 +219,13 @@ def save_own_history(payload: SelfHistoryPayload, identity: Identity, session: D
         current_period=payload.current_period,
         records=payload.records,
     )
-    return import_history(session, student, identity[0], imported, list_courses(session))
+    return import_history(session, student, identity[0], imported, courses_for(session, student))
 
 
 @router.get("/me/progression")
 def progression(identity: Identity, session: Database):
-    return evaluate(list_courses(session), history_view(session, student_for(session, identity[0])))
+    student = student_for(session, identity[0])
+    return evaluate(courses_for(session, student), history_view(session, student))
 
 
 @router.put("/admin/students/{registration}/history")
@@ -196,15 +241,13 @@ def upload_history(
         raise HTTPException(404, "Matrícula não provisionada.")
     if not student.coordination_managed:
         raise HTTPException(409, "Esta conta usa histórico informado pelo estudante.")
-    if student.program != "SI":
-        raise HTTPException(409, "A grade deste curso ainda não foi cadastrada.")
-    return import_history(session, student, identity[0], payload, list_courses(session))
+    return import_history(session, student, identity[0], payload, courses_for(session, student))
 
 
 @router.get("/plans")
 def plans(identity: Identity, session: Database):
     student = student_for(session, identity[0])
-    courses = list_courses(session)
+    courses = courses_for(session, student)
     return [
         plan_view(session, student, plan, courses)
         for plan in session.scalars(
@@ -219,7 +262,7 @@ def create_plan(payload: NewPlan, identity: Identity, session: Database):
     plan = Plan(student_id=student.id, **payload.model_dump())
     session.add(plan)
     session.flush()
-    result = plan_view(session, student, plan, list_courses(session))
+    result = plan_view(session, student, plan, courses_for(session, student))
     session.commit()
     return result
 
@@ -227,7 +270,9 @@ def create_plan(payload: NewPlan, identity: Identity, session: Database):
 @router.get("/plans/{plan_id}")
 def get_plan(plan_id: str, identity: Identity, session: Database):
     student = student_for(session, identity[0])
-    return plan_view(session, student, own_plan(session, student, plan_id), list_courses(session))
+    return plan_view(
+        session, student, own_plan(session, student, plan_id), courses_for(session, student)
+    )
 
 
 @router.post("/plans/{plan_id}/simulations")
@@ -237,7 +282,7 @@ def simulation(plan_id: str, payload: EvaluateDraft, identity: Identity, session
     require_version(plan, student, payload.version, payload.history_revision)
     try:
         return evaluate(
-            list_courses(session),
+            courses_for(session, student),
             history_view(session, student),
             payload.hypothetical_ids,
             payload.planned_ids,
@@ -257,7 +302,7 @@ def save_plan(plan_id: str, payload: SavePlan, identity: Identity, session: Data
     student = student_for(session, identity[0])
     plan = own_plan(session, student, plan_id)
     require_version(plan, student, payload.version, payload.history_revision)
-    courses = list_courses(session)
+    courses = courses_for(session, student)
     try:
         evaluated = evaluate(
             courses,

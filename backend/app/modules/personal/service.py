@@ -11,6 +11,10 @@ from app.modules.personal.models import AcademicRecord, HistoryImport
 from app.modules.progression.service import course_status
 
 WARNING = "A oferta ainda não está disponível. A validação considera apenas pré-requisitos."
+UNVERIFIED_PREREQUISITES = (
+    "Os pré-requisitos desta matriz ainda não foram confirmados; "
+    "o planejamento não comprova elegibilidade para matrícula."
+)
 
 
 def history_view(session, student):
@@ -220,7 +224,12 @@ def evaluate(
         },
         "valid": not problems,
         "problems": problems,
-        "warnings": [WARNING],
+        "warnings": [WARNING]
+        + (
+            [UNVERIFIED_PREREQUISITES]
+            if any(course.get("prerequisite_status") == "unverified" for course in courses)
+            else []
+        ),
     }
 
 

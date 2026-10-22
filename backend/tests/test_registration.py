@@ -17,7 +17,8 @@ def test_signup_creates_student_and_session(client):
     result = signup(client)
     assert result.status_code == 201, result.text
     assert result.json()["user"]["email"] == "new.student@example.org"
-    assert result.json()["student"] == {"program": "SI"}
+    assert result.json()["student"]["program"] == "SI"
+    assert result.json()["student"]["curriculum"]["id"] == "SI-demo"
     assert result.json()["csrf_token"]
     assert client.get("/api/auth/me").json()["student"] == result.json()["student"]
     assert client.get("/api/me/progression").status_code == 200
@@ -177,26 +178,94 @@ def test_old_admin_import_remains_idempotent_without_start_term(accounts):
     assert result.json()["unchanged"] is True
 
 
-def test_other_programs_never_receive_si_planning(client):
-    for program in ("CC", "IA", "EC"):
+def test_current_programs_use_only_their_own_catalog_and_plans(client):
+    from app.core.database import get_session
+    from app.main import app
+    from app.seed import seed
+
+    with next(app.dependency_overrides[get_session]()) as session:
+        seed(session)
+    for program, year, own_id, other_id in (
+        ("CC", "2024.1", "cc:cin0133", "ia:cin0133"),
+        ("IA", "2025.1", "ia:cin0133", "ec:cin0001"),
+        ("EC", "2024.1", "ec:cin0001", "cc:cin0133"),
+    ):
         result = signup(
             client,
             email=f"{program}@example.org",
             registration=f"registration-{program}",
             program=program,
+            start_term=year,
         )
         assert result.status_code == 201, result.text
         assert result.json()["student"]["program"] == program
-        assert client.get("/api/me/progression").status_code == 409
-        assert client.get("/api/plans").status_code == 409
+        headers = {**ORIGIN, "X-CSRF-Token": result.json()["csrf_token"]}
+        progression = client.get("/api/me/progression")
+        assert progression.status_code == 200, progression.text
+        ids = {course["id"] for course in progression.json()["courses"]}
+        assert own_id in ids and other_id not in ids
+        report = {
+            "start_term": year,
+            "current_period": 3,
+            "records": [{"course_id": own_id, "academic_term": year, "status": "completed"}],
+        }
+        assert client.put("/api/me/history", headers=headers, json=report).status_code == 200
         assert (
-            client.post(
-                "/api/plans",
-                headers={**ORIGIN, "X-CSRF-Token": result.json()["csrf_token"]},
-                json={"name": "Wrong map", "target_term": "2026.2"},
+            client.put(
+                "/api/me/history",
+                headers=headers,
+                json={**report, "records": [{**report["records"][0], "course_id": other_id}]},
             ).status_code
-            == 409
+            == 422
         )
+        assert client.get("/api/me/history").json()["revision"] == 1
+        plan = client.post(
+            "/api/plans", headers=headers, json={"name": "Meu plano", "target_term": "2026.2"}
+        )
+        assert plan.status_code == 201, plan.text
+        invalid_plan = client.put(
+            f"/api/plans/{plan.json()['id']}",
+            headers=headers,
+            json={
+                "name": "Inválido",
+                "target_term": "2026.2",
+                "version": 1,
+                "history_revision": 1,
+                "planned_ids": [other_id],
+                "hypothetical_ids": [],
+            },
+        )
+        assert invalid_plan.status_code == 422
+
+
+def test_older_cohorts_do_not_receive_current_matrix(client):
+    from app.core.database import get_session
+    from app.main import app
+    from app.seed import seed
+
+    with next(app.dependency_overrides[get_session]()) as session:
+        seed(session)
+    for program, term, available_since in (
+        ("CC", "2023.2", "2024.1"),
+        ("EC", "2023.2", "2024.1"),
+        ("IA", "2024.2", "2025.1"),
+    ):
+        result = signup(
+            client,
+            email=f"old-{program}@example.org",
+            registration=f"old-{program}",
+            program=program,
+            start_term=term,
+        )
+        assert result.status_code == 201
+        assert result.json()["student"]["curriculum"] == {
+            "available": False,
+            "id": None,
+            "valid_from": available_since,
+            "source_url": None,
+        }
+        assert client.get("/api/me/history").status_code == 200
+        assert client.get("/api/me/progression").status_code == 409
 
 
 def test_migration_assigns_existing_students_to_si_without_start_term(tmp_path):
@@ -215,7 +284,7 @@ def test_migration_assigns_existing_students_to_si_without_start_term(tmp_path):
         connection.execute(text("CREATE TABLE students (id VARCHAR(36) PRIMARY KEY)"))
         command.stamp(config, "0004")
         connection.execute(text("INSERT INTO students (id) VALUES ('legacy')"))
-        command.upgrade(config, "head")
+        command.upgrade(config, "0006")
         result = connection.execute(
             text("SELECT program, start_term, coordination_managed FROM students WHERE id='legacy'")
         ).one()
@@ -242,7 +311,7 @@ def test_migration_preserves_public_account_origin(tmp_path):
         connection.execute(
             text("INSERT INTO students (id, registration_verified) VALUES ('public', 0)")
         )
-        command.upgrade(config, "head")
+        command.upgrade(config, "0006")
         managed = connection.execute(
             text("SELECT coordination_managed FROM students WHERE id='public'")
         ).scalar_one()
