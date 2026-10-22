@@ -122,7 +122,7 @@ TEST_DATABASE_URL=postgresql+psycopg://pai:pai@127.0.0.1:54329/pai npm test
 
 Os testes criam esquemas aleatórios e removem somente esses esquemas ao terminar. Cobrem banco vazio e grade existente, seed repetido, dois salvamentos concorrentes, importações simultâneas idênticas e reconexão do pool. Sem `TEST_DATABASE_URL`, os testes específicos de PostgreSQL são marcados como ignorados; a suíte de API usa SQLite em memória. Os testes de navegador incluem o fluxo persistido, duas alternativas, novo login, sessão expirada, conflito, histórico ausente e tela móvel, além das demonstrações antigas.
 
-Na validação local desta entrega, os 69 testes do backend passaram com PostgreSQL real, incluindo migrações, concorrência, isolamento entre matrizes, cadastro e edição do histórico pelo estudante. Os 3 testes de componentes e os 17 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem cadastro, histórico e planos nos quatro cursos, distribuição de disciplinas e eletivas por alternativa, ordem dos cards e recuperação após novo login.
+Na validação local desta entrega, os 70 testes do backend passaram com PostgreSQL real, incluindo migrações, concorrência, isolamento entre matrizes, cadastro e edição do histórico pelo estudante. Os 3 testes de componentes e os 17 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem cadastro, histórico e planos nos quatro cursos, distribuição de disciplinas e eletivas por alternativa, ordem dos cards e recuperação após novo login.
 
 ## Executar somente o protótipo original
 
