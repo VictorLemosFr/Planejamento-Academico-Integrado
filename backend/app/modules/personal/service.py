@@ -10,7 +10,7 @@ from app.modules.constraints.service import CurriculumGraph
 from app.modules.personal.models import AcademicRecord, HistoryImport
 from app.modules.progression.service import course_status
 
-WARNING = "A oferta ainda não está disponível. A validação considera apenas pré-requisitos."
+WARNING = "A oferta ainda não está disponível. A validação considera apenas pré-requisitos cadastrados."
 UNVERIFIED_PREREQUISITES = (
     "Os pré-requisitos desta matriz ainda não foram confirmados; "
     "o planejamento não comprova elegibilidade para matrícula."
