@@ -268,6 +268,25 @@ def test_older_cohorts_do_not_receive_current_matrix(client):
         assert client.get("/api/me/progression").status_code == 409
 
 
+def test_history_edit_cannot_switch_to_unsupported_cohort(client):
+    from app.core.database import get_session
+    from app.main import app
+    from app.seed import seed
+
+    with next(app.dependency_overrides[get_session]()) as session:
+        seed(session)
+    result = signup(client, program="IA", start_term="2025.1")
+    headers = {**ORIGIN, "X-CSRF-Token": result.json()["csrf_token"]}
+    response = client.put(
+        "/api/me/history",
+        headers=headers,
+        json={"start_term": "2024.2", "current_period": 2, "records": []},
+    )
+    assert response.status_code == 409
+    assert client.get("/api/me/history").json()["revision"] == 0
+    assert client.get("/api/me/progression").status_code == 200
+
+
 def test_migration_assigns_existing_students_to_si_without_start_term(tmp_path):
     from pathlib import Path
 

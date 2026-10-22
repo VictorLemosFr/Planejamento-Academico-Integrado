@@ -46,14 +46,15 @@ def user_view(session, user, login):
     }
 
 
-def student_curriculum(session, student):
-    if student.start_term is None and student.program != "SI":
+def student_curriculum(session, student, start_term=None):
+    term = start_term or student.start_term
+    if term is None and student.program != "SI":
         return None
     return session.scalar(
         select(Curriculum)
         .where(
             Curriculum.program == student.program,
-            Curriculum.valid_from <= (student.start_term or "0000.1"),
+            Curriculum.valid_from <= (term or "0000.1"),
         )
         .order_by(Curriculum.valid_from.desc())
     )
@@ -211,6 +212,9 @@ def history(identity: Identity, session: Database):
 @router.put("/me/history")
 def save_own_history(payload: SelfHistoryPayload, identity: Identity, session: Database):
     student = student_for(session, identity[0])
+    curriculum = student_curriculum(session, student, payload.start_term)
+    if curriculum is None:
+        raise HTTPException(409, "Não há matriz curricular para este semestre de ingresso.")
     imported = HistoryPayload(
         schema_version=1,
         source="Informado pelo estudante",
@@ -219,7 +223,9 @@ def save_own_history(payload: SelfHistoryPayload, identity: Identity, session: D
         current_period=payload.current_period,
         records=payload.records,
     )
-    return import_history(session, student, identity[0], imported, courses_for(session, student))
+    return import_history(
+        session, student, identity[0], imported, list_courses(session, curriculum.id)
+    )
 
 
 @router.get("/me/progression")
