@@ -10,12 +10,14 @@ export type ActionKind = "approve" | "revoke" | "plan" | "unplan";
 
 export interface Course {
   id: string;
+  source_code?: string | null;
   name: string;
   short_name: string;
   period: number | null;
   hours: number;
   type: "mandatory" | "elective";
   prerequisite_ids: string[];
+  prerequisite_status?: "verified" | "unverified";
   status: Status;
   missing_prerequisite_ids: string[];
   dependent_ids: string[];
@@ -49,6 +51,12 @@ export interface Identity {
   user: { id: string; email: string; role: "student" | "coordination" };
   student: {
     program: "CC" | "SI" | "IA" | "EC";
+    curriculum: {
+      available: boolean;
+      id: string | null;
+      valid_from: string | null;
+      source_url: string | null;
+    };
   } | null;
   csrf_token: string;
 }

@@ -84,7 +84,7 @@ export default function App() {
         }}
       />
     );
-  if (identity.student && identity.student.program !== "SI")
+  if (identity.student && !identity.student.curriculum.available)
     return (
       <PendingProgram
         identity={identity}
@@ -126,6 +126,7 @@ function PendingProgram({
 }) {
   const [failure, setFailure] = useState("");
   const program = identity.student!.program;
+  const validFrom = identity.student!.curriculum.valid_from;
   return (
     <div className="app-shell min-h-dvh">
       <header className="app-header flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
@@ -159,11 +160,14 @@ function PendingProgram({
         <section className="glass-panel rounded-xl p-7 sm:p-10">
           <p className="eyebrow">{programNames[program]}</p>
           <h2 className="mt-3 text-2xl font-semibold">
-            Grade de {program} ainda não cadastrada
+            {validFrom
+              ? `Matriz de ${program} disponível a partir de ${validFrom}`
+              : `Grade de ${program} ainda não cadastrada`}
           </h2>
           <p className="mt-3 text-slate-600">
-            A grade e o planejamento deste curso estarão disponíveis após o
-            cadastro da matriz curricular.
+            {validFrom
+              ? "Seu semestre de ingresso é anterior à matriz atendida. O planejamento para sua turma ainda não está disponível."
+              : "A grade e o planejamento deste curso estarão disponíveis após o cadastro da matriz curricular."}
           </p>
         </section>
       </main>
@@ -600,10 +604,33 @@ function Student({
         )}
       </header>
       <div className="institution-note border-b border-slate-200 px-5 py-2 text-xs text-slate-500 sm:px-8">
-        Grade demonstrativa, pendente de validação institucional · o histórico é
-        informado pelo estudante · a matrícula oficial continua no SIGAA.
+        {identity.student?.curriculum.id === "SI-demo"
+          ? "Grade demonstrativa de SI"
+          : `Matriz ${identity.student?.curriculum.id ?? ""} transcrita do CIn`}
+        {identity.student?.curriculum.source_url?.startsWith("https://") && (
+          <>
+            {" "}
+            ·{" "}
+            <a
+              href={identity.student.curriculum.source_url}
+              target="_blank"
+              rel="noreferrer"
+              className="underline"
+            >
+              Consultar fonte
+            </a>
+          </>
+        )}{" "}
+        · pendente de validação institucional · o histórico é informado pelo
+        estudante · a matrícula oficial continua no SIGAA.
       </div>
       <main className="workspace mx-auto max-w-[1920px] px-4 py-5 sm:px-8">
+        {isStudent &&
+          data?.warnings.map((warning) => (
+            <p key={warning} className="mb-2 text-xs text-amber-800">
+              {warning}
+            </p>
+          ))}
         {isStudent && (
           <section
             className="workspace-intro"
