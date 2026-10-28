@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CourseView(BaseModel):
@@ -62,3 +62,11 @@ class PublicEvaluation(BaseModel):
     hypothetical_ids: list[str] = Field(default_factory=list, max_length=500)
     action: Literal["approve", "revoke"] | None = None
     course_id: str | None = Field(default=None, min_length=1, max_length=40)
+    simulated_grades: dict[str, float] = Field(default_factory=dict, max_length=500)
+
+    @field_validator("simulated_grades")
+    @classmethod
+    def grade_range(cls, value):
+        if any(not 0 <= grade <= 10 for grade in value.values()):
+            raise ValueError("Notas simuladas devem ficar entre 0 e 10.")
+        return value

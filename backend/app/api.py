@@ -100,6 +100,7 @@ def public_evaluation(session, curriculum_id, payload):
             payload.hypothetical_ids,
             action=action,
             requirements=requirements_view(curriculum),
+            simulated_grades=payload.simulated_grades,
         )
     except ValueError as error:
         raise HTTPException(422, str(error)) from error

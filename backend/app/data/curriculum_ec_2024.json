@@ -5,6 +5,7 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 1",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 1",
     "hours": 60,
+    "credits": 4,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -17,6 +18,7 @@
     "name": "GEOMETRIA ANALÍTICA 1",
     "short_name": "GEOMETRIA ANALÍTICA 1",
     "hours": 60,
+    "credits": 4,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -29,6 +31,7 @@
     "name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "short_name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -41,6 +44,7 @@
     "name": "LABORATÓRIO DE PROGRAMAÇÃO 1",
     "short_name": "LABORATÓRIO DE PROGRAMAÇÃO 1",
     "hours": 30,
+    "credits": 1,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -55,6 +59,7 @@
     "name": "INTRODUÇÃO A COMPUTAÇÃO",
     "short_name": "INTRODUÇÃO A COMPUTAÇÃO",
     "hours": 30,
+    "credits": 1,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -67,6 +72,7 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 2",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 2",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -81,6 +87,7 @@
     "name": "FUNDAMENTOS DE ÁLGEBRA LINEAR",
     "short_name": "FUNDAMENTOS DE ÁLGEBRA LINEAR",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -95,6 +102,7 @@
     "name": "FUNDAMENTOS DE PROGRAMAÇÃO IMPERATIVA",
     "short_name": "FUNDAMENTOS DE PROGRAMAÇÃO IMPERATIVA",
     "hours": 60,
+    "credits": 3,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -111,6 +119,7 @@
     "name": "LABORATÓRIO DE PROGRAMAÇÃO 2",
     "short_name": "LABORATÓRIO DE PROGRAMAÇÃO 2",
     "hours": 30,
+    "credits": 1,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -125,6 +134,7 @@
     "name": "SISTEMAS DIGITAIS",
     "short_name": "SISTEMAS DIGITAIS",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -141,6 +151,7 @@
     "name": "LABORATÓRIO DE SISTEMAS DIGITAIS",
     "short_name": "LABORATÓRIO DE SISTEMAS DIGITAIS",
     "hours": 30,
+    "credits": 1,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -155,6 +166,7 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 3",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 3",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -170,6 +182,7 @@
     "name": "FÍSICA GERAL 1",
     "short_name": "FÍSICA GERAL 1",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -184,6 +197,7 @@
     "name": "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO",
     "short_name": "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -198,6 +212,7 @@
     "name": "ALGORITMOS E ESTRUTURA DE DADOS",
     "short_name": "ALGORITMOS E ESTRUTURA DE DADOS",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -212,6 +227,7 @@
     "name": "ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES",
     "short_name": "ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -228,6 +244,7 @@
     "name": "LABORATÓRIO DE ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES",
     "short_name": "LABORATÓRIO DE ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES",
     "hours": 30,
+    "credits": 1,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -242,6 +259,7 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 4",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 4",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -256,6 +274,7 @@
     "name": "FÍSICA GERAL 3",
     "short_name": "FÍSICA GERAL 3",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -271,6 +290,7 @@
     "name": "INFORMÁTICA E SOCIEDADE",
     "short_name": "INFORMÁTICA E SOCIEDADE",
     "hours": 30,
+    "credits": 2,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -285,6 +305,7 @@
     "name": "LÓGICA PARA COMPUTAÇÃO",
     "short_name": "LÓGICA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -299,6 +320,7 @@
     "name": "SISTEMAS OPERACIONAIS",
     "short_name": "SISTEMAS OPERACIONAIS",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -313,6 +335,7 @@
     "name": "ESTATÍSTICA E PROBABILIDADE PARA COMPUTAÇÃO",
     "short_name": "ESTATÍSTICA E PROBABILIDADE PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -327,6 +350,7 @@
     "name": "COMPLEMENTAÇÃO DE MATEMÁTICA PARA COMPUTAÇÃO",
     "short_name": "COMPLEMENTAÇÃO DE MATEMÁTICA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -341,6 +365,7 @@
     "name": "CIRCUITOS ELÉTRICOS 1",
     "short_name": "CIRCUITOS ELÉTRICOS 1",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -357,6 +382,7 @@
     "name": "LABORATÓRIO DE CIRCUITOS ELÉTRICOS 1",
     "short_name": "LABORATÓRIO DE CIRCUITOS ELÉTRICOS 1",
     "hours": 30,
+    "credits": 1,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -371,6 +397,7 @@
     "name": "TEORIA DA COMPUTAÇÃO",
     "short_name": "TEORIA DA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -385,6 +412,7 @@
     "name": "FUNDAMENTOS DE REDES DE COMPUTADORES",
     "short_name": "FUNDAMENTOS DE REDES DE COMPUTADORES",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -399,6 +427,7 @@
     "name": "BANCO DE DADOS",
     "short_name": "BANCO DE DADOS",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -413,6 +442,7 @@
     "name": "SINAIS E SISTEMAS PARA COMPUTAÇÃO",
     "short_name": "SINAIS E SISTEMAS PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -428,6 +458,7 @@
     "name": "ELETROMAGNETISMO",
     "short_name": "ELETROMAGNETISMO",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -443,6 +474,7 @@
     "name": "ELETRÔNICA PARA COMPUTAÇÃO",
     "short_name": "ELETRÔNICA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -457,6 +489,7 @@
     "name": "LABORATÓRIO DE ELETRÔNICA",
     "short_name": "LABORATÓRIO DE ELETRÔNICA",
     "hours": 30,
+    "credits": 1,
     "period": 6,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -471,6 +504,7 @@
     "name": "INTRODUÇÃO AO APRENDIZADO DE MÁQUINA",
     "short_name": "INTRODUÇÃO AO APRENDIZADO DE MÁQUINA",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -486,6 +520,7 @@
     "name": "ENGENHARIA DE SOFTWARE E SISTEMAS",
     "short_name": "ENGENHARIA DE SOFTWARE E SISTEMAS",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -500,6 +535,7 @@
     "name": "PRINCÍPIOS DE COMUNICAÇÕES",
     "short_name": "PRINCÍPIOS DE COMUNICAÇÕES",
     "hours": 60,
+    "credits": 4,
     "period": 7,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -515,6 +551,7 @@
     "name": "FUNDAMENTOS DE SISTEMAS DE CONTROLE",
     "short_name": "FUNDAMENTOS DE SISTEMAS DE CONTROLE",
     "hours": 60,
+    "credits": 4,
     "period": 7,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -530,6 +567,7 @@
     "name": "PROCESSAMENTO DE SINAIS",
     "short_name": "PROCESSAMENTO DE SINAIS",
     "hours": 60,
+    "credits": 4,
     "period": 7,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -544,6 +582,7 @@
     "name": "SISTEMAS EMBARCADOS",
     "short_name": "SISTEMAS EMBARCADOS",
     "hours": 60,
+    "credits": 4,
     "period": 7,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -560,6 +599,7 @@
     "name": "LABORATÓRIO DE SISTEMAS EMBARCADOS",
     "short_name": "LABORATÓRIO DE SISTEMAS EMBARCADOS",
     "hours": 30,
+    "credits": 1,
     "period": 7,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -574,6 +614,7 @@
     "name": "TEORIA E IMPLEMENTAÇÃO DE LINGUAGENS DE PROGRAMAÇÃO",
     "short_name": "TEORIA E IMPLEMENTAÇÃO DE LINGUAGENS DE PROGRAMAÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": 7,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -588,6 +629,7 @@
     "name": "PROJETO CO-DESENVOLVIMENTO HARDWARE / SOFTWARE",
     "short_name": "PROJETO CO-DESENVOLVIMENTO HARDWARE / SOFTWARE",
     "hours": 60,
+    "credits": 2,
     "period": 8,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -602,6 +644,7 @@
     "name": "TRABALHO DE CONCLUSÃO DE CURSO 1",
     "short_name": "TRABALHO DE CONCLUSÃO DE CURSO 1",
     "hours": 60,
+    "credits": 3,
     "period": 9,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -614,6 +657,7 @@
     "name": "ESTÁGIO OBRIGATÓRIO",
     "short_name": "ESTÁGIO OBRIGATÓRIO",
     "hours": 180,
+    "credits": 6,
     "period": 9,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -626,6 +670,7 @@
     "name": "TRABALHO DE CONCLUSÃO DE CURSO 2",
     "short_name": "TRABALHO DE CONCLUSÃO DE CURSO 2",
     "hours": 60,
+    "credits": 2,
     "period": 10,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -640,6 +685,7 @@
     "name": "PROCESSOS ESTOCÁSTICOS",
     "short_name": "PROCESSOS ESTOCÁSTICOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -654,6 +700,7 @@
     "name": "TEORIA DA INFORMAÇÃO",
     "short_name": "TEORIA DA INFORMAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -668,6 +715,7 @@
     "name": "COMUNICAÇÕES SEM FIO",
     "short_name": "COMUNICAÇÕES SEM FIO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -682,6 +730,7 @@
     "name": "LABORATÓRIO DE COMUNICAÇÕES",
     "short_name": "LABORATÓRIO DE COMUNICAÇÕES",
     "hours": 60,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -697,6 +746,7 @@
     "name": "MICROONDAS",
     "short_name": "MICROONDAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -711,6 +761,7 @@
     "name": "PROPAGAÇÃO ELETROMAGNÉTICA",
     "short_name": "PROPAGAÇÃO ELETROMAGNÉTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -725,6 +776,7 @@
     "name": "ANTENAS",
     "short_name": "ANTENAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -739,6 +791,7 @@
     "name": "ENLACES DE COMUNICAÇÃO",
     "short_name": "ENLACES DE COMUNICAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -753,6 +806,7 @@
     "name": "CRIPTOGRAFIA",
     "short_name": "CRIPTOGRAFIA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -767,6 +821,7 @@
     "name": "COMUNICAÇÕES ÓPTICAS",
     "short_name": "COMUNICAÇÕES ÓPTICAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -783,6 +838,7 @@
     "name": "SEMINÁRIOS EM COMUNICAÇÕES",
     "short_name": "SEMINÁRIOS EM COMUNICAÇÕES",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -797,6 +853,7 @@
     "name": "TEORIA DE FILAS",
     "short_name": "TEORIA DE FILAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -811,6 +868,7 @@
     "name": "TENDÊNCIAS EM COMUNICAÇÕES",
     "short_name": "TENDÊNCIAS EM COMUNICAÇÕES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -825,6 +883,7 @@
     "name": "PROCESSAMENTO DE SINAIS 2",
     "short_name": "PROCESSAMENTO DE SINAIS 2",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -839,6 +898,7 @@
     "name": "PROCESSAMENTO DE VÍDEO",
     "short_name": "PROCESSAMENTO DE VÍDEO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -853,6 +913,7 @@
     "name": "PROCESSAMENTO DE IMAGEM",
     "short_name": "PROCESSAMENTO DE IMAGEM",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -867,6 +928,7 @@
     "name": "PROCESSAMENTO DE VOZ",
     "short_name": "PROCESSAMENTO DE VOZ",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -881,6 +943,7 @@
     "name": "VISÃO COMPUTACIONAL",
     "short_name": "VISÃO COMPUTACIONAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -895,6 +958,7 @@
     "name": "FOTOGRAFIA COMPUTACIONAL",
     "short_name": "FOTOGRAFIA COMPUTACIONAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -909,6 +973,7 @@
     "name": "SEMINÁRIOS EM PROCESSAMENTO DE SINAIS",
     "short_name": "SEMINÁRIOS EM PROCESSAMENTO DE SINAIS",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -923,6 +988,7 @@
     "name": "TENDÊNCIAS EM PROCESSAMENTO DE SINAIS",
     "short_name": "TENDÊNCIAS EM PROCESSAMENTO DE SINAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -937,6 +1003,7 @@
     "name": "REDES DE COMPUTADORES",
     "short_name": "REDES DE COMPUTADORES",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -951,6 +1018,7 @@
     "name": "REDES SEM FIO 1",
     "short_name": "REDES SEM FIO 1",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -965,6 +1033,7 @@
     "name": "REDES SEM FIO 2",
     "short_name": "REDES SEM FIO 2",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -979,6 +1048,7 @@
     "name": "REDES DE ACESSO",
     "short_name": "REDES DE ACESSO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -993,6 +1063,7 @@
     "name": "REDES DEFINIDAS POR SOFTWARE",
     "short_name": "REDES DEFINIDAS POR SOFTWARE",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1007,6 +1078,7 @@
     "name": "GERENCIAMENTO E MONITORAMENTO DE REDES",
     "short_name": "GERENCIAMENTO E MONITORAMENTO DE REDES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1021,6 +1093,7 @@
     "name": "AVALIAÇÃO DE DESEMPENHO DE REDES",
     "short_name": "AVALIAÇÃO DE DESEMPENHO DE REDES",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1035,6 +1108,7 @@
     "name": "REDES AUTOMOTIVAS",
     "short_name": "REDES AUTOMOTIVAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1049,6 +1123,7 @@
     "name": "REDES VEICULARES",
     "short_name": "REDES VEICULARES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1063,6 +1138,7 @@
     "name": "TECNOLOGIAS DE COMUNICAÇÃO",
     "short_name": "TECNOLOGIAS DE COMUNICAÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1077,6 +1153,7 @@
     "name": "SISTEMAS DISTRIBUÍDOS",
     "short_name": "SISTEMAS DISTRIBUÍDOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1091,6 +1168,7 @@
     "name": "SEGURANÇA DE REDES E SISTEMAS DISTRIBUÍDOS",
     "short_name": "SEGURANÇA DE REDES E SISTEMAS DISTRIBUÍDOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1107,6 +1185,7 @@
     "name": "INTERNET DAS COISAS",
     "short_name": "INTERNET DAS COISAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1121,6 +1200,7 @@
     "name": "COMPUTAÇÃO UBÍQUA",
     "short_name": "COMPUTAÇÃO UBÍQUA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1135,6 +1215,7 @@
     "name": "PROGRAMAÇÃO CONCORRENTE E DISTRIBUÍDA",
     "short_name": "PROGRAMAÇÃO CONCORRENTE E DISTRIBUÍDA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1149,6 +1230,7 @@
     "name": "DEPENDABILIDADE",
     "short_name": "DEPENDABILIDADE",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1164,6 +1246,7 @@
     "name": "SIMULAÇÃO ESTOCÁSTICA",
     "short_name": "SIMULAÇÃO ESTOCÁSTICA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1179,6 +1262,7 @@
     "name": "COMPUTAÇÃO ORIENTADA A SERVIÇOS",
     "short_name": "COMPUTAÇÃO ORIENTADA A SERVIÇOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1193,6 +1277,7 @@
     "name": "PLATAFORMAS DE DISTRIBUIÇÃO",
     "short_name": "PLATAFORMAS DE DISTRIBUIÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1207,6 +1292,7 @@
     "name": "TENDÊNCIAS EM REDES DE COMPUTADORES",
     "short_name": "TENDÊNCIAS EM REDES DE COMPUTADORES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1221,6 +1307,7 @@
     "name": "SEMINÁRIOS EM REDES DE COMPUTADORES",
     "short_name": "SEMINÁRIOS EM REDES DE COMPUTADORES",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1235,6 +1322,7 @@
     "name": "SISTEMAS CRÍTICOS E DE TEMPO REAL",
     "short_name": "SISTEMAS CRÍTICOS E DE TEMPO REAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1249,6 +1337,7 @@
     "name": "TECNOLOGIAS E PROTOTIPAÇÃO DE SISTEMAS EMBARCADOS",
     "short_name": "TECNOLOGIAS E PROTOTIPAÇÃO DE SISTEMAS EMBARCADOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1263,6 +1352,7 @@
     "name": "PROJETO DE SISTEMAS EMBARCADOS",
     "short_name": "PROJETO DE SISTEMAS EMBARCADOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1277,6 +1367,7 @@
     "name": "PROJETO DE CIRCUITOS LOW-POWER",
     "short_name": "PROJETO DE CIRCUITOS LOW-POWER",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1291,6 +1382,7 @@
     "name": "TENDÊNCIAS EM SISTEMAS EMBARCADOS",
     "short_name": "TENDÊNCIAS EM SISTEMAS EMBARCADOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1305,6 +1397,7 @@
     "name": "SEMINÁRIOS EM SISTEMAS EMBARCADOS",
     "short_name": "SEMINÁRIOS EM SISTEMAS EMBARCADOS",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1319,6 +1412,7 @@
     "name": "CONTROLE INTELIGENTE",
     "short_name": "CONTROLE INTELIGENTE",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1333,6 +1427,7 @@
     "name": "CONTROLE ADAPTATIVO",
     "short_name": "CONTROLE ADAPTATIVO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1347,6 +1442,7 @@
     "name": "INTRODUÇÃO À ROBÓTICA",
     "short_name": "INTRODUÇÃO À ROBÓTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1361,6 +1457,7 @@
     "name": "SISTEMAS DE CONTROLE NÃO-LINEAR",
     "short_name": "SISTEMAS DE CONTROLE NÃO-LINEAR",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1375,6 +1472,7 @@
     "name": "OTIMIZAÇÃO",
     "short_name": "OTIMIZAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1390,6 +1488,7 @@
     "name": "AVALIAÇÃO E DESEMPENHO DE SISTEMAS",
     "short_name": "AVALIAÇÃO E DESEMPENHO DE SISTEMAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1405,6 +1504,7 @@
     "name": "TENDÊNCIAS EM ENGENHARIAS DE CONTROLE",
     "short_name": "TENDÊNCIAS EM ENGENHARIAS DE CONTROLE",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1419,6 +1519,7 @@
     "name": "REDES NEURAIS",
     "short_name": "REDES NEURAIS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1433,6 +1534,7 @@
     "name": "AGENTES AUTÔNOMOS",
     "short_name": "AGENTES AUTÔNOMOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1447,6 +1549,7 @@
     "name": "COMPUTAÇÃO QUÂNTICA",
     "short_name": "COMPUTAÇÃO QUÂNTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1461,6 +1564,7 @@
     "name": "INTRODUÇÃO À APRENDIZAGEM PROFUNDA",
     "short_name": "INTRODUÇÃO À APRENDIZAGEM PROFUNDA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1475,6 +1579,7 @@
     "name": "INTRODUÇÃO À APRENDIZAGEM POR REFORÇO",
     "short_name": "INTRODUÇÃO À APRENDIZAGEM POR REFORÇO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1491,6 +1596,7 @@
     "name": "APRENDIZAGEM DE MÁQUINA QUÂNTICA",
     "short_name": "APRENDIZAGEM DE MÁQUINA QUÂNTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1506,6 +1612,7 @@
     "name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "short_name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1520,6 +1627,7 @@
     "name": "INTELIGÊNCIA ARTIFICIAL COLETIVA",
     "short_name": "INTELIGÊNCIA ARTIFICIAL COLETIVA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1534,6 +1642,7 @@
     "name": "SEMINÁRIOS EM INTELIGÊNCIA COMPUTACIONAL",
     "short_name": "SEMINÁRIOS EM INTELIGÊNCIA COMPUTACIONAL",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1548,6 +1657,7 @@
     "name": "TENDÊNCIAS EM INTELIGÊNCIA COMPUTACIONAL",
     "short_name": "TENDÊNCIAS EM INTELIGÊNCIA COMPUTACIONAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1562,6 +1672,7 @@
     "name": "PROCESSAMENTO GRÁFICO",
     "short_name": "PROCESSAMENTO GRÁFICO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1577,6 +1688,7 @@
     "name": "DISPOSITIVOS MULTIMÍDIA",
     "short_name": "DISPOSITIVOS MULTIMÍDIA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1592,6 +1704,7 @@
     "name": "INTERAÇÃO HUMANO COMPUTADOR",
     "short_name": "INTERAÇÃO HUMANO COMPUTADOR",
     "hours": 30,
+    "credits": 1,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1606,6 +1719,7 @@
     "name": "COMPUTAÇÃO GRÁFICA",
     "short_name": "COMPUTAÇÃO GRÁFICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1620,6 +1734,7 @@
     "name": "FUNDAMENTOS GEOMÉTRICOS PARA VISÃO COMPUTACIONAL",
     "short_name": "FUNDAMENTOS GEOMÉTRICOS PARA VISÃO COMPUTACIONAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1635,6 +1750,7 @@
     "name": "COMPUTAÇÃO MUSICAL E PROCESSAMENTO DE SOM",
     "short_name": "COMPUTAÇÃO MUSICAL E PROCESSAMENTO DE SOM",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1649,6 +1765,7 @@
     "name": "JOGOS DIGITAIS",
     "short_name": "JOGOS DIGITAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1663,6 +1780,7 @@
     "name": "TENDÊNCIAS EM MÍDIA E INTERAÇÃO",
     "short_name": "TENDÊNCIAS EM MÍDIA E INTERAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1677,6 +1795,7 @@
     "name": "SEGURANÇA DE COMPUTADORES",
     "short_name": "SEGURANÇA DE COMPUTADORES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1691,6 +1810,7 @@
     "name": "AUDITORIA E SEGURANÇA DE SISTEMAS DE INFORMAÇÃO",
     "short_name": "AUDITORIA E SEGURANÇA DE SISTEMAS DE INFORMAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1705,6 +1825,7 @@
     "name": "ASSINATURA DIGITAL E CERTIFICAÇÃO DIGITAL",
     "short_name": "ASSINATURA DIGITAL E CERTIFICAÇÃO DIGITAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1719,6 +1840,7 @@
     "name": "TÉCNICAS DE ATAQUE E DETECÇÃO DE INTRUSÃO",
     "short_name": "TÉCNICAS DE ATAQUE E DETECÇÃO DE INTRUSÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1733,6 +1855,7 @@
     "name": "SEGURANÇA EM COMPUTAÇÃO EM NUVEM",
     "short_name": "SEGURANÇA EM COMPUTAÇÃO EM NUVEM",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1747,6 +1870,7 @@
     "name": "SEMINÁRIOS EM SEGURANÇA",
     "short_name": "SEMINÁRIOS EM SEGURANÇA",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1761,6 +1885,7 @@
     "name": "TENDÊNCIAS EM SEGURANÇA",
     "short_name": "TENDÊNCIAS EM SEGURANÇA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1775,6 +1900,7 @@
     "name": "PROCESSAMENTO DE CADEIA DE CARACTERES",
     "short_name": "PROCESSAMENTO DE CADEIA DE CARACTERES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1789,6 +1915,7 @@
     "name": "ALGORITMOS E ESTRUTURA DE DADOS AVANÇADOS",
     "short_name": "ALGORITMOS E ESTRUTURA DE DADOS AVANÇADOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1803,6 +1930,7 @@
     "name": "ALGORITMOS PARA STREAMS DE DADOS",
     "short_name": "ALGORITMOS PARA STREAMS DE DADOS",
     "hours": 60,
+    "credits": null,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -1815,6 +1943,7 @@
     "name": "ÉTICA E ASPECTOS JURÍDICOS DA COMPUTAÇÃO",
     "short_name": "ÉTICA E ASPECTOS JURÍDICOS DA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1829,6 +1958,7 @@
     "name": "RELAÇÕES RACIAIS",
     "short_name": "RELAÇÕES RACIAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -1841,6 +1971,7 @@
     "name": "INTRODUÇÃO A LIBRAS",
     "short_name": "INTRODUÇÃO A LIBRAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -1853,6 +1984,7 @@
     "name": "LÍNGUA INGLESA INSTRUMENTAL 1",
     "short_name": "LÍNGUA INGLESA INSTRUMENTAL 1",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -1865,6 +1997,7 @@
     "name": "FÍSICA GERAL 2",
     "short_name": "FÍSICA GERAL 2",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1881,6 +2014,7 @@
     "name": "FÍSICA GERAL 4",
     "short_name": "FÍSICA GERAL 4",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1897,6 +2031,7 @@
     "name": "FÍSICA EXPERIMENTAL 1",
     "short_name": "FÍSICA EXPERIMENTAL 1",
     "hours": 45,
+    "credits": 1,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1913,6 +2048,7 @@
     "name": "FÍSICA EXPERIMENTAL 2",
     "short_name": "FÍSICA EXPERIMENTAL 2",
     "hours": 45,
+    "credits": 1,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1930,6 +2066,7 @@
     "name": "PROJETO DE BANCO DE DADOS",
     "short_name": "PROJETO DE BANCO DE DADOS",
     "hours": 60,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1944,6 +2081,7 @@
     "name": "DATA WAREHOUSING",
     "short_name": "DATA WAREHOUSING",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1958,6 +2096,7 @@
     "name": "INTRODUÇÃO À BIOINFORMÁTICA",
     "short_name": "INTRODUÇÃO À BIOINFORMÁTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1972,6 +2111,7 @@
     "name": "GESTÃO DE NEGÓCIOS",
     "short_name": "GESTÃO DE NEGÓCIOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -1984,6 +2124,7 @@
     "name": "PROJETO DE COMPILADORES",
     "short_name": "PROJETO DE COMPILADORES",
     "hours": 60,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -1998,6 +2139,7 @@
     "name": "ANÁLISE E PROJETO DE SISTEMAS",
     "short_name": "ANÁLISE E PROJETO DE SISTEMAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -2012,6 +2154,7 @@
     "name": "INTRODUÇÃO AOS DISPOSITIVOS SEMICONDUTORES",
     "short_name": "INTRODUÇÃO AOS DISPOSITIVOS SEMICONDUTORES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -2026,6 +2169,7 @@
     "name": "SISTEMAS DE APOIO À DECISÃO",
     "short_name": "SISTEMAS DE APOIO À DECISÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -2041,6 +2185,7 @@
     "name": "CRIATIVIDADE COMPUTACIONAL",
     "short_name": "CRIATIVIDADE COMPUTACIONAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -2053,6 +2198,7 @@
     "name": "ENGENHARIA DE REQUISITOS",
     "short_name": "ENGENHARIA DE REQUISITOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -2068,6 +2214,7 @@
     "name": "APLICAÇÕES DE APRENDIZAGEM DE MÁQUINA",
     "short_name": "APLICAÇÕES DE APRENDIZAGEM DE MÁQUINA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
