@@ -46,7 +46,7 @@ test("public explorer simulates approvals without an account", async ({
   ).toHaveAttribute("data-status", "available");
   await expect(
     summary.getByRole("progressbar", { name: /Obrigatórias/ }),
-  ).toHaveAttribute("aria-valuenow", "60");
+  ).toHaveAttribute("aria-valuenow", "120");
   await page.getByRole("button", { name: /Limpar simulação/ }).click();
   await expect(
     page.getByRole("button", { name: "Introdução à Programação", exact: true }),
