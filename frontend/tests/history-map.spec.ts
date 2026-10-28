@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { drag } from "./drag";
+import { drag, goHistory } from "./drag";
 
 async function register(page: Page, name: string, period = "3") {
   await page.goto("/");
@@ -12,6 +12,7 @@ async function register(page: Page, name: string, period = "3") {
   await page.getByLabel("Período atual").fill(period);
   await page.getByLabel("Curso").selectOption("SI");
   await page.getByRole("button", { name: "Cadastrar" }).click();
+  await goHistory(page);
   await expect(
     page.getByRole("heading", { name: "Histórico informado", exact: true }),
   ).toBeVisible();
@@ -109,14 +110,14 @@ test("electives dragged into a past period become history records", async ({
       .getByLabel("Semestre"),
   ).toHaveValue("2025.1");
   await editor(page).getByLabel("Nota final").fill("9");
-  // Períodos futuros não aceitam registros do histórico.
-  await expect(
-    page
-      .getByLabel("Mover Contabilidade de Custos e Gerencial para período", {
-        exact: true,
-      })
-      .locator("option"),
-  ).toHaveCount(4);
+  // Períodos futuros não viram histórico: a opção leva para a Simulação.
+  const options = page
+    .getByLabel("Mover Contabilidade de Custos e Gerencial para período", {
+      exact: true,
+    })
+    .locator("option");
+  await expect(options).toHaveCount(9);
+  await expect(options.filter({ hasText: "(Simulação)" })).toHaveCount(5);
   await page.getByRole("button", { name: "Salvar histórico" }).click();
   await expect(
     page.locator('[role="status"]:not([id^="DndLiveRegion"])'),

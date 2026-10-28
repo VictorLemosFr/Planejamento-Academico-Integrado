@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { goHistory } from "./drag";
 
 test("academic overview reflects official progression and stays usable on mobile with reduced motion", async ({
   page,
@@ -24,6 +25,7 @@ test("academic overview reflects official progression and stays usable on mobile
   await page.getByLabel("E-mail").fill("student-a@example.test");
   await page.getByLabel("Senha", { exact: true }).fill("fictional-secret");
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
+  await goHistory(page);
   await expect(
     page.getByRole("heading", { name: "Histórico informado", exact: true }),
   ).toBeVisible();

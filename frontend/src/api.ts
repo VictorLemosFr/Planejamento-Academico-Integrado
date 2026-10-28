@@ -12,6 +12,8 @@ import type {
   PublicCurriculum,
   PublicGrid,
   TranscriptProposal,
+  FailureImpact,
+  SharedPlan,
 } from "./types";
 
 let csrf = "";
@@ -140,3 +142,13 @@ export const simulatePublic = (
     `/public/curricula/${encodeURIComponent(id)}/simulations`,
     body("POST", payload),
   );
+export const getFailureImpact = (courseId: string) =>
+  request<FailureImpact>(
+    `/me/progression/failure-impact/${encodeURIComponent(courseId)}`,
+  );
+export const sharePlan = (id: string) =>
+  request<{ token: string }>(`/plans/${id}/share`, body("POST"));
+export const unsharePlan = (id: string) =>
+  request(`/plans/${id}/share`, body("DELETE"));
+export const getSharedPlan = (token: string) =>
+  request<SharedPlan>(`/public/shared/${encodeURIComponent(token)}`);

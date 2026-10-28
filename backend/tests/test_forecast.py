@@ -9,7 +9,13 @@ from app.main import app
 from app.modules.curriculum.catalog import CATALOGS
 from app.modules.curriculum.repository import list_courses
 from app.modules.personal.service import evaluate
-from app.modules.planning.forecast import current_term, longest_chain, summarize, term_after
+from app.modules.planning.forecast import (
+    current_term,
+    failure_impact,
+    longest_chain,
+    summarize,
+    term_after,
+)
 from app.seed import seed
 
 SI = next(catalog for catalog in CATALOGS if catalog["id"] == "SI-2024")
@@ -59,9 +65,11 @@ def test_current_term_counts_from_entry():
 
 def test_longest_chain_ignores_completed_links():
     courses = [course("a"), course("b", ["a"]), course("c", ["b"]), course("d")]
-    assert longest_chain(courses, {"a", "b", "c", "d"}) == ["a", "b", "c"]
-    assert longest_chain(courses, {"b", "c", "d"}) == ["b", "c"]
-    assert longest_chain(courses, set()) == []
+    assert longest_chain(courses, {"a", "b", "c", "d"}) == (["a", "b", "c"], 3)
+    assert longest_chain(courses, {"b", "c", "d"}) == (["b", "c"], 2)
+    assert longest_chain(courses, set()) == ([], 0)
+    # Uma reprovação faz a disciplina ocupar dois semestres na cadeia.
+    assert longest_chain(courses, {"b", "c", "d"}, {"b": 2}) == (["b", "c"], 3)
 
 
 def test_forecast_uses_the_larger_of_chain_and_pace():
@@ -95,6 +103,36 @@ def test_forecast_uses_the_larger_of_chain_and_pace():
     assert after["first_remaining_term"] == "2026.2"
     assert after["earliest_completion_term"] == "2026.2"
     assert after["estimated_completion_term"] == "2027.1"
+
+
+def test_failure_impact_delays_the_chain():
+    courses = [course("a"), course("b", ["a"]), course("c", ["b"]), course("x")]
+    requirements = {"standard_semesters": 3}
+    # Cadeia a → b → c: 3 semestres. Reprovar "a" (ainda não cursada) custa mais um.
+    impact = failure_impact(courses, set(), set(), requirements, history(), "a", 0)
+    assert impact["before"]["estimated_semesters"] == 3
+    assert impact["after"]["estimated_semesters"] == 4
+    assert impact["delay_semesters"] == 1
+    assert impact["blocked_ids"] == ["b", "c"]
+    assert impact["on_critical_path"]
+    assert impact["failure_level_after"] == "attention"
+    # "x" não está em cadeia nenhuma: a carga extra cabe sem atrasar.
+    loose = failure_impact(courses, set(), set(), {}, history(), "x", 0)
+    assert loose["delay_semesters"] == 0 and loose["blocked_ids"] == []
+
+
+def test_failure_impact_of_a_course_in_progress():
+    courses = [course("a"), course("b", ["a"]), course("c", ["b"])]
+    # Cursando "a" no 1º período: b e c ficam para 2025.2 e 2026.1.
+    impact = failure_impact(courses, set(), {"a"}, {}, history(), "a", 2)
+    assert impact["in_progress"]
+    assert impact["before"]["estimated_completion_term"] == "2026.1"
+    # Reprovada, "a" volta em 2025.2 e a cadeia inteira anda um semestre.
+    assert impact["after"]["estimated_completion_term"] == "2026.2"
+    assert impact["delay_semesters"] == 1
+    assert impact["refused_after"]
+    approved = failure_impact(courses, {"a"}, set(), {}, history(), "a", 0)
+    assert not approved["applicable"]
 
 
 def test_unverified_prerequisites_are_flagged():

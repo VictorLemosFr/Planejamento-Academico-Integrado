@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { goHistory } from "./drag";
 import { fileURLToPath } from "node:url";
 
 const fixture = fileURLToPath(
@@ -11,6 +12,7 @@ async function login(page: Page) {
   await page.getByLabel("Senha", { exact: true }).fill("fictional-secret");
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
   await expect(page.getByRole("button", { name: "Sair" })).toBeVisible();
+  await goHistory(page);
 }
 
 test("public explorer simulates approvals without an account", async ({
@@ -159,6 +161,7 @@ test("history import reads a fictional SIGAA PDF before saving", async ({
   await page.getByLabel("Período atual").fill("2");
   await page.getByLabel("Curso").selectOption("SI");
   await page.getByRole("button", { name: "Cadastrar" }).click();
+  await goHistory(page);
   await page.getByRole("button", { name: "Editar histórico" }).click();
   await page.getByLabel("PDF do histórico escolar").setInputFiles(fixture);
   const preview = page.getByLabel("Prévia da importação");

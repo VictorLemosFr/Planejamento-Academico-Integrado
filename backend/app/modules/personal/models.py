@@ -99,6 +99,8 @@ class Plan(Base):
     hypothetical_ids: Mapped[list] = mapped_column(JSON, default=list)
     course_layout: Mapped[dict] = mapped_column(JSON, default=dict)
     simulated_grades: Mapped[dict] = mapped_column(JSON, default=dict)
+    # Link somente leitura; None quando o plano não está compartilhado.
+    share_token: Mapped[str | None] = mapped_column(String(64), unique=True, default=None)
     version: Mapped[int] = mapped_column(default=1)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)

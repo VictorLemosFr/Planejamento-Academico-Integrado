@@ -20,6 +20,7 @@ export function CourseDetails({
   historySlot,
   simulationSlot,
   moveSlot,
+  impactSlot,
 }: {
   course: Course | undefined;
   courses: Course[];
@@ -35,6 +36,8 @@ export function CourseDetails({
   simulationSlot?: ReactNode;
   /** Alternativa acessível ao arraste: escolher o período numa lista. */
   moveSlot?: ReactNode;
+  /** "E se eu reprovar?", com base no histórico real. */
+  impactSlot?: ReactNode;
   onAction: (kind: ActionKind) => void;
   onSelect: (id: string) => void;
   onClose: () => void;
@@ -272,6 +275,7 @@ export function CourseDetails({
                 )}
                 {simulationSlot}
               </div>
+              {impactSlot}
               {moveSlot}
             </div>
 

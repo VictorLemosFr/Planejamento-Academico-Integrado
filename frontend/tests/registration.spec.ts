@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { goHistory } from "./drag";
 
 test("student registers and enters the SI planner", async ({ page }) => {
   await page.goto("/");
@@ -12,6 +13,7 @@ test("student registers and enters the SI planner", async ({ page }) => {
   await page.getByLabel("Curso").selectOption("SI");
   await page.getByRole("button", { name: "Cadastrar" }).click();
   await expect(page.getByRole("button", { name: "Sair" })).toBeVisible();
+  await goHistory(page);
   await page.getByRole("button", { name: "Editar histórico" }).click();
   await page.getByRole("button", { name: "Adicionar cadeira" }).click();
   await page.getByRole("combobox", { name: "Disciplina" }).selectOption("ip");
@@ -60,6 +62,7 @@ for (const [program, term, course] of [
     await expect(page.locator(".institution-note")).toContainText(
       "pré-requisitos conferidos no PPC",
     );
+    await goHistory(page);
     await page.getByRole("button", { name: "Editar histórico" }).click();
     await page.getByRole("button", { name: "Adicionar cadeira" }).click();
     await page

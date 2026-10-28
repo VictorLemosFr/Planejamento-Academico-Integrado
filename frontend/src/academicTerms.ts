@@ -20,26 +20,30 @@ export function termsUntil(startTerm: string, currentPeriod: number) {
   );
 }
 
-/** Eletivas registradas no histórico aparecem no período da tentativa mais recente. */
+/**
+ * Disciplinas registradas no histórico aparecem no período da tentativa mais
+ * recente: eletivas sempre, obrigatórias só quando foram cursadas fora do
+ * período da matriz (arrastadas para outro período, por exemplo).
+ */
 export function historyLayout(
   courses: Course[],
   records: HistoryRecord[],
   startTerm: string,
 ) {
   const layout: Record<string, { period: number; order: number }> = {};
-  const electives = new Set(
-    courses.filter((c) => c.type === "elective").map((c) => c.id),
-  );
+  const byId = new Map(courses.map((c) => [c.id, c]));
   const latest = new Map<string, string>();
   for (const record of records) {
-    if (!electives.has(record.course_id)) continue;
+    if (!byId.has(record.course_id)) continue;
     const previous = latest.get(record.course_id);
     if (!previous || previous < record.academic_term)
       latest.set(record.course_id, record.academic_term);
   }
   const orders = new Map<number, number>();
   for (const [id, term] of [...latest].sort()) {
+    const course = byId.get(id)!;
     const period = Math.max(1, periodOf(startTerm, term));
+    if (course.type === "mandatory" && course.period === period) continue;
     const order = orders.get(period) ?? 2000;
     layout[id] = { period, order };
     orders.set(period, order + 1);

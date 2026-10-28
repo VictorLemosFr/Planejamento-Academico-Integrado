@@ -1,4 +1,5 @@
 import type { HTMLAttributes, Ref } from "react";
+import { GripVertical } from "lucide-react";
 import { formatGrade } from "../academicTerms";
 import { courseName, courseShortName } from "../display";
 import type { Course, FailureLevel, Status } from "../types";
@@ -102,6 +103,7 @@ export function CourseCard({
       type="button"
       {...dragHandle}
       aria-label={courseName(course)}
+      data-course-id={course.id}
       aria-pressed={selected}
       onClick={onSelect}
       data-status={course.status}
@@ -115,7 +117,12 @@ export function CourseCard({
         <span className="status-pill">
           <span aria-hidden="true">{meta.icon}</span> {meta.label}
         </span>
-        <span className="card-hours">{course.hours}h</span>
+        <span className="card-hours">
+          {course.hours}h
+          {dragHandle && (
+            <GripVertical className="grip" size={14} aria-hidden="true" />
+          )}
+        </span>
       </div>
       <h3>{courseShortName(course)}</h3>
       <div className="card-foot">

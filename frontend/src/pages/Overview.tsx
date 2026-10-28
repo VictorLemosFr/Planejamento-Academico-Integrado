@@ -1,0 +1,368 @@
+import { Link } from "react-router";
+import {
+  ArrowRight,
+  CalendarPlus,
+  Download,
+  Info,
+  Map as MapIcon,
+  PencilLine,
+  TriangleAlert,
+} from "lucide-react";
+import { formatGrade, termOf } from "../academicTerms";
+import { courseName, courseShortName } from "../display";
+import { projectSemesters } from "../planner";
+import type { Course, HistoryRecord, Progression } from "../types";
+import { BigValue } from "../components/BigValue";
+import { CrGoal } from "../components/CrGoal";
+import { trackedPercent } from "../components/ProgressSummary";
+
+const credit = (course?: Course) =>
+  course?.credits ?? Math.max(1, Math.round((course?.hours ?? 60) / 15));
+
+/** CR acumulado ao fim de cada semestre com nota. */
+export function crTimeline(records: HistoryRecord[], courses: Course[]) {
+  const byId = new Map(courses.map((c) => [c.id, c]));
+  const terms = [...new Set(records.map((r) => r.academic_term))].sort();
+  let weighted = 0;
+  let total = 0;
+  const points: { term: string; value: number }[] = [];
+  for (const term of terms) {
+    for (const r of records) {
+      if (r.academic_term !== term || r.status === "in_progress") continue;
+      if (r.grade === null || r.grade === undefined) continue;
+      const weight = credit(byId.get(r.course_id));
+      weighted += weight * Number(r.grade);
+      total += weight;
+    }
+    if (total) points.push({ term, value: weighted / total });
+  }
+  return points;
+}
+
+function Sparkline({ points }: { points: { term: string; value: number }[] }) {
+  if (points.length < 2) return null;
+  const w = 160;
+  const h = 40;
+  const min = Math.min(...points.map((p) => p.value)) - 0.3;
+  const max = Math.max(...points.map((p) => p.value)) + 0.3;
+  const x = (i: number) => (i / (points.length - 1)) * (w - 8) + 4;
+  const y = (v: number) => h - 4 - ((v - min) / (max - min || 1)) * (h - 8);
+  const d = points
+    .map((p, i) => `${i ? "L" : "M"}${x(i)},${y(p.value)}`)
+    .join(" ");
+  const last = points[points.length - 1];
+  return (
+    <svg
+      className="sparkline"
+      viewBox={`0 0 ${w} ${h}`}
+      role="img"
+      aria-label={`Evolução do CR: ${points.map((p) => `${p.term} ${formatGrade(p.value)}`).join(", ")}`}
+    >
+      <path d={d} />
+      <circle cx={x(points.length - 1)} cy={y(last.value)} r="3" />
+    </svg>
+  );
+}
+
+export function Overview({
+  data,
+  records,
+  startTerm,
+  currentPeriod,
+  onSelectCourse,
+  onExport,
+}: {
+  data: Progression;
+  records: HistoryRecord[];
+  startTerm: string | null;
+  currentPeriod: number;
+  onSelectCourse: (id: string) => void;
+  onExport: () => void;
+}) {
+  const { integralization, forecast, cr } = data;
+  const percent = trackedPercent(integralization);
+  const mandatory = integralization?.mandatory;
+  const profile = integralization?.profile_electives;
+  const required = (mandatory?.required ?? 0) + (profile?.required ?? 0);
+  const doneHours =
+    Math.min(mandatory?.completed ?? 0, mandatory?.required ?? 0) +
+    Math.min(profile?.completed ?? 0, profile?.required ?? 0);
+  const ongoingHours =
+    (mandatory?.in_progress ?? 0) + (profile?.in_progress ?? 0);
+  const share = (value: number) => (required ? (value / required) * 100 : 0);
+  const recorded = new Set(records.map((r) => r.course_id));
+  const missing = data.courses.filter(
+    (c) =>
+      c.type === "mandatory" &&
+      (c.period ?? 99) < currentPeriod &&
+      !recorded.has(c.id),
+  );
+  const atRisk = data.courses.filter(
+    (c) => c.failure_level === "critical" || c.failure_level === "refused",
+  );
+  const assumed = new Set([
+    ...data.official_completed_ids,
+    ...data.in_progress_ids,
+  ]);
+  const firstPeriod = data.in_progress_ids.length
+    ? currentPeriod + 1
+    : currentPeriod;
+  const projection = forecast
+    ? projectSemesters(data.courses, {
+        budget: forecast.pace_hours_per_semester ?? 360,
+        assumed,
+        period: firstPeriod,
+        profileRemaining: forecast.remaining_profile_elective_hours,
+      })
+    : null;
+  const termLabel = (index: number) =>
+    startTerm
+      ? termOf(startTerm, firstPeriod + index)
+      : `${firstPeriod + index}º período`;
+  const timeline = crTimeline(records, data.courses);
+  const ongoingCredits = data.courses
+    .filter((c) => c.status === "in_progress")
+    .reduce((sum, c) => sum + credit(c), 0);
+  const activity = [...records]
+    .sort((a, b) => b.academic_term.localeCompare(a.academic_term))
+    .slice(0, 6);
+  const byId = new Map(data.courses.map((c) => [c.id, c]));
+  const statusText = {
+    completed: "Aprovada",
+    failed: "Reprovada",
+    in_progress: "Cursando",
+  };
+
+  return (
+    <div className="overview">
+      {!startTerm && (
+        <div className="banner" role="note">
+          <Info size={16} aria-hidden="true" />
+          <span>
+            Informe seu semestre de ingresso para datar o histórico e a
+            previsão.
+          </span>
+          <Link to="/historico?editar=1">
+            Informar agora <ArrowRight size={14} aria-hidden="true" />
+          </Link>
+        </div>
+      )}
+      {missing.length > 0 && (
+        <div className="banner" role="note">
+          <Info size={16} aria-hidden="true" />
+          <span>
+            {missing.length} obrigatória{missing.length > 1 ? "s" : ""} de
+            períodos já cursados {missing.length > 1 ? "estão" : "está"} sem
+            situação informada.
+          </span>
+          <Link to="/historico">
+            Informar agora <ArrowRight size={14} aria-hidden="true" />
+          </Link>
+        </div>
+      )}
+      {atRisk.map((c) => (
+        <div key={c.id} className="banner warn" role="note">
+          <TriangleAlert size={16} aria-hidden="true" />
+          <span>
+            {c.failures} reprovações em {courseShortName(c)}
+            {c.failure_level === "refused"
+              ? ": matrícula recusada (Res. nº 09/2009)."
+              : ": mais uma e a matrícula é recusada."}
+          </span>
+          <button type="button" onClick={() => onSelectCourse(c.id)}>
+            Ver disciplina <ArrowRight size={14} aria-hidden="true" />
+          </button>
+        </div>
+      ))}
+
+      <div className="overview-grid">
+        <section className="panel stat" aria-label="Coeficiente de rendimento">
+          <p className="stat-label">
+            Coeficiente de rendimento
+            <span
+              className="info"
+              title="Média das notas ponderada pelos créditos; reprovação por falta conta como zero (Res. nº 09/2009-CCEPE)"
+            >
+              <Info size={13} aria-label="Como é calculado" />
+            </span>
+          </p>
+          <div className="stat-row">
+            <BigValue value={cr?.value} />
+            <Sparkline points={timeline} />
+          </div>
+          <p className="stat-note">
+            {cr?.credits ?? 0} créditos com nota
+            {cr?.ungraded_attempts
+              ? ` · ${cr.ungraded_attempts} tentativa(s) sem nota`
+              : ""}
+          </p>
+          <div className="panel-actions">
+            <Link to="/historico">
+              <PencilLine size={15} aria-hidden="true" /> Registrar notas
+            </Link>
+          </div>
+        </section>
+
+        <section className="panel stat" aria-label="Integralização">
+          <p className="stat-label">Integralização acompanhada</p>
+          <BigValue value={percent} digits={0} suffix="%" />
+          <div className="segmented" aria-hidden="true">
+            <i className="seg-done" style={{ width: `${share(doneHours)}%` }} />
+            <i
+              className="seg-ongoing"
+              style={{ width: `${share(ongoingHours)}%` }}
+            />
+          </div>
+          <ul className="legend-dots">
+            <li data-kind="done">Concluído {doneHours}h</li>
+            <li data-kind="ongoing">Cursando {ongoingHours}h</li>
+            <li data-kind="left">
+              Faltam {Math.max(0, required - doneHours - ongoingHours)}h
+            </li>
+          </ul>
+          <div className="panel-actions">
+            <Link to="/historico">
+              <MapIcon size={15} aria-hidden="true" /> Ver no mapa
+            </Link>
+            <button type="button" onClick={onExport}>
+              <Download size={15} aria-hidden="true" /> Exportar PDF
+            </button>
+          </div>
+        </section>
+
+        <section className="panel stat" aria-label="Previsão de conclusão">
+          <p className="stat-label">Previsão de conclusão</p>
+          <span className="big-value">
+            {forecast?.estimated_completion_term ??
+              `${forecast?.estimated_semesters ?? "—"} sem.`}
+          </span>
+          <p className="stat-note">
+            {forecast?.estimated_semesters ?? "—"} semestre(s) restante(s) ·
+            caminho crítico de {forecast?.critical_path_semesters ?? "—"}
+          </p>
+          <div className="panel-actions">
+            <Link to="/proximo-semestre">
+              <CalendarPlus size={15} aria-hidden="true" /> Montar próximo
+              semestre
+            </Link>
+          </div>
+        </section>
+      </div>
+
+      <div className="overview-grid two">
+        <section className="panel" aria-labelledby="path-title">
+          <div className="panel-head">
+            <h2 id="path-title">Um caminho possível</h2>
+            <Link to="/proximo-semestre" className="link">
+              Ver plano completo <ArrowRight size={14} aria-hidden="true" />
+            </Link>
+          </div>
+          {projection && projection.semesters.length ? (
+            <table className="data-table">
+              <thead>
+                <tr>
+                  <th>Semestre</th>
+                  <th>Disciplinas</th>
+                  <th className="num">Carga</th>
+                </tr>
+              </thead>
+              <tbody>
+                {projection.semesters.slice(0, 4).map((s) => (
+                  <tr key={s.index}>
+                    <td>{termLabel(s.index)}</td>
+                    <td className="truncate">
+                      {s.picks
+                        .map((p) => courseShortName(p.course))
+                        .join(", ") || "—"}
+                      {s.electiveHours
+                        ? ` + ${s.electiveHours}h de eletivas`
+                        : ""}
+                    </td>
+                    <td className="num">
+                      {s.mandatoryHours + s.electiveHours}h
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={3}>
+                    {projection.stuck
+                      ? "Há disciplinas presas (recusa de matrícula ou pré-requisito pendente)."
+                      : `Conclusão neste caminho: ${termLabel(projection.semesters.length - 1)}, com ${forecast?.pace_hours_per_semester ?? 360}h por semestre.`}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          ) : (
+            <p className="muted">
+              Nada pendente: todas as obrigatórias e eletivas de perfil estão
+              cobertas.
+            </p>
+          )}
+        </section>
+        <CrGoal cr={cr} defaultCredits={ongoingCredits} />
+      </div>
+
+      <section className="panel" aria-labelledby="activity-title">
+        <div className="panel-head">
+          <h2 id="activity-title">Atividade no histórico</h2>
+          <Link to="/historico" className="link">
+            Ver histórico <ArrowRight size={14} aria-hidden="true" />
+          </Link>
+        </div>
+        {activity.length ? (
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Semestre</th>
+                <th>Disciplina</th>
+                <th>Situação</th>
+                <th className="num">Nota</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activity.map((r, i) => (
+                <tr key={`${r.course_id}-${r.academic_term}-${i}`}>
+                  <td>{r.academic_term}</td>
+                  <td>
+                    <button
+                      type="button"
+                      className="row-link"
+                      onClick={() => onSelectCourse(r.course_id)}
+                    >
+                      {byId.get(r.course_id)
+                        ? courseName(byId.get(r.course_id)!)
+                        : r.course_id}
+                    </button>
+                  </td>
+                  <td>
+                    <span className="status-text" data-attempt={r.status}>
+                      {statusText[r.status]}
+                    </span>
+                  </td>
+                  <td
+                    className="num"
+                    data-negative={r.status === "failed" || undefined}
+                  >
+                    {r.grade !== null && r.grade !== undefined
+                      ? formatGrade(Number(r.grade))
+                      : "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="muted">
+            Nenhuma cadeira registrada ainda. Comece em{" "}
+            <Link to="/historico" className="link">
+              Meu histórico
+            </Link>{" "}
+            ou importe o PDF do SIGAA.
+          </p>
+        )}
+      </section>
+    </div>
+  );
+}

@@ -10,7 +10,14 @@ A aplicação entrega **cadastro ou login → histórico informado pelo estudant
 
 - Mapa curricular por período, busca, filtros (inclusive "Críticas") e detalhes em abas: Resumo, Histórico e Dependências.
 - Setas de dependência ao selecionar uma disciplina (pré-requisito, libera, co-requisito), com as demais esmaecidas; botão *Caminho crítico* destaca a maior cadeia de obrigatórias pendentes; modo *Compacto* e *Legenda*.
-- Cards arrastáveis com mouse, toque (pressionar e segurar) e teclado (espaço, setas, espaço), via dnd-kit, com anúncios em português para leitores de tela. O seletor "Mover … para período" no painel continua como alternativa.
+- Cards arrastáveis a qualquer momento com mouse, toque (pressionar e segurar) e teclado (espaço, setas, espaço), via dnd-kit, com anúncios em português para leitores de tela. No histórico, soltar num período já cursado registra a tentativa naquele semestre; soltar num período futuro leva a disciplina para a Simulação. Na Simulação sem alternativa aberta, o primeiro arraste cria um rascunho. O seletor "Mover … para período" no painel continua como alternativa; clicar de novo no card selecionado desmarca e apaga as setas.
+- Barra lateral retrátil (no celular vira barra de abas no rodapé) com as páginas Visão geral, Meu histórico, Simulação, Próximo semestre, Comparar e Explorar grades. A nota sobre a fonte da matriz fica no rodapé.
+- **Visão geral:** CR com decimais menores e evolução por semestre, integralização com legenda, previsão, avisos com ação ("Informar agora"), "Um caminho possível" até a formatura, calculadora de meta de CR e atividade recente do histórico.
+- **E se eu reprovar?** No painel da disciplina, compara a previsão atual com a de uma reprovação (`GET /api/me/progression/failure-impact/{id}`): atraso em semestres, disciplinas que ficam travadas e o nível pela Res. nº 09/2009.
+- **Próximo semestre:** sugere disciplinas liberadas até a carga desejada, priorizando o caminho crítico, as atrasadas e as que liberam mais; cria uma alternativa com a sugestão.
+- **Comparar:** até três alternativas lado a lado (previsão, integralização, CR simulado, carga), com a melhor de cada linha destacada.
+- **Compartilhar e exportar:** link somente leitura de um plano salvo (`/compartilhado/<token>`, revogável, sem notas, CR, reprovações ou e-mail; migração `0011`) e "Exportar PDF", que imprime um relatório por período.
+- **Busca rápida:** `Ctrl+K` (`⌘K` no Mac) encontra disciplinas, páginas e ações.
 - Faixa fixa de indicadores (CR ou CR simulado, % integralizado, previsão, alterações não salvas). A Simulação tem identidade de rascunho (borda tracejada violeta) para não ser confundida com o histórico real.
 - *Marcar período como aprovado* registra de uma vez as obrigatórias de um período já cursado; exceções são ajustadas card a card.
 - Tema escuro (segue o sistema; a escolha fica salva no navegador). Nomes em CAIXA ALTA das páginas do CIn aparecem em formato de título só na exibição.
