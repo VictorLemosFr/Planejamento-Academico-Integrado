@@ -1,4 +1,5 @@
 import { test, expect, type Page } from "@playwright/test";
+import { drag } from "./drag";
 
 async function login(page: Page) {
   await page.goto("/");
@@ -39,7 +40,7 @@ test("dragging between and within periods is saved per alternative after a new l
     exact: true,
   });
   const target = page.getByRole("region", { name: "3º período", exact: true });
-  await intro.dragTo(target);
+  await drag(page, intro, target);
   await expect(
     target.getByRole("button", {
       name: "Introdução à Programação",
@@ -50,18 +51,14 @@ test("dragging between and within periods is saved per alternative after a new l
     name: "Matemática Discreta para Computação",
     exact: true,
   });
-  await math.hover();
-  await page.mouse.down();
-  const destination = await target
-    .getByRole("button", { name: "Introdução à Programação", exact: true })
-    .boundingBox();
-  if (!destination) throw new Error("Drop target missing");
-  await page.mouse.move(
-    destination.x + destination.width / 2,
-    destination.y + destination.height / 2,
-    { steps: 12 },
+  await drag(
+    page,
+    math,
+    target.getByRole("button", {
+      name: "Introdução à Programação",
+      exact: true,
+    }),
   );
-  await page.mouse.up();
   const names = await target
     .getByRole("button")
     .evaluateAll((buttons) =>
@@ -71,16 +68,7 @@ test("dragging between and within periods is saved per alternative after a new l
     names.indexOf("Matemática Discreta para Computação") + 1,
   );
   // Reorder the two moved cards inside their new period.
-  await intro.hover();
-  const samePeriodTarget = await math.boundingBox();
-  if (!samePeriodTarget) throw new Error("Drop target missing");
-  await page.mouse.down();
-  await page.mouse.move(
-    samePeriodTarget.x + samePeriodTarget.width / 2,
-    samePeriodTarget.y + samePeriodTarget.height / 2,
-    { steps: 12 },
-  );
-  await page.mouse.up();
+  await drag(page, intro, math);
   await expect(
     target.getByRole("button", {
       name: "Introdução à Programação",
@@ -88,7 +76,9 @@ test("dragging between and within periods is saved per alternative after a new l
     }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("Plano salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Plano salvo");
   await create(page, "Mapa independente");
   await expect(
     page
@@ -162,13 +152,26 @@ test("planned electives enter the map and can be moved and saved using mobile co
       exact: true,
     }),
   ).toHaveCount(0);
+  // No celular, o seletor de período fica no painel da disciplina.
+  await page
+    .getByRole("button", {
+      name: "Contabilidade de Custos e Gerencial",
+      exact: true,
+    })
+    .click();
   await page
     .getByLabel("Mover Contabilidade de Custos e Gerencial para período", {
       exact: true,
     })
     .selectOption("4");
+  await page
+    .getByRole("button", { name: "Fechar detalhes", exact: true })
+    .last()
+    .click();
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("Plano salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Plano salvo");
   await page.reload();
   await page
     .getByLabel("Alternativa salva")
@@ -191,10 +194,20 @@ test("planned electives enter the map and can be moved and saved using mobile co
     fullPage: true,
   });
   await page
+    .getByRole("button", {
+      name: "Contabilidade de Custos e Gerencial",
+      exact: true,
+    })
+    .click();
+  await page
     .getByLabel("Mover Contabilidade de Custos e Gerencial para período", {
       exact: true,
     })
     .selectOption("catalog");
+  await page
+    .getByRole("button", { name: "Fechar detalhes", exact: true })
+    .last()
+    .click();
   await expect(
     catalog.getByRole("button", {
       name: "Contabilidade de Custos e Gerencial",
@@ -202,7 +215,9 @@ test("planned electives enter the map and can be moved and saved using mobile co
     }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("Plano salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Plano salvo");
   await page.reload();
   await page
     .getByLabel("Alternativa salva")

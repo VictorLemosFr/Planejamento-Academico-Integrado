@@ -18,7 +18,9 @@ test("student registers and enters the SI planner", async ({ page }) => {
   await page.getByLabel("Semestre da tentativa").fill("2024.1");
   await page.getByLabel("Situação").selectOption("completed");
   await page.getByRole("button", { name: "Salvar histórico" }).click();
-  await expect(page.getByRole("status")).toContainText("Histórico salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Histórico salvo");
   await expect(
     page.getByRole("button", { name: "Introdução à Programação" }),
   ).toContainText("Concluída");
@@ -65,7 +67,9 @@ for (const [program, term, course] of [
       .selectOption(course);
     await page.getByLabel("Semestre da tentativa").fill(term);
     await page.getByRole("button", { name: "Salvar histórico" }).click();
-    await expect(page.getByRole("status")).toContainText("Histórico salvo");
+    await expect(
+      page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+    ).toContainText("Histórico salvo");
     await goSimulation(page);
     await page.getByLabel("Nome da alternativa").fill(`Plano ${program}`);
     await page.getByLabel("Semestre-alvo").fill("2026.2");

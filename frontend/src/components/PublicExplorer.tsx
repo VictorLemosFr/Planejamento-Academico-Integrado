@@ -6,6 +6,9 @@ import type { PublicGrid, Status } from "../types";
 import { CurriculumMap } from "./CurriculumMap";
 import { CourseDetails } from "./CourseDetails";
 import { ProgressSummary } from "./ProgressSummary";
+import { KpiStrip } from "./KpiStrip";
+import { ThemeToggle } from "./ThemeToggle";
+import { courseName } from "../display";
 
 const input =
   "glass-input mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900";
@@ -30,7 +33,7 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
   const [startTerm, setStartTerm] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<Status | "all">("all");
+  const [filter, setFilter] = useState<Status | "all" | "critical">("all");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -83,8 +86,9 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
   const visible =
     grid?.courses.filter(
       (c) =>
-        (filter === "all" || c.status === filter) &&
-        c.name
+        (filter === "all" ||
+          (filter === "critical" ? c.critical : c.status === filter)) &&
+        courseName(c)
           .toLocaleLowerCase("pt-BR")
           .includes(search.toLocaleLowerCase("pt-BR")),
     ) ?? [];
@@ -103,26 +107,24 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
               Planejamento Acadêmico Integrado
             </h1>
           </div>
-          <Link to="/" className={button}>
-            {signedIn ? "Voltar ao meu planejamento" : "Entrar ou criar conta"}
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link to="/" className={button}>
+              {signedIn
+                ? "Voltar ao meu planejamento"
+                : "Entrar ou criar conta"}
+            </Link>
+          </div>
         </div>
       </header>
       <main className="workspace mx-auto max-w-[1920px] px-4 py-5 sm:px-8">
-        <section className="workspace-intro" aria-label="Apresentação">
-          <div>
-            <p className="eyebrow">EXPLORAR GRADES</p>
-            <h2>
-              Navegue por qualquer curso.
-              <br />
-              <span>Simule sem criar conta.</span>
-            </h2>
-            <p>
-              Clique em uma disciplina e simule a aprovação para ver o que ela
-              libera. Nada é salvo: para guardar planos, entre na sua conta.
-            </p>
-          </div>
-        </section>
+        <div className="public-intro">
+          <p className="eyebrow">EXPLORAR GRADES</p>
+          <p>
+            Navegue por qualquer curso e simule aprovações sem criar conta. Nada
+            é salvo: para guardar planos, entre na sua conta.
+          </p>
+        </div>
         {curricula.error && (
           <p role="alert" className="mb-4 text-sm text-red-700">
             {curricula.error.message}
@@ -177,6 +179,17 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
         {!grid && !error && <p role="status">Carregando grade…</p>}
         {grid && (
           <>
+            <KpiStrip
+              mode="public"
+              integralization={grid.integralization}
+              forecast={grid.forecast}
+              counts={[
+                {
+                  label: "aprov. simuladas",
+                  value: grid.hypothetical_ids.length,
+                },
+              ]}
+            />
             <div className="filter-bar mb-5 flex flex-wrap gap-3">
               <label className="text-xs">
                 Período atual
@@ -225,10 +238,13 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
                 <select
                   className={input}
                   value={filter}
-                  onChange={(e) => setFilter(e.target.value as Status | "all")}
+                  onChange={(e) =>
+                    setFilter(e.target.value as Status | "all" | "critical")
+                  }
                 >
                   {[
                     ["all", "Todas"],
+                    ["critical", "Críticas (muitas dependentes)"],
                     ["simulated", "Aprovação simulada"],
                     ["available", "Disponíveis"],
                     ["pending", "Pendentes"],
@@ -249,12 +265,6 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
                 Limpar simulação ({grid.hypothetical_ids.length})
               </button>
             </div>
-            <ProgressSummary
-              integralization={grid.integralization}
-              forecast={grid.forecast}
-              courses={grid.courses}
-              onSelect={setSelectedId}
-            />
             <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
               <CurriculumMap
                 key={curriculumId}
@@ -272,6 +282,7 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
                   )
                 }
                 onSelect={setSelectedId}
+                criticalPathIds={grid.forecast?.critical_path_ids}
               />
               <CourseDetails
                 course={selected}
@@ -284,6 +295,14 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
                 }}
                 onSelect={setSelectedId}
                 onClose={() => setSelectedId(null)}
+              />
+            </div>
+            <div className="mt-6">
+              <ProgressSummary
+                integralization={grid.integralization}
+                forecast={grid.forecast}
+                courses={grid.courses}
+                onSelect={setSelectedId}
               />
             </div>
           </>

@@ -71,7 +71,7 @@ test("public explorer simulates approvals without an account", async ({
   await expect(
     page
       .getByRole("region", { name: "9º período", exact: true })
-      .getByRole("button", { name: "TRABALHO DE CONCLUSÃO DE CURSO" }),
+      .getByRole("button", { name: "Trabalho de Conclusão de Curso" }),
   ).toBeVisible();
 
   await tabs
@@ -82,16 +82,17 @@ test("public explorer simulates approvals without an account", async ({
   ).toBeVisible();
   await page
     .getByRole("button", {
-      name: "LABORATÓRIO DE SISTEMAS DIGITAIS",
+      name: "Laboratório de Sistemas Digitais",
       exact: true,
     })
     .click();
   const details = page.getByRole("complementary", {
     name: "Detalhes da disciplina",
   });
+  await details.getByRole("tab", { name: "Dependências" }).click();
   await expect(details).toContainText("Co-requisitos");
   await expect(
-    details.getByRole("button", { name: /SISTEMAS DIGITAIS/ }),
+    details.getByRole("button", { name: /Sistemas Digitais$/ }),
   ).toBeVisible();
 
   await page.setViewportSize({ width: 390, height: 844 });
@@ -172,7 +173,9 @@ test("history import reads a fictional SIGAA PDF before saving", async ({
     4,
   );
   await page.getByRole("button", { name: "Salvar histórico" }).click();
-  await expect(page.getByRole("status")).toContainText("Histórico salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Histórico salvo");
   await expect(
     page.getByRole("button", { name: "Introdução à Programação", exact: true }),
   ).toHaveAttribute("data-status", "completed");

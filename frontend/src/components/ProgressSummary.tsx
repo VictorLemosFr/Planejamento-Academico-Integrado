@@ -1,3 +1,4 @@
+import { titleCase } from "../display";
 import type { Course, Forecast, Integralization } from "../types";
 
 const plural = (n: number, one: string, many: string) =>
@@ -179,7 +180,7 @@ export function ProgressSummary({
                     onSelect?.(id);
                   }}
                 >
-                  {byId.get(id)?.short_name ?? id}
+                  {titleCase(byId.get(id)?.short_name ?? id)}
                 </a>
               </span>
             ))}
