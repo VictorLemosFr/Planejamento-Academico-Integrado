@@ -50,6 +50,10 @@ export function CurriculumMap({
   layout = {},
   editable = false,
   onMove,
+  canMove = () => true,
+  maxPeriod = 20,
+  editHint,
+  needsInfo = () => false,
 }: {
   courses: Course[];
   allCourses?: Course[];
@@ -59,6 +63,11 @@ export function CurriculumMap({
   layout?: CourseLayout;
   editable?: boolean;
   onMove?: (id: string, period: number | null, beforeId?: string) => void;
+  /** No histórico só eletivas se movem, e apenas para períodos já cursados. */
+  canMove?: (course: Course) => boolean;
+  maxPeriod?: number;
+  editHint?: string;
+  needsInfo?: (course: Course) => boolean;
 }) {
   const [dragging, setDragging] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<string | null>(null);
@@ -82,6 +91,8 @@ export function CurriculumMap({
   );
   function over(event: DragEvent, target: string) {
     if (!editable || !dragging) return;
+    const period = Number(target.replace("period-", ""));
+    if (target.startsWith("period-") && period > maxPeriod) return;
     event.preventDefault();
     event.stopPropagation();
     event.dataTransfer.dropEffect = "move";
@@ -95,6 +106,7 @@ export function CurriculumMap({
   }
   function drop(event: DragEvent, period: number | null, beforeId?: string) {
     if (!editable || !dragging) return;
+    if (period !== null && period > maxPeriod) return;
     event.preventDefault();
     event.stopPropagation();
     if (event.dataTransfer.getData("application/x-pai-course") === dragging)
@@ -114,7 +126,8 @@ export function CurriculumMap({
         selected={selectedId === course.id}
         related={relatedIds.has(course.id)}
         onSelect={() => onSelect(course.id)}
-        draggable={editable}
+        draggable={editable && canMove(course)}
+        needsInfo={needsInfo(course)}
         onDragStart={(e) => {
           e.dataTransfer.setData("application/x-pai-course", course.id);
           e.dataTransfer.effectAllowed = "move";
@@ -125,7 +138,7 @@ export function CurriculumMap({
           setDropTarget(null);
         }}
       />
-      {editable && (
+      {editable && canMove(course) && (
         <div className="card-move-control">
           <span aria-hidden="true">⠿</span>
           <select
@@ -141,7 +154,7 @@ export function CurriculumMap({
             {course.type === "elective" && (
               <option value="catalog">Catálogo de eletivas</option>
             )}
-            {Array.from({ length: 20 }, (_, i) => i + 1).map((p) => (
+            {Array.from({ length: maxPeriod }, (_, i) => i + 1).map((p) => (
               <option key={p} value={p}>
                 {p}º período
               </option>
@@ -149,11 +162,13 @@ export function CurriculumMap({
           </select>
         </div>
       )}
-      {editable && placementWarning(course, allCourses, layout) && (
-        <p className="placement-warning">
-          Pré-requisito no mesmo período ou posterior.
-        </p>
-      )}
+      {editable &&
+        canMove(course) &&
+        placementWarning(course, allCourses, layout) && (
+          <p className="placement-warning">
+            Pré-requisito no mesmo período ou posterior.
+          </p>
+        )}
     </div>
   );
 
@@ -165,16 +180,17 @@ export function CurriculumMap({
             Mapa curricular
           </h2>
           <p className="mt-1 text-xs text-slate-500">
-            {editable
-              ? "Arraste para mover. Solte sobre um card para inserir antes dele."
-              : "Selecione uma disciplina para explorar sua trajetória."}
+            {editHint ??
+              (editable
+                ? "Arraste para mover. Solte sobre um card para inserir antes dele."
+                : "Selecione uma disciplina para explorar sua trajetória.")}
           </p>
         </div>
         <span className="shrink-0 text-xs text-slate-500">
           {periodCount} períodos
         </span>
       </div>
-      {editable && (
+      {editable && !editHint && (
         <p className="map-edit-hint">
           Distribuição desta alternativa · mover cards não simula aprovação.
           Clique em Salvar para manter suas mudanças.

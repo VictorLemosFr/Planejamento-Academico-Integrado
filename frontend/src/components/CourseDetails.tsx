@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import type { ActionKind, Course } from "../types";
 import { statusMeta } from "./CourseCard";
 
@@ -14,6 +14,8 @@ export function CourseDetails({
   planned = false,
   allowPlanning = true,
   readOnlyHint,
+  historySlot,
+  simulationSlot,
 }: {
   course: Course | undefined;
   courses: Course[];
@@ -24,6 +26,9 @@ export function CourseDetails({
   /** Na grade pública só há simulação de aprovação, sem plano salvo. */
   allowPlanning?: boolean;
   readOnlyHint?: string;
+  /** Modo "Meu histórico": edição das tentativas reais no lugar das ações de simulação. */
+  historySlot?: ReactNode;
+  simulationSlot?: ReactNode;
   onAction: (kind: ActionKind) => void;
   onSelect: (id: string) => void;
   onClose: () => void;
@@ -126,7 +131,8 @@ export function CourseDetails({
                 </dd>
               </div>
             </dl>
-            {course.status === "locked" && (
+            {historySlot}
+            {course.status === "locked" && !historySlot && (
               <p className="mt-4 rounded-lg bg-amber-50 p-3 text-xs leading-5 text-amber-800">
                 Conclua os pré-requisitos pendentes para liberar esta
                 disciplina.
@@ -192,7 +198,7 @@ export function CourseDetails({
                 dependem dela, direta ou indiretamente.
               </p>
             )}
-            <div className="mt-6 space-y-2">
+            <div className={`mt-6 space-y-2 ${historySlot ? "hidden" : ""}`}>
               {official && (
                 <p className="text-sm text-emerald-800">
                   Aprovação informada · somente leitura
@@ -274,6 +280,7 @@ export function CourseDetails({
                   )}
                 </>
               )}
+              {simulationSlot}
             </div>
           </>
         )}

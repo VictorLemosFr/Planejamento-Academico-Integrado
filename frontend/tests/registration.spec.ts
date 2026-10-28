@@ -29,6 +29,14 @@ test("student registers and enters the SI planner", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Sair" })).toBeVisible();
 });
 
+async function goSimulation(page: import("@playwright/test").Page) {
+  await page
+    .getByRole("navigation", { name: "Navegação principal" })
+    .getByRole("link", { name: "Simulação" })
+    .click();
+  await expect(page.getByLabel("Alternativa salva")).toBeVisible();
+}
+
 for (const [program, term, course] of [
   ["CC", "2024.1", "cc:cin0133"],
   ["IA", "2025.1", "ia:cin0133"],
@@ -58,12 +66,13 @@ for (const [program, term, course] of [
     await page.getByLabel("Semestre da tentativa").fill(term);
     await page.getByRole("button", { name: "Salvar histórico" }).click();
     await expect(page.getByRole("status")).toContainText("Histórico salvo");
+    await goSimulation(page);
     await page.getByLabel("Nome da alternativa").fill(`Plano ${program}`);
     await page.getByLabel("Semestre-alvo").fill("2026.2");
     await page.getByRole("button", { name: "Criar alternativa" }).click();
     await page.reload();
     await expect(
-      page.getByRole("button", { name: "Editar histórico" }),
+      page.getByRole("heading", { name: "Simulação", exact: true }),
     ).toBeVisible();
     await page
       .getByLabel("Alternativa salva")

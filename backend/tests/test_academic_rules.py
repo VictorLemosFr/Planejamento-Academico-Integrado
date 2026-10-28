@@ -228,3 +228,22 @@ def test_0010_adds_credits_without_overwriting():
         with admin.begin() as connection:
             connection.execute(text(f'DROP SCHEMA "{schema}" CASCADE'))
         admin.dispose()
+
+
+def test_preview_evaluates_without_saving(client):
+    headers = signup(client, period=2)
+    draft = {
+        "start_term": "2024.1",
+        "current_period": 2,
+        "records": attempts(("ip", "2024.1", "completed", 8.0), ("cad", "2024.1", "failed", 2.0)),
+    }
+    preview = client.post("/api/me/history/preview", headers=headers, json=draft).json()
+    status = {c["id"]: c["status"] for c in preview["courses"]}
+    assert status["ip"] == "completed" and status["ds"] == "available"
+    assert preview["cr"]["value"] == round((5 * 8 + 3 * 2) / 8, 2)
+    assert client.get("/api/me/history").json()["revision"] == 0
+    four = attempts(*[("cad", f"202{i}.1", "failed", 1.0) for i in range(4, 8)])
+    rejected = client.post(
+        "/api/me/history/preview", headers=headers, json={**draft, "records": four}
+    )
+    assert rejected.status_code == 422

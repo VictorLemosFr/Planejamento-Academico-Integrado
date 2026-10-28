@@ -1164,3 +1164,25 @@ button:not(.course-card):not(:disabled):hover {
   font-size: 11px;
   color: #6a8098;
 }
+/* Modo histórico: barra de salvar e editor de tentativas. */
+.history-save-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid #ddd3f5;
+  border-radius: 14px;
+  background: #f7f3ffcc;
+  padding: 10px 14px;
+}
+.attempts-editor input:disabled {
+  background: #f1f5f9;
+}
+.failure-badge {
+  font-weight: 600;
+}
+.attempt-field {
+  min-height: 36px;
+  margin-top: 2px;
+}

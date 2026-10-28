@@ -7,6 +7,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 
 from app.core.config import get_settings
+from app.modules.constraints.service import CurriculumGraph
 from app.modules.curriculum.models import Curriculum
 from app.modules.curriculum.repository import list_courses, requirements_view
 from app.modules.personal.models import LoginSession, Plan, Student, User, now
@@ -28,7 +29,13 @@ from app.modules.personal.security import (
     require_origin,
     token_hash,
 )
-from app.modules.personal.service import evaluate, history_view, import_history, plan_view
+from app.modules.personal.service import (
+    evaluate,
+    history_view,
+    import_history,
+    plan_view,
+    validate_records,
+)
 from app.modules.personal.transcript import (
     MAX_BYTES,
     TranscriptError,
@@ -236,6 +243,27 @@ def save_own_history(payload: SelfHistoryPayload, identity: Identity, session: D
     return import_history(
         session, student, identity[0], imported, list_courses(session, curriculum.id)
     )
+
+
+@router.post("/me/history/preview")
+def preview_history(payload: SelfHistoryPayload, identity: Identity, session: Database):
+    """Avalia um histórico em edição sem gravá-lo, para o mapa refletir cada mudança."""
+    student = student_for(session, identity[0], require_curriculum=False)
+    curriculum = student_curriculum(session, student, payload.start_term)
+    if curriculum is None:
+        raise HTTPException(409, "Não há matriz curricular para este semestre de ingresso.")
+    courses = list_courses(session, curriculum.id)
+    records = payload.model_dump(exclude_none=True)["records"]
+    validate_records(records, CurriculumGraph(courses))
+    session.rollback()
+    history = {
+        "revision": student.history_revision,
+        "awaiting_import": not records,
+        "current_period": payload.current_period,
+        "start_term": payload.start_term,
+        "records": records,
+    }
+    return evaluate(courses, history, requirements=requirements_view(curriculum))
 
 
 @router.post("/me/history/pdf")

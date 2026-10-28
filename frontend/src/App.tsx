@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, NavLink, useLocation } from "react-router";
 import * as api from "./api";
-import type { ActionKind, Identity, Plan, Status } from "./types";
+import type {
+  ActionKind,
+  HistoryRecord,
+  HistoryUpdate,
+  Identity,
+  Plan,
+  Progression,
+  Status,
+} from "./types";
 import DemoApp from "./DemoApp";
 import { CurriculumMap } from "./components/CurriculumMap";
 import { CourseDetails } from "./components/CourseDetails";
@@ -10,6 +18,13 @@ import { HistoryEditor } from "./components/HistoryEditor";
 import { PublicExplorer } from "./components/PublicExplorer";
 import { ProgressSummary, trackedPercent } from "./components/ProgressSummary";
 import { moveCourse } from "./courseLayout";
+import { AttemptsEditor } from "./components/AttemptsEditor";
+import {
+  formatGrade,
+  historyLayout,
+  termOf,
+  termsUntil,
+} from "./academicTerms";
 
 const input =
   "glass-input mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900";
@@ -24,6 +39,9 @@ const snapshot = (p: Plan | null) =>
     p.planned_ids,
     p.hypothetical_ids,
     Object.entries(p.course_layout ?? {}).sort(([a], [b]) =>
+      a.localeCompare(b),
+    ),
+    Object.entries(p.simulated_grades ?? {}).sort(([a], [b]) =>
       a.localeCompare(b),
     ),
   ]);
@@ -449,6 +467,15 @@ function Student({
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
   const [editingHistory, setEditingHistory] = useState(false);
+  const [historyDraft, setHistoryDraft] = useState<HistoryUpdate | null>(null);
+  const [preview, setPreview] = useState<Progression | null>(null);
+  const location = useLocation();
+  // Separação explícita: o que aconteceu (histórico) e o que se imagina (simulação).
+  const mode: "history" | "simulation" =
+    location.pathname.startsWith("/simulacao") ||
+    location.pathname.startsWith("/planejamento")
+      ? "simulation"
+      : "history";
   const isStudent = identity.user.role === "student";
   const history = useQuery({
     queryKey: ["history"],
@@ -465,8 +492,19 @@ function Student({
     queryFn: api.getPlans,
     enabled: isStudent,
   });
-  const dirty = snapshot(draft) !== snapshot(saved);
-  const data = draft ?? progression.data;
+  const planDirty = snapshot(draft) !== snapshot(saved);
+  const historyDirty = historyDraft !== null;
+  const dirty = planDirty || historyDirty;
+  const data =
+    mode === "simulation"
+      ? (draft ?? progression.data)
+      : (preview ?? progression.data);
+  const startTerm =
+    historyDraft?.start_term ?? history.data?.start_term ?? null;
+  const currentPeriod =
+    historyDraft?.current_period ?? history.data?.current_period ?? 1;
+  const records: HistoryRecord[] =
+    historyDraft?.records ?? history.data?.records ?? [];
   const selected = data?.courses.find((c) => c.id === selectedId);
   const failure =
     error ||
@@ -502,6 +540,92 @@ function Student({
     setSaved(plan);
     setSelectedId(null);
   }
+  function editHistory(next: HistoryRecord[]) {
+    if (!startTerm) {
+      setError(
+        "Informe o semestre de ingresso em “Editar histórico” antes de registrar cadeiras no mapa.",
+      );
+      return;
+    }
+    const update = {
+      start_term: startTerm,
+      current_period: currentPeriod,
+      records: next,
+    };
+    setHistoryDraft(update);
+    void run(async () => {
+      setPreview(await api.previewHistory(update));
+    });
+  }
+  function replaceCourse(courseId: string, next: HistoryRecord[]) {
+    editHistory([...records.filter((r) => r.course_id !== courseId), ...next]);
+  }
+  function moveInHistory(courseId: string, period: number | null) {
+    const course = data?.courses.find((c) => c.id === courseId);
+    if (!course || course.type !== "elective" || !startTerm || busy) return;
+    const own = records
+      .filter((r) => r.course_id === courseId)
+      .sort((a, b) => a.academic_term.localeCompare(b.academic_term));
+    if (period === null) {
+      if (
+        own.length &&
+        !window.confirm("Remover as tentativas desta eletiva do histórico?")
+      )
+        return;
+      replaceCourse(courseId, []);
+      setSelectedId(null);
+      return;
+    }
+    const term = termOf(startTerm, period);
+    const status = period >= currentPeriod ? "in_progress" : "completed";
+    if (own.some((r) => r.academic_term === term)) return;
+    if (!own.length) {
+      replaceCourse(courseId, [
+        { course_id: courseId, academic_term: term, status },
+      ]);
+    } else {
+      const latest = own[own.length - 1];
+      replaceCourse(courseId, [
+        ...own.slice(0, -1),
+        {
+          ...latest,
+          academic_term: term,
+          status:
+            status === "in_progress"
+              ? "in_progress"
+              : latest.status === "in_progress"
+                ? "completed"
+                : latest.status,
+          grade: status === "in_progress" ? null : latest.grade,
+        },
+      ]);
+    }
+    setSelectedId(courseId);
+    setNotice(
+      "Eletiva registrada no histórico. Ajuste situação e nota no painel e clique em Salvar histórico.",
+    );
+  }
+  function setSimulatedGrade(courseId: string, grade: number | null) {
+    if (!draft) return;
+    const simulated_grades = { ...(draft.simulated_grades ?? {}) };
+    if (grade === null) delete simulated_grades[courseId];
+    else simulated_grades[courseId] = grade;
+    setDraft({ ...draft, simulated_grades });
+  }
+  async function refreshSimulatedCr() {
+    if (!draft) return;
+    await run(async () => {
+      const result = await api.evaluatePlan(draft.id, {
+        version: draft.version,
+        history_revision: draft.history_revision,
+        planned_ids: draft.planned_ids,
+        hypothetical_ids: draft.hypothetical_ids,
+        course_layout: draft.course_layout,
+        simulated_grades: draft.simulated_grades ?? {},
+      });
+      setDraft({ ...draft, ...result });
+    });
+  }
   async function refresh() {
     if (!discard()) return;
     await run(async () => {
@@ -522,6 +646,7 @@ function Student({
         planned_ids: draft.planned_ids,
         hypothetical_ids: draft.hypothetical_ids,
         course_layout: draft.course_layout,
+        simulated_grades: draft.simulated_grades ?? {},
         action: { kind, course_id: selectedId },
       });
       setDraft({ ...draft, ...result });
@@ -608,8 +733,10 @@ function Student({
             className="main-nav mt-5 flex gap-5 text-sm"
             aria-label="Navegação principal"
           >
-            <NavLink to="/">Mapa curricular</NavLink>
-            <NavLink to="/planejamento">Alternativas do semestre</NavLink>
+            <NavLink to="/" end>
+              Meu histórico
+            </NavLink>
+            <NavLink to="/simulacao">Simulação</NavLink>
             <NavLink to="/grades">Explorar grades</NavLink>
           </nav>
         )}
@@ -749,7 +876,11 @@ function Student({
             >
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="font-semibold">
-                  {draft ? "Cenário hipotético" : "Histórico informado"}
+                  {mode === "history"
+                    ? "Histórico informado"
+                    : draft
+                      ? "Cenário hipotético"
+                      : "Simulação"}
                 </h2>
                 <span className="text-xs text-slate-500">
                   Revisão {data?.history_revision ?? "—"} ·{" "}
@@ -775,197 +906,278 @@ function Student({
                   {warning.message}
                 </p>
               ))}
-              <label className="mt-4 block max-w-lg text-xs text-slate-600">
-                Alternativa salva
-                <select
-                  className={input}
-                  value={draft?.id ?? ""}
-                  disabled={busy || plans.isLoading}
-                  onChange={(e) => {
-                    const id = e.target.value;
-                    if (!discard()) return;
-                    void run(async () =>
-                      open(id ? await api.getPlan(id) : null),
-                    );
-                  }}
-                >
-                  <option value="">Histórico informado</option>
-                  {plans.data?.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name} · {p.target_term}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <form
-                className="mt-4 flex flex-wrap items-end gap-3"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  if (!discard()) return;
-                  void run(async () => {
-                    open(await api.createPlan(newName, newTerm));
-                    setNewName("");
-                    await plans.refetch();
-                  });
-                }}
-              >
-                <label className="min-w-0 text-xs text-slate-600">
-                  Nome da alternativa
-                  <input
-                    className={input}
-                    required
-                    maxLength={120}
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                  />
-                </label>
-                <label className="text-xs text-slate-600">
-                  Semestre-alvo
-                  <input
-                    className={input}
-                    required
-                    pattern="[0-9]{4}\.[12]"
-                    placeholder="2026.2"
-                    value={newTerm}
-                    onChange={(e) => setNewTerm(e.target.value)}
-                  />
-                </label>
-                <button className={button} disabled={busy}>
-                  Criar alternativa
-                </button>
-              </form>
-              {draft && (
-                <div className="mt-5 border-t border-slate-200 pt-4">
-                  <div className="flex flex-wrap items-end gap-3">
-                    <label className="text-xs text-slate-600">
-                      Nome do plano
-                      <input
-                        className={input}
-                        maxLength={120}
-                        value={draft.name}
-                        disabled={busy}
-                        onChange={(e) => {
-                          setNotice("");
-                          setDraft({ ...draft, name: e.target.value });
-                        }}
-                      />
-                    </label>
-                    <label className="text-xs text-slate-600">
-                      Semestre do plano
-                      <input
-                        className={input}
-                        value={draft.target_term}
-                        disabled={busy}
-                        onChange={(e) => {
-                          setNotice("");
-                          setDraft({ ...draft, target_term: e.target.value });
-                        }}
-                      />
-                    </label>
-                    <button
-                      className={primary}
-                      disabled={
-                        busy ||
-                        !dirty ||
-                        !draft.valid ||
-                        !draft.name.trim() ||
-                        !/^\d{4}\.[12]$/.test(draft.target_term)
-                      }
-                      onClick={() =>
-                        void run(async () => {
-                          open(await api.savePlan(draft));
-                          await plans.refetch();
-                          setNotice(
-                            "Plano salvo. Suas escolhas estão persistidas.",
-                          );
-                        })
-                      }
+              {mode === "history" && (
+                <div className="history-mode mt-4">
+                  <p className="text-sm text-slate-600">
+                    Este é o que <strong>já aconteceu</strong>. Clique numa
+                    disciplina do mapa para registrar aprovação, reprovação e
+                    nota, ou arraste eletivas do catálogo para os períodos já
+                    cursados. Para testar cenários, use a aba{" "}
+                    <NavLink
+                      to="/simulacao"
+                      className="font-medium text-blue-700 underline"
                     >
-                      Salvar
-                    </button>
-                    <button
-                      className={button}
-                      disabled={busy}
-                      onClick={() => void refresh()}
-                    >
-                      Recarregar plano
-                    </button>
-                    <button
-                      className={`${button} text-red-700`}
-                      disabled={busy}
-                      onClick={() => {
-                        if (
-                          window.confirm(
-                            "Excluir esta alternativa e seu rascunho?",
-                          )
-                        )
-                          void run(async () => {
-                            await api.deletePlan(draft.id, draft.version);
-                            open(null);
-                            await plans.refetch();
-                            setNotice("Plano excluído.");
-                          });
-                      }}
-                    >
-                      Excluir alternativa
-                    </button>
-                  </div>
-                  <p className="mt-3 text-sm text-violet-800">
-                    {dirty ? "Alterações pendentes" : "Versão salva"} · somente
-                    aprovações simuladas liberam dependentes neste cenário.
-                    Planejar ou estar em andamento não libera pré-requisitos.
+                      Simulação
+                    </NavLink>
+                    .
                   </p>
-                  {!draft.valid && (
-                    <div className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
-                      <p>
-                        Este plano precisa de ajustes antes de salvar. Suas
-                        escolhas foram preservadas.
+                  {historyDirty && (
+                    <div
+                      className="history-save-bar mt-4"
+                      role="region"
+                      aria-label="Alterações no histórico"
+                    >
+                      <p className="text-sm text-violet-800">
+                        Alterações no histórico ainda não salvas.
                       </p>
-                      {Object.entries(draft.problems).map(([id, issues]) => (
-                        <div key={id} className="mt-2">
-                          <span>
-                            {data?.courses.find((c) => c.id === id)?.name}:{" "}
-                            {issues.join(" ")}
-                          </span>
-                          <button
-                            className={`${button} ml-2 mt-1`}
-                            disabled={busy}
-                            onClick={() =>
-                              void run(async () => {
-                                const result = await api.evaluatePlan(
-                                  draft.id,
-                                  {
-                                    version: draft.version,
-                                    history_revision: draft.history_revision,
-                                    course_layout: draft.course_layout,
-                                    planned_ids: draft.planned_ids.filter(
-                                      (x) => x !== id,
-                                    ),
-                                    hypothetical_ids:
-                                      draft.hypothetical_ids.filter(
-                                        (x) => x !== id,
-                                      ),
-                                  },
-                                );
-                                setDraft({ ...draft, ...result });
-                              })
-                            }
-                          >
-                            Remover escolha
-                          </button>
-                        </div>
-                      ))}
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          className={primary}
+                          disabled={busy}
+                          onClick={() =>
+                            void run(async () => {
+                              await api.saveHistory(historyDraft!);
+                              setHistoryDraft(null);
+                              setPreview(null);
+                              open(null);
+                              await Promise.all([
+                                history.refetch(),
+                                progression.refetch(),
+                                plans.refetch(),
+                              ]);
+                              setNotice("Histórico salvo.");
+                            })
+                          }
+                        >
+                          Salvar histórico
+                        </button>
+                        <button
+                          className={button}
+                          disabled={busy}
+                          onClick={() => {
+                            setHistoryDraft(null);
+                            setPreview(null);
+                          }}
+                        >
+                          Descartar alterações
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
               )}
+              {mode === "simulation" && (
+                <>
+                  <label className="mt-4 block max-w-lg text-xs text-slate-600">
+                    Alternativa salva
+                    <select
+                      className={input}
+                      value={draft?.id ?? ""}
+                      disabled={busy || plans.isLoading}
+                      onChange={(e) => {
+                        const id = e.target.value;
+                        if (!discard()) return;
+                        void run(async () =>
+                          open(id ? await api.getPlan(id) : null),
+                        );
+                      }}
+                    >
+                      <option value="">Histórico informado</option>
+                      {plans.data?.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name} · {p.target_term}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <form
+                    className="mt-4 flex flex-wrap items-end gap-3"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      if (!discard()) return;
+                      void run(async () => {
+                        open(await api.createPlan(newName, newTerm));
+                        setNewName("");
+                        await plans.refetch();
+                      });
+                    }}
+                  >
+                    <label className="min-w-0 text-xs text-slate-600">
+                      Nome da alternativa
+                      <input
+                        className={input}
+                        required
+                        maxLength={120}
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                      />
+                    </label>
+                    <label className="text-xs text-slate-600">
+                      Semestre-alvo
+                      <input
+                        className={input}
+                        required
+                        pattern="[0-9]{4}\.[12]"
+                        placeholder="2026.2"
+                        value={newTerm}
+                        onChange={(e) => setNewTerm(e.target.value)}
+                      />
+                    </label>
+                    <button className={button} disabled={busy}>
+                      Criar alternativa
+                    </button>
+                  </form>
+                  {draft && (
+                    <div className="mt-5 border-t border-slate-200 pt-4">
+                      <div className="flex flex-wrap items-end gap-3">
+                        <label className="text-xs text-slate-600">
+                          Nome do plano
+                          <input
+                            className={input}
+                            maxLength={120}
+                            value={draft.name}
+                            disabled={busy}
+                            onChange={(e) => {
+                              setNotice("");
+                              setDraft({ ...draft, name: e.target.value });
+                            }}
+                          />
+                        </label>
+                        <label className="text-xs text-slate-600">
+                          Semestre do plano
+                          <input
+                            className={input}
+                            value={draft.target_term}
+                            disabled={busy}
+                            onChange={(e) => {
+                              setNotice("");
+                              setDraft({
+                                ...draft,
+                                target_term: e.target.value,
+                              });
+                            }}
+                          />
+                        </label>
+                        <button
+                          className={primary}
+                          disabled={
+                            busy ||
+                            !dirty ||
+                            !draft.valid ||
+                            !draft.name.trim() ||
+                            !/^\d{4}\.[12]$/.test(draft.target_term)
+                          }
+                          onClick={() =>
+                            void run(async () => {
+                              open(await api.savePlan(draft));
+                              await plans.refetch();
+                              setNotice(
+                                "Plano salvo. Suas escolhas estão persistidas.",
+                              );
+                            })
+                          }
+                        >
+                          Salvar
+                        </button>
+                        <button
+                          className={button}
+                          disabled={busy}
+                          onClick={() => void refresh()}
+                        >
+                          Recarregar plano
+                        </button>
+                        <button
+                          className={`${button} text-red-700`}
+                          disabled={busy}
+                          onClick={() => {
+                            if (
+                              window.confirm(
+                                "Excluir esta alternativa e seu rascunho?",
+                              )
+                            )
+                              void run(async () => {
+                                await api.deletePlan(draft.id, draft.version);
+                                open(null);
+                                await plans.refetch();
+                                setNotice("Plano excluído.");
+                              });
+                          }}
+                        >
+                          Excluir alternativa
+                        </button>
+                      </div>
+                      <p className="mt-3 text-sm text-violet-800">
+                        {dirty ? "Alterações pendentes" : "Versão salva"} ·
+                        somente aprovações simuladas liberam dependentes neste
+                        cenário. Planejar ou estar em andamento não libera
+                        pré-requisitos.
+                      </p>
+                      {!draft.valid && (
+                        <div className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
+                          <p>
+                            Este plano precisa de ajustes antes de salvar. Suas
+                            escolhas foram preservadas.
+                          </p>
+                          {Object.entries(draft.problems).map(
+                            ([id, issues]) => (
+                              <div key={id} className="mt-2">
+                                <span>
+                                  {data?.courses.find((c) => c.id === id)?.name}
+                                  : {issues.join(" ")}
+                                </span>
+                                <button
+                                  className={`${button} ml-2 mt-1`}
+                                  disabled={busy}
+                                  onClick={() =>
+                                    void run(async () => {
+                                      const result = await api.evaluatePlan(
+                                        draft.id,
+                                        {
+                                          version: draft.version,
+                                          history_revision:
+                                            draft.history_revision,
+                                          course_layout: draft.course_layout,
+                                          planned_ids: draft.planned_ids.filter(
+                                            (x) => x !== id,
+                                          ),
+                                          hypothetical_ids:
+                                            draft.hypothetical_ids.filter(
+                                              (x) => x !== id,
+                                            ),
+                                        },
+                                      );
+                                      setDraft({ ...draft, ...result });
+                                    })
+                                  }
+                                >
+                                  Remover escolha
+                                </button>
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              )}
             </section>
-            <div className="metrics-grid mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="metrics-grid mb-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
               {[
                 ["Aprovações oficiais", data?.counts.completed],
                 ["Aprovações simuladas", data?.counts.simulated],
                 ["Em andamento", data?.counts.in_progress],
                 ["Carga planejada", `${data?.planned_hours ?? 0}h`],
+                mode === "simulation" &&
+                draft?.cr?.simulated_value !== null &&
+                draft?.cr?.simulated_value !== undefined
+                  ? ["CR simulado", formatGrade(draft.cr.simulated_value)]
+                  : [
+                      data?.cr?.ungraded_attempts
+                        ? `CR · ${data.cr.ungraded_attempts} sem nota`
+                        : "CR",
+                      formatGrade(data?.cr?.value),
+                    ],
               ].map(([label, value]) => (
                 <div
                   key={label}
@@ -1020,26 +1232,62 @@ function Student({
             </div>
             {data && (
               <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
-                <CurriculumMap
-                  key={draft?.id ?? "official"}
-                  courses={visible}
-                  allCourses={data.courses}
-                  layout={draft?.course_layout}
-                  editable={!!draft && !busy}
-                  onMove={move}
-                  selectedId={selectedId}
-                  relatedIds={
-                    new Set(
-                      selected
-                        ? [
-                            ...selected.prerequisite_ids,
-                            ...selected.dependent_ids,
-                          ]
-                        : [],
-                    )
-                  }
-                  onSelect={setSelectedId}
-                />
+                {mode === "history" ? (
+                  <CurriculumMap
+                    key="history"
+                    courses={visible}
+                    allCourses={data.courses}
+                    layout={
+                      startTerm
+                        ? historyLayout(data.courses, records, startTerm)
+                        : {}
+                    }
+                    editable={!!startTerm && !busy}
+                    canMove={(course) => course.type === "elective"}
+                    maxPeriod={currentPeriod}
+                    editHint="Clique numa disciplina para registrar a situação. Arraste eletivas para os períodos já cursados."
+                    needsInfo={(course) =>
+                      course.type === "mandatory" &&
+                      course.period === 1 &&
+                      currentPeriod > 1 &&
+                      !records.some((r) => r.course_id === course.id)
+                    }
+                    onMove={(id, period) => moveInHistory(id, period)}
+                    selectedId={selectedId}
+                    relatedIds={
+                      new Set(
+                        selected
+                          ? [
+                              ...selected.prerequisite_ids,
+                              ...selected.dependent_ids,
+                            ]
+                          : [],
+                      )
+                    }
+                    onSelect={setSelectedId}
+                  />
+                ) : (
+                  <CurriculumMap
+                    key={draft?.id ?? "official"}
+                    courses={visible}
+                    allCourses={data.courses}
+                    layout={draft?.course_layout}
+                    editable={!!draft && !busy}
+                    onMove={move}
+                    selectedId={selectedId}
+                    relatedIds={
+                      new Set(
+                        selected
+                          ? [
+                              ...selected.prerequisite_ids,
+                              ...selected.dependent_ids,
+                            ]
+                          : [],
+                      )
+                    }
+                    onSelect={setSelectedId}
+                  />
+                )}
                 <CourseDetails
                   course={selected}
                   courses={data.courses}
@@ -1050,6 +1298,73 @@ function Student({
                   readOnly={!draft || selected?.status === "completed"}
                   official={selected?.status === "completed"}
                   planned={draft?.planned_ids.includes(selectedId ?? "")}
+                  historySlot={
+                    mode === "history" && selected ? (
+                      startTerm ? (
+                        <AttemptsEditor
+                          key={selected.id}
+                          course={selected}
+                          records={records.filter(
+                            (r) => r.course_id === selected.id,
+                          )}
+                          terms={termsUntil(startTerm, currentPeriod)}
+                          defaultTerm={termOf(
+                            startTerm,
+                            Math.max(
+                              1,
+                              Math.min(
+                                selected.period ?? currentPeriod - 1,
+                                currentPeriod,
+                              ),
+                            ),
+                          )}
+                          firstPeriodRequired={
+                            selected.type === "mandatory" &&
+                            selected.period === 1 &&
+                            currentPeriod > 1
+                          }
+                          failureLimit={data.failure_limit ?? 3}
+                          failureRule={
+                            data.failure_rule ?? "Res. nº 09/2009-CCEPE/UFPE"
+                          }
+                          onChange={(next) => replaceCourse(selected.id, next)}
+                        />
+                      ) : (
+                        <p className="mt-5 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
+                          Informe seu semestre de ingresso em “Editar histórico”
+                          para registrar cadeiras no mapa.
+                        </p>
+                      )
+                    ) : undefined
+                  }
+                  simulationSlot={
+                    mode === "simulation" &&
+                    draft &&
+                    selected &&
+                    (draft.planned_ids.includes(selected.id) ||
+                      draft.hypothetical_ids.includes(selected.id)) ? (
+                      <label className="mt-3 block text-xs text-slate-600">
+                        Nota simulada (entra no CR simulado)
+                        <input
+                          className={input}
+                          type="number"
+                          min="0"
+                          max="10"
+                          step="0.1"
+                          inputMode="decimal"
+                          disabled={busy}
+                          value={draft.simulated_grades?.[selected.id] ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(",", ".");
+                            const grade = value === "" ? null : Number(value);
+                            if (grade === null || (grade >= 0 && grade <= 10))
+                              setSimulatedGrade(selected.id, grade);
+                          }}
+                          onBlur={() => void refreshSimulatedCr()}
+                        />
+                      </label>
+                    ) : undefined
+                  }
                 />
               </div>
             )}
