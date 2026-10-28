@@ -1,4 +1,8 @@
-"""Carrega dados demonstrativos sem substituir registros existentes."""
+"""Carrega as matrizes atendidas sem substituir registros existentes.
+
+Correções de dados em bancos já populados são feitas por migrações do Alembic,
+pois o seed apenas insere o que falta.
+"""
 
 import json
 from pathlib import Path
@@ -7,53 +11,34 @@ from sqlalchemy.orm import Session
 
 from app.core.database import engine
 from app.modules.constraints.service import CurriculumGraph
+from app.modules.curriculum.catalog import CATALOGS, REQUIREMENT_FIELDS
 from app.modules.curriculum.models import Course, Curriculum, Prerequisite
 
-CATALOGS = (
-    ("SI-demo", "SI", "0000.1", "app/data/curriculum.json", "curriculum.json"),
-    (
-        "CC-2024",
-        "CC",
-        "2024.1",
-        "https://portal.cin.ufpe.br/graduacao/ciencia-da-computacao/",
-        "curriculum_cc_2024.json",
-    ),
-    (
-        "IA-2025",
-        "IA",
-        "2025.1",
-        "https://portal.cin.ufpe.br/graduacao/inteligencia-artificial/",
-        "curriculum_ia_2025.json",
-    ),
-    (
-        "EC-2024",
-        "EC",
-        "2024.1",
-        "https://portal.cin.ufpe.br/graduacao/engenharia-da-computacao/",
-        "curriculum_ec_2024.json",
-    ),
-)
+
+def load_catalog(catalog):
+    return json.loads((Path(__file__).parent / "data" / catalog["filename"]).read_text())
 
 
 def seed(session: Session):
     catalogs = []
     seen_ids = set()
-    for curriculum_id, program, valid_from, source_url, filename in CATALOGS:
-        courses = json.loads((Path(__file__).parent / "data" / filename).read_text())
+    for catalog in CATALOGS:
+        courses = load_catalog(catalog)
         ids = [course["id"] for course in courses]
         if len(set(ids)) != len(ids) or seen_ids.intersection(ids):
-            raise ValueError(f"IDs repetidos na matriz {curriculum_id}.")
+            raise ValueError(f"IDs repetidos na matriz {catalog['id']}.")
         seen_ids.update(ids)
         CurriculumGraph(courses)
-        catalogs.append((curriculum_id, program, valid_from, source_url, courses))
-    for curriculum_id, program, valid_from, source_url, courses in catalogs:
-        if session.get(Curriculum, curriculum_id) is None:
+        catalogs.append((catalog, courses))
+    for catalog, courses in catalogs:
+        if session.get(Curriculum, catalog["id"]) is None:
             session.add(
                 Curriculum(
-                    id=curriculum_id,
-                    program=program,
-                    valid_from=valid_from,
-                    source_url=source_url,
+                    id=catalog["id"],
+                    program=catalog["program"],
+                    valid_from=catalog["valid_from"],
+                    source_url=catalog["source_url"],
+                    **{field: catalog[field] for field in REQUIREMENT_FIELDS},
                 )
             )
         for course in courses:
@@ -63,11 +48,11 @@ def seed(session: Session):
                         **{
                             key: value for key, value in course.items() if key != "prerequisite_ids"
                         },
-                        curriculum_id=curriculum_id,
+                        curriculum_id=catalog["id"],
                     )
                 )
     session.flush()
-    for _, _, _, _, courses in catalogs:
+    for _, courses in catalogs:
         for course in courses:
             for prerequisite_id in course["prerequisite_ids"]:
                 key = (course["id"], prerequisite_id)
@@ -81,4 +66,4 @@ def seed(session: Session):
 if __name__ == "__main__":
     with Session(engine) as session:
         seed(session)
-    print("Dados demonstrativos carregados. Nenhum registro existente foi substituído.")
+    print("Matrizes carregadas. Nenhum registro existente foi substituído.")

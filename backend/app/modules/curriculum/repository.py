@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.modules.curriculum.models import Course, Prerequisite
 
 
-def list_courses(session: Session, curriculum_id: str = "SI-demo"):
+def list_courses(session: Session, curriculum_id: str = "SI-2024"):
     courses = list(
         session.scalars(
             select(Course)

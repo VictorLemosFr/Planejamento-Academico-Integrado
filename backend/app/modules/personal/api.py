@@ -48,15 +48,14 @@ def user_view(session, user, login):
 
 def student_curriculum(session, student, start_term=None):
     term = start_term or student.start_term
-    if term is None and student.program != "SI":
-        return None
+    program = select(Curriculum).where(Curriculum.program == student.program)
+    if term is None:
+        if student.program != "SI":
+            return None
+        # Contas legadas de SI, provisionadas sem ingresso, mantêm a matriz de SI.
+        return session.scalar(program.order_by(Curriculum.valid_from))
     return session.scalar(
-        select(Curriculum)
-        .where(
-            Curriculum.program == student.program,
-            Curriculum.valid_from <= (term or "0000.1"),
-        )
-        .order_by(Curriculum.valid_from.desc())
+        program.where(Curriculum.valid_from <= term).order_by(Curriculum.valid_from.desc())
     )
 
 

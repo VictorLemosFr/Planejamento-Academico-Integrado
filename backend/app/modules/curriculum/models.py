@@ -13,6 +13,14 @@ class Curriculum(Base):
     program: Mapped[str] = mapped_column(String(2))
     valid_from: Mapped[str] = mapped_column(String(6))
     source_url: Mapped[str] = mapped_column(String(512))
+    # Requisitos publicados pela fonte; ausentes ficam nulos em vez de estimados.
+    official_mandatory_hours: Mapped[int | None] = mapped_column(nullable=True)
+    profile_elective_hours: Mapped[int | None] = mapped_column(nullable=True)
+    free_elective_hours: Mapped[int | None] = mapped_column(nullable=True)
+    complementary_hours: Mapped[int | None] = mapped_column(nullable=True)
+    extension_hours: Mapped[int | None] = mapped_column(nullable=True)
+    total_hours: Mapped[int | None] = mapped_column(nullable=True)
+    standard_semesters: Mapped[int | None] = mapped_column(nullable=True)
 
 
 class Course(Base):
@@ -31,7 +39,7 @@ class Course(Base):
         ),
     )
     id: Mapped[str] = mapped_column(String(40), primary_key=True)
-    curriculum_id: Mapped[str] = mapped_column(ForeignKey("curricula.id"), default="SI-demo")
+    curriculum_id: Mapped[str] = mapped_column(ForeignKey("curricula.id"), default="SI-2024")
     source_code: Mapped[str | None] = mapped_column(String(40), nullable=True)
     prerequisite_status: Mapped[str] = mapped_column(String(12), default="unverified")
     name: Mapped[str] = mapped_column(String(255))

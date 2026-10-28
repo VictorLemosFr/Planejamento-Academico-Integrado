@@ -1,51 +1,62 @@
 [
   {
     "id": "mdc",
+    "source_code": "CIN0132",
     "name": "Matemática Discreta para Computação",
     "short_name": "Matemática Discreta",
     "hours": 60,
     "period": 1,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "ip",
+    "source_code": "CIN0133",
     "name": "Introdução à Programação",
     "short_name": "Introdução à Programação",
-    "hours": 120,
+    "hours": 60,
     "period": 1,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "sdig",
+    "source_code": "CIN0130",
     "name": "Sistemas Digitais",
     "short_name": "Sistemas Digitais",
     "hours": 60,
     "period": 1,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "cad",
+    "source_code": "CIN0131",
     "name": "Concepção de Artefatos Digitais",
     "short_name": "Concepção de Artefatos",
-    "hours": 60,
+    "hours": 120,
     "period": 1,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "calc1",
+    "source_code": "MA026",
     "name": "Cálculo Diferencial e Integral 1",
     "short_name": "Cálculo 1",
     "hours": 60,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "edoo",
+    "source_code": "CIN0135",
     "name": "Estruturas de Dados Orientadas a Objetos",
     "short_name": "Estruturas de Dados",
     "hours": 60,
@@ -53,10 +64,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "ip"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "acso",
+    "source_code": "CIN0134",
     "name": "Arquitetura de Computadores e Sistemas Operacionais",
     "short_name": "Arquitetura e SO",
     "hours": 60,
@@ -64,10 +77,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "sdig"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "ds",
+    "source_code": "CIN0136",
     "name": "Desenvolvimento de Software",
     "short_name": "Desenvolvimento de Software",
     "hours": 120,
@@ -75,19 +90,23 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "ip"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "avl",
+    "source_code": "CIN0138",
     "name": "Álgebra Vetorial e Linear para Computação",
     "short_name": "Álgebra Vetorial e Linear",
     "hours": 60,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "algo",
+    "source_code": "CIN0140",
     "name": "Algoritmos",
     "short_name": "Algoritmos",
     "hours": 60,
@@ -95,10 +114,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "edoo"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "bd",
+    "source_code": "CIN0137",
     "name": "Banco de Dados",
     "short_name": "Banco de Dados",
     "hours": 60,
@@ -106,10 +127,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "edoo"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "iesi",
+    "source_code": "CIN0139",
     "name": "Integração e Evolução de Sistemas de Informação",
     "short_name": "Integração e Evolução de SI",
     "hours": 120,
@@ -117,10 +140,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "ds"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "estat",
+    "source_code": "CIN0142",
     "name": "Estatística e Probabilidade para Computação",
     "short_name": "Estatística e Probabilidade",
     "hours": 60,
@@ -128,10 +153,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "calc1"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "logica",
+    "source_code": "CIN0141",
     "name": "Lógica para Computação",
     "short_name": "Lógica para Computação",
     "hours": 60,
@@ -139,10 +166,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "mdc"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "isdrc",
+    "source_code": "CIN0143",
     "name": "Introdução a Sistemas Distribuídos e Redes de Computadores",
     "short_name": "Sistemas Distribuídos e Redes",
     "hours": 60,
@@ -150,10 +179,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "acso"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "amcd",
+    "source_code": "CIN0144",
     "name": "Aprendizado de Máquina e Ciência de Dados",
     "short_name": "Aprendizado de Máquina e CD",
     "hours": 120,
@@ -162,19 +193,23 @@
     "prerequisite_ids": [
       "ip",
       "avl"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "empinf",
+    "source_code": "CIN0183",
     "name": "Empreendimentos em Informática",
     "short_name": "Empreendimentos em Informática",
     "hours": 60,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "asesi",
+    "source_code": "CIN0184",
     "name": "Aspectos Sócio-econômicos de Sistemas de Informação",
     "short_name": "Aspectos Sócio-econômicos",
     "hours": 60,
@@ -182,19 +217,23 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "admc",
+    "source_code": "CGA0002",
     "name": "Administração Contemporânea",
     "short_name": "Administração Contemporânea",
     "hours": 60,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "arqemp",
+    "source_code": "CIN0187",
     "name": "Arquitetura Empresarial",
     "short_name": "Arquitetura Empresarial",
     "hours": 60,
@@ -202,10 +241,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "gpn",
+    "source_code": "CIN0186",
     "name": "Gestão de Processos de Negócio",
     "short_name": "Gestão de Processos",
     "hours": 60,
@@ -213,28 +254,34 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "estagio",
+    "source_code": "CIN0188",
     "name": "Estágio Obrigatório",
     "short_name": "Estágio Obrigatório",
     "hours": 75,
     "period": 6,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "ctc",
+    "source_code": "CIN0190",
     "name": "Comunicação Técnica e Científica",
     "short_name": "Comunicação Técnica",
     "hours": 60,
     "period": 7,
     "type": "mandatory",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "apsi",
+    "source_code": "CIN0189",
     "name": "Análise e Projeto de Sistemas de Informação",
     "short_name": "Análise e Projeto de SI",
     "hours": 60,
@@ -242,10 +289,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "tcc",
+    "source_code": "CIN0191",
     "name": "Trabalho de Conclusão de Curso",
     "short_name": "Trabalho de Conclusão",
     "hours": 75,
@@ -253,10 +302,12 @@
     "type": "mandatory",
     "prerequisite_ids": [
       "ctc"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "sad",
+    "source_code": "CIN0192",
     "name": "Sistemas de Apoio à Decisão",
     "short_name": "Sistemas de Apoio à Decisão",
     "hours": 60,
@@ -265,10 +316,12 @@
     "prerequisite_ids": [
       "iesi",
       "estat"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "gdic",
+    "source_code": "CIN0193",
     "name": "Gestão de Dados, Informação e Conhecimento",
     "short_name": "Gestão de Dados e Informação",
     "hours": 60,
@@ -276,10 +329,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "sis",
+    "source_code": "CIN0158",
     "name": "Segurança de Informação e Sistemas",
     "short_name": "Segurança da Informação",
     "hours": 60,
@@ -288,10 +343,12 @@
     "prerequisite_ids": [
       "ds",
       "isdrc"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "ihc",
+    "source_code": "CIN0194",
     "name": "Fundamentos em Interação Humano-Computador",
     "short_name": "Interação Humano-Computador",
     "hours": 60,
@@ -299,10 +356,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "cad"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "tsi",
+    "source_code": "CIN0195",
     "name": "Tendências em Sistemas de Informação",
     "short_name": "Tendências em SI",
     "hours": 60,
@@ -310,10 +369,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "ggti",
+    "source_code": "CIN0196",
     "name": "Governança e Gestão de Tecnologia da Informação",
     "short_name": "Governança e Gestão de TI",
     "hours": 60,
@@ -321,10 +382,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "gppti",
+    "source_code": "CIN0197",
     "name": "Gestão de Portfólio de Projetos de Tecnologia da Informação",
     "short_name": "Portfólio de Projetos de TI",
     "hours": 60,
@@ -332,10 +395,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "inovsi",
+    "source_code": "CIN0198",
     "name": "Inovação em SI",
     "short_name": "Inovação em SI",
     "hours": 60,
@@ -343,10 +408,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "nuvem",
+    "source_code": "CIN0177",
     "name": "Computação em Nuvem",
     "short_name": "Computação em Nuvem",
     "hours": 60,
@@ -354,64 +421,78 @@
     "type": "elective",
     "prerequisite_ids": [
       "isdrc"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "ccg",
+    "source_code": "CT528",
     "name": "Contabilidade de Custos e Gerencial",
     "short_name": "Contabilidade de Custos",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "ingles",
+    "source_code": "LE037",
     "name": "Língua Inglesa Instrumental",
     "short_name": "Inglês Instrumental",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "libras",
+    "source_code": "LE716",
     "name": "Introdução a LIBRAS",
     "short_name": "Introdução a LIBRAS",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "tslog",
+    "source_code": "CIN0185",
     "name": "Tecnologias para Suporte a Logística",
     "short_name": "Tecnologias para Logística",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "gprod",
+    "source_code": "CIN0199",
     "name": "Gestão da Produção",
     "short_name": "Gestão da Produção",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "gpe",
+    "source_code": "CGA0001",
     "name": "Gestão de Pessoas e Equipes",
     "short_name": "Gestão de Pessoas e Equipes",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "findig",
+    "source_code": "EC477",
     "name": "Finanças Digitais",
     "short_name": "Finanças Digitais",
     "hours": 60,
@@ -419,10 +500,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "asesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "aear",
+    "source_code": "CIN0162",
     "name": "Análise e Especificação Avançada de Requisitos de Sistemas",
     "short_name": "Requisitos Avançados",
     "hours": 60,
@@ -430,10 +513,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "er"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "er",
+    "source_code": "IF1008",
     "name": "Engenharia de Requisitos",
     "short_name": "Engenharia de Requisitos",
     "hours": 60,
@@ -441,10 +526,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "ip"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "fts",
+    "source_code": "CIN0168",
     "name": "Fundamentos de Teste de Software",
     "short_name": "Teste de Software",
     "hours": 60,
@@ -452,10 +539,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "ds"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "mgp",
+    "source_code": "CIN0165",
     "name": "Metodologias de Gerenciamento de Projeto",
     "short_name": "Gerenciamento de Projeto",
     "hours": 60,
@@ -463,10 +552,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "pgqs",
+    "source_code": "CIN0166",
     "name": "Planejamento e Gestão da Qualidade de Software",
     "short_name": "Qualidade de Software",
     "hours": 60,
@@ -475,10 +566,12 @@
     "prerequisite_ids": [
       "ds",
       "iesi"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "pnt",
+    "source_code": "CIN0167",
     "name": "Programação com Novas Tecnologias",
     "short_name": "Programação com Novas Tecnologias",
     "hours": 60,
@@ -486,19 +579,23 @@
     "type": "elective",
     "prerequisite_ids": [
       "ds"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "cc",
+    "source_code": "CIN0129",
     "name": "Criatividade Computacional",
     "short_name": "Criatividade Computacional",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "rn",
+    "source_code": "CIN0037",
     "name": "Redes Neurais",
     "short_name": "Redes Neurais",
     "hours": 60,
@@ -506,10 +603,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "amcd"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "bdnc",
+    "source_code": "CIN0155",
     "name": "Bancos de Dados Não-Convencionais",
     "short_name": "Bancos de Dados Não-Convencionais",
     "hours": 60,
@@ -517,10 +616,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "bd"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "aam",
+    "source_code": "CIN0043",
     "name": "Aplicações de Aprendizagem de Máquina",
     "short_name": "Aplicações de Aprendizagem de Máquina",
     "hours": 60,
@@ -528,10 +629,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "amcd"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "visdados",
+    "source_code": "CIN0152",
     "name": "Visualização de Dados",
     "short_name": "Visualização de Dados",
     "hours": 60,
@@ -540,10 +643,12 @@
     "prerequisite_ids": [
       "ip",
       "estat"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "iap",
+    "source_code": "CIN0040",
     "name": "Introdução à Aprendizagem Profunda",
     "short_name": "Aprendizagem Profunda",
     "hours": 60,
@@ -551,10 +656,12 @@
     "type": "elective",
     "prerequisite_ids": [
       "amcd"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "iar",
+    "source_code": "CIN0041",
     "name": "Introdução à Aprendizagem por Reforço",
     "short_name": "Aprendizagem por Reforço",
     "hours": 60,
@@ -564,24 +671,29 @@
       "ip",
       "avl",
       "estat"
-    ]
+    ],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "tdei",
-    "name": "Tecnologia, Diversidade, Equidade e Inclusão",
-    "short_name": "Diversidade, Equidade e Inclusão",
+    "source_code": "CIN0161",
+    "name": "Tecnologia, Diversidade e Inclusão",
+    "short_name": "Tecnologia, Diversidade e Inclusão",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   },
   {
     "id": "eajc",
+    "source_code": "CIN0121",
     "name": "Ética e Aspectos Jurídicos da Computação",
     "short_name": "Ética e Aspectos Jurídicos",
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": []
+    "prerequisite_ids": [],
+    "prerequisite_status": "unverified"
   }
 ]
