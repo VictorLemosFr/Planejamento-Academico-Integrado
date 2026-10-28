@@ -13,6 +13,14 @@ async function signIn(
   ).toBeVisible();
 }
 
+async function goSimulation(page: import("@playwright/test").Page) {
+  await page
+    .getByRole("navigation", { name: "Navegação principal" })
+    .getByRole("link", { name: "Simulação" })
+    .click();
+  await expect(page.getByLabel("Alternativa salva")).toBeVisible();
+}
+
 test("history, two alternatives, hypothetical draft, save and recovery after login", async ({
   page,
 }) => {
@@ -30,6 +38,7 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     .getByRole("button", { name: "Fechar detalhes", exact: true })
     .last()
     .click();
+  await goSimulation(page);
   await page.getByLabel("Nome da alternativa").fill("Alternativa A");
   await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
@@ -65,6 +74,7 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await page.getByRole("button", { name: "Sair", exact: true }).click();
   await signIn(page);
+  await goSimulation(page);
   await expect(
     page.getByLabel("Alternativa salva").locator("option"),
   ).toHaveCount(3);
@@ -83,6 +93,7 @@ test("the official map directs pending courses to an alternative", async ({
   page,
 }) => {
   await signIn(page);
+  await goSimulation(page);
   await page
     .getByRole("button", {
       name: "Matemática Discreta para Computação",
@@ -119,6 +130,7 @@ test("empty history, student isolation and mobile layout", async ({
   await expect(
     page.getByText("Nenhuma cadeira registrada", { exact: true }),
   ).toBeVisible();
+  await goSimulation(page);
   await expect(
     page.getByLabel("Alternativa salva").locator("option"),
   ).toHaveCount(1);
@@ -134,6 +146,7 @@ test("save failure and conflict do not claim success or discard draft", async ({
   page,
 }) => {
   await signIn(page);
+  await goSimulation(page);
   await page.getByLabel("Nome da alternativa").fill("Falha");
   await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
@@ -159,6 +172,7 @@ test("save failure and conflict do not claim success or discard draft", async ({
 
 test("expired session clears personal content", async ({ page }) => {
   await signIn(page);
+  await goSimulation(page);
   await page.route("**/api/plans", (route) =>
     route.fulfill({
       status: 401,

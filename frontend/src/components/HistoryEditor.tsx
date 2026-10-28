@@ -64,6 +64,7 @@ export function HistoryEditor({
       course_id: r.course_id,
       academic_term: r.academic_term,
       status: r.status,
+      grade: r.grade ?? null,
     }));
     // Ao mesclar, o PDF prevalece sobre a mesma cadeira no mesmo semestre.
     const merged =
@@ -166,6 +167,7 @@ export function HistoryEditor({
                       <th>Disciplina</th>
                       <th>Semestre</th>
                       <th>Situação</th>
+                      <th>Nota</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -175,6 +177,7 @@ export function HistoryEditor({
                         <td>{r.name}</td>
                         <td>{r.academic_term}</td>
                         <td>{statusLabels[r.status]}</td>
+                        <td>{r.grade ?? "—"}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -261,7 +264,7 @@ export function HistoryEditor({
         {records.map((record, index) => (
           <div
             key={index}
-            className="grid gap-3 rounded-lg border border-slate-200 p-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end"
+            className="grid gap-3 rounded-lg border border-slate-200 p-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.7fr)_auto] sm:items-end"
           >
             <label className="text-sm">
               Disciplina
@@ -306,6 +309,10 @@ export function HistoryEditor({
                   update(index, {
                     ...record,
                     status: event.target.value as HistoryRecord["status"],
+                    grade:
+                      event.target.value === "in_progress"
+                        ? null
+                        : record.grade,
                   })
                 }
               >
@@ -313,6 +320,25 @@ export function HistoryEditor({
                 <option value="in_progress">Cursando</option>
                 <option value="failed">Reprovada</option>
               </select>
+            </label>
+            <label className="text-sm">
+              Nota final
+              <input
+                className={input}
+                type="number"
+                min="0"
+                max="10"
+                step="0.1"
+                inputMode="decimal"
+                disabled={record.status === "in_progress"}
+                value={record.grade ?? ""}
+                onChange={(event) => {
+                  const value = event.target.value.replace(",", ".");
+                  const grade = value === "" ? null : Number(value);
+                  if (grade === null || (grade >= 0 && grade <= 10))
+                    update(index, { ...record, grade });
+                }}
+              />
             </label>
             <button
               type="button"

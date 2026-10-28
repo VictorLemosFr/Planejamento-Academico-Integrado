@@ -32,6 +32,12 @@ As sessões duram oito horas. O banco armazena apenas SHA-256 do identificador a
 
 As tentativas devem pertencer à matriz do estudante e não podem anteceder o semestre de ingresso. O salvamento substitui a versão vigente; repetir o mesmo conteúdo é idempotente. Os dados são **autodeclarados** e servem apenas ao planejamento: não alteram nem comprovam o histórico do SIGAA. O semestre de ingresso também pode ser informado por contas antigas na primeira edição.
 
+### Notas, reprovações e prévia do histórico
+
+Cada registro aceita `grade` (nota final de 0 a 10, opcional; proibida em `in_progress`). O histórico rejeita qualquer tentativa posterior à 3ª reprovação na mesma disciplina (Res. nº 09/2009-CCEPE/UFPE). `POST /api/me/history/preview` recebe o mesmo corpo de `PUT /api/me/history` e devolve a avaliação completa sem gravar nada; a interface usa essa prévia enquanto o estudante edita o histórico no mapa.
+
+As avaliações trazem, por disciplina, `attempts`, `failures`, `failure_level` (`attention`, `critical` ou `refused`), `grade` e `simulated_grade`, e no topo `cr` (`value`, `simulated_value`, `credits`, `graded_attempts`, `ungraded_attempts`). O CR é a média das notas finais ponderada pelos créditos (`credits` de cada disciplina), contando todas as tentativas com nota. Planos aceitam `simulated_grades` (`{course_id: nota}`), válidas apenas para disciplinas planejadas ou aprovadas na hipótese; disciplinas com matrícula recusada não podem ser planejadas nem aprovadas na simulação.
+
 ### Leitura do histórico em PDF
 
 `POST /api/me/history/pdf` recebe o PDF do histórico do SIGAA no corpo, com `Content-Type: application/pdf`, sessão e token CSRF. O limite é 5 MB e 40 páginas; PDF protegido por senha é recusado. A resposta é apenas uma proposta e nada é gravado:
@@ -45,7 +51,7 @@ As tentativas devem pertencer à matriz do estudante e não podem anteceder o se
 }
 ```
 
-A leitura procura, em cada linha, um código da matriz do estudante, um semestre `AAAA.N` e uma situação do SIGAA (`APR`, `APRN`, `DISP`, `CUMP`, `INCORP` → aprovada; `REP`, `REPF`, `REPN`, `REPMF` → reprovada; `MATR` → cursando; `TRANC`, `CANC` → ignorada). Códigos repetidos na matriz são desempatados pelo nome; sem desempate, voltam em `unmatched`. O estudante revisa a proposta e salva pelo `PUT /api/me/history` habitual.
+A leitura procura, em cada linha, um código da matriz do estudante, um semestre `AAAA.N` e uma situação do SIGAA (`APR`, `APRN`, `DISP`, `CUMP`, `INCORP` → aprovada; `REP`, `REPF`, `REPN`, `REPMF` → reprovada; `MATR` → cursando; `TRANC`, `CANC` → ignorada). Códigos repetidos na matriz são desempatados pelo nome; sem desempate, voltam em `unmatched`. Quando a linha traz a nota final, ela vem em `grade`; reprovação por falta (`REPF`, `REPMF`, `REPNF`) recebe nota zero. O estudante revisa a proposta e salva pelo `PUT /api/me/history` habitual.
 
 ### Integralização e previsão
 

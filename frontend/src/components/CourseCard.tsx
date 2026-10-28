@@ -1,5 +1,22 @@
 import type { DragEventHandler } from "react";
-import type { Course, Status } from "../types";
+import { formatGrade } from "../academicTerms";
+import type { Course, FailureLevel, Status } from "../types";
+
+const failureMeta: Record<
+  Exclude<FailureLevel, null>,
+  { label: string; style: string }
+> = {
+  attention: { label: "atenção", style: "border-amber-300 text-amber-800" },
+  critical: { label: "crítico", style: "border-red-300 text-red-700" },
+  refused: {
+    label: "matrícula recusada",
+    style: "border-red-700 bg-red-700! text-white",
+  },
+};
+
+export function failureText(count: number) {
+  return `${count} reprovaç${count === 1 ? "ão" : "ões"}`;
+}
 
 export const statusMeta: Record<
   Status,
@@ -50,6 +67,7 @@ export function CourseCard({
   draggable = false,
   onDragStart,
   onDragEnd,
+  needsInfo = false,
 }: {
   course: Course;
   selected: boolean;
@@ -58,6 +76,8 @@ export function CourseCard({
   draggable?: boolean;
   onDragStart?: DragEventHandler<HTMLButtonElement>;
   onDragEnd?: DragEventHandler<HTMLButtonElement>;
+  /** Histórico: cadeira do 1º período ainda sem situação informada. */
+  needsInfo?: boolean;
 }) {
   const meta = statusMeta[course.status];
   return (
@@ -84,6 +104,32 @@ export function CourseCard({
         {course.short_name}
       </h3>
       <div className="mt-3 flex flex-wrap gap-1 text-[10px]">
+        {needsInfo && (
+          <span className="rounded border border-amber-300 bg-white/80 px-1.5 py-0.5 text-amber-800">
+            Informe a situação
+          </span>
+        )}
+        {!!course.failures && course.failure_level && (
+          <span
+            className={`failure-badge rounded border bg-white/80 px-1.5 py-0.5 ${failureMeta[course.failure_level].style}`}
+          >
+            {failureText(course.failures)} ·{" "}
+            {failureMeta[course.failure_level].label}
+          </span>
+        )}
+        {course.status === "completed" &&
+          course.grade !== null &&
+          course.grade !== undefined && (
+            <span className="rounded bg-white/70 px-1.5 py-0.5 font-medium">
+              Nota {formatGrade(course.grade)}
+            </span>
+          )}
+        {course.simulated_grade !== null &&
+          course.simulated_grade !== undefined && (
+            <span className="rounded border border-teal-300 bg-white/80 px-1.5 py-0.5 text-teal-800">
+              Nota simulada {formatGrade(course.simulated_grade)}
+            </span>
+          )}
         {course.critical && (
           <span className="rounded border border-red-200 bg-white/80 px-1.5 py-0.5 text-red-700">
             Crítica

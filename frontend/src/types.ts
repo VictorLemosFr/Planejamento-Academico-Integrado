@@ -7,6 +7,19 @@ export type Status =
   | "pending"
   | "locked";
 export type ActionKind = "approve" | "revoke" | "plan" | "unplan";
+export type FailureLevel = "attention" | "critical" | "refused" | null;
+export interface Attempt {
+  academic_term: string;
+  status: "completed" | "failed" | "in_progress";
+  grade?: number | null;
+}
+export interface CoefficientSummary {
+  value: number | null;
+  simulated_value: number | null;
+  credits: number;
+  graded_attempts: number;
+  ungraded_attempts: number;
+}
 
 export interface Course {
   id: string;
@@ -19,6 +32,12 @@ export interface Course {
   prerequisite_ids: string[];
   corequisite_ids?: string[];
   prerequisite_status?: "verified" | "unverified";
+  credits?: number | null;
+  attempts?: Attempt[];
+  failures?: number;
+  failure_level?: FailureLevel;
+  grade?: number | null;
+  simulated_grade?: number | null;
   status: Status;
   missing_prerequisite_ids: string[];
   dependent_ids: string[];
@@ -75,6 +94,7 @@ export interface History {
     course_id: string;
     academic_term: string;
     status: "completed" | "failed" | "in_progress";
+    grade?: number | null;
   }[];
   import: {
     source: string;
@@ -158,6 +178,10 @@ export interface TranscriptIssue {
 }
 
 export interface Progression extends Simulation {
+  cr?: CoefficientSummary;
+  simulated_grades?: Record<string, number>;
+  failure_limit?: number;
+  failure_rule?: string;
   integralization?: Integralization | null;
   forecast?: Forecast | null;
   course_layout: CourseLayout;
@@ -179,6 +203,7 @@ export interface Plan extends Progression {
 }
 export interface Draft {
   course_layout?: CourseLayout;
+  simulated_grades?: Record<string, number>;
   planned_ids: string[];
   hypothetical_ids: string[];
   version: number;

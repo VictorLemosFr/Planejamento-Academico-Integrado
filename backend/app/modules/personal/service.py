@@ -68,11 +68,10 @@ def official_sets(history):
     return completed, ongoing
 
 
-def import_history(session, student, author, payload, courses):
-    data = payload.model_dump(exclude_none=True)
-    graph = CurriculumGraph(courses)
+def validate_records(records, graph):
+    """Disciplinas da matriz, sem tentativa duplicada e sem tentativa após a recusa."""
     seen = set()
-    for index, record in enumerate(data["records"]):
+    for index, record in enumerate(records):
         field = ["body", "records", index]
         if record["course_id"] not in graph.courses:
             raise HTTPException(
@@ -85,7 +84,7 @@ def import_history(session, student, author, payload, courses):
             )
         seen.add(key)
     attempts = {}
-    for record in data["records"]:
+    for record in records:
         attempts.setdefault(record["course_id"], []).append(record)
     for course_id, items in attempts.items():
         failures = 0
@@ -98,6 +97,12 @@ def import_history(session, student, author, payload, courses):
                     f"({RULE_SOURCE}); não há tentativa seguinte.",
                 )
             failures += record["status"] == "failed"
+
+
+def import_history(session, student, author, payload, courses):
+    data = payload.model_dump(exclude_none=True)
+    graph = CurriculumGraph(courses)
+    validate_records(data["records"], graph)
     # Canonical order makes equivalent full files idempotent.
     data["records"].sort(key=lambda r: (r["course_id"], r["academic_term"]))
     digest = sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest()

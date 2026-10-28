@@ -8,6 +8,15 @@ async function login(page: Page) {
   await expect(
     page.getByRole("button", { name: "Sair", exact: true }),
   ).toBeVisible();
+  // Alternativas ficam na aba Simulação, separadas do histórico real.
+  await goSimulation(page);
+}
+async function goSimulation(page: import("@playwright/test").Page) {
+  await page
+    .getByRole("navigation", { name: "Navegação principal" })
+    .getByRole("link", { name: "Simulação" })
+    .click();
+  await expect(page.getByLabel("Alternativa salva")).toBeVisible();
 }
 async function create(page: Page, name: string) {
   await page.getByLabel("Nome da alternativa").fill(name);

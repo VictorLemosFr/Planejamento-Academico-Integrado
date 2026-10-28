@@ -92,6 +92,8 @@ export const getHistory = () => request<History>("/me/history");
 export const saveHistory = (payload: HistoryUpdate) =>
   request<{ revision: number }>("/me/history", body("PUT", payload));
 export const getProgression = () => request<Progression>("/me/progression");
+export const previewHistory = (payload: HistoryUpdate) =>
+  request<Progression>("/me/history/preview", body("POST", payload));
 export const getPlans = () => request<Plan[]>("/plans");
 export const getPlan = (id: string) => request<Plan>(`/plans/${id}`);
 export const createPlan = (name: string, target_term: string) =>
@@ -109,6 +111,7 @@ export const savePlan = (plan: Plan) =>
       planned_ids: plan.planned_ids,
       hypothetical_ids: plan.hypothetical_ids,
       course_layout: plan.course_layout,
+      simulated_grades: plan.simulated_grades ?? {},
     }),
   );
 export const deletePlan = (id: string, version: number) =>
