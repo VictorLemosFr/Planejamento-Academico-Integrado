@@ -8,6 +8,10 @@ import type {
   Plan,
   Progression,
   Draft,
+  Program,
+  PublicCurriculum,
+  PublicGrid,
+  TranscriptProposal,
 } from "./types";
 
 let csrf = "";
@@ -29,7 +33,8 @@ export async function request<T>(
   let response: Response;
   const headers = new Headers(options?.headers);
   if (options?.method && options.method !== "GET") {
-    headers.set("Content-Type", "application/json");
+    if (!headers.has("Content-Type"))
+      headers.set("Content-Type", "application/json");
     if (csrf) headers.set("X-CSRF-Token", csrf);
   }
   try {
@@ -80,7 +85,7 @@ export const register = (payload: {
   registration: string;
   current_period: number;
   start_term: string;
-  program: "CC" | "SI" | "IA" | "EC";
+  program: Program;
 }) => request<Identity>("/auth/register", body("POST", payload));
 export const logout = () => request("/auth/logout", body("POST"));
 export const getHistory = () => request<History>("/me/history");
@@ -108,3 +113,27 @@ export const savePlan = (plan: Plan) =>
   );
 export const deletePlan = (id: string, version: number) =>
   request(`/plans/${id}?version=${version}`, body("DELETE"));
+export const readTranscript = (file: File) =>
+  request<TranscriptProposal>("/me/history/pdf", {
+    method: "POST",
+    body: file,
+    headers: { "Content-Type": "application/pdf" },
+  });
+export const getPublicCurricula = () =>
+  request<PublicCurriculum[]>("/public/curricula");
+export const getPublicGrid = (id: string) =>
+  request<PublicGrid>(`/public/curricula/${encodeURIComponent(id)}`);
+export const simulatePublic = (
+  id: string,
+  payload: {
+    current_period: number;
+    start_term?: string | null;
+    hypothetical_ids: string[];
+    action?: "approve" | "revoke";
+    course_id?: string;
+  },
+) =>
+  request<PublicGrid>(
+    `/public/curricula/${encodeURIComponent(id)}/simulations`,
+    body("POST", payload),
+  );

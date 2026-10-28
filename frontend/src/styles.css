@@ -934,3 +934,233 @@ button:not(.course-card):not(:disabled):hover {
     font-size: 10px;
   }
 }
+/* Integralização e previsão compartilham o mesmo par de cartões. */
+.progress-summary {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+}
+.summary-card {
+  border-radius: 18px;
+  padding: 20px 22px;
+  border: 1px solid #ffffffe0;
+}
+.summary-card h2 {
+  margin: 8px 0 14px;
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  color: #2d4d7c;
+}
+.summary-card h2 span {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #6a8098;
+}
+.hours-row + .hours-row {
+  margin-top: 12px;
+}
+.hours-row-label {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+  font-size: 12px;
+  color: #4f6681;
+}
+.hours-row-label strong {
+  color: #20334e;
+}
+.hours-bar {
+  display: flex;
+  height: 10px;
+  margin-top: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dfe8f3;
+}
+.hours-bar-done {
+  background: linear-gradient(90deg, #519baf, #5074cd);
+}
+.hours-bar-ongoing {
+  background: repeating-linear-gradient(
+    135deg,
+    #8fb8e6,
+    #8fb8e6 4px,
+    #b9d2ef 4px,
+    #b9d2ef 8px
+  );
+}
+.summary-footnote {
+  margin-top: 12px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #6a8098;
+}
+.forecast-term {
+  margin: -6px 0 12px;
+  font-size: 13px;
+  color: #4f6681;
+}
+.forecast-limits {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.forecast-limits > div {
+  border-radius: 12px;
+  background: #ffffff8a;
+  padding: 10px 12px;
+}
+.forecast-limits dt {
+  font-size: 11px;
+  color: #6a8098;
+}
+.forecast-limits dd {
+  margin-top: 2px;
+  font-weight: 600;
+}
+.critical-chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font-size: 11px;
+  color: #8a9bb0;
+}
+.critical-chain a {
+  border: 1px solid #f2c4c4;
+  border-radius: 999px;
+  background: #fff;
+  padding: 3px 9px;
+  color: #a33c3c;
+}
+.critical-chain > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.forecast-warning {
+  margin-top: 12px;
+  border-radius: 10px;
+  background: #fdf3e2;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: #8f5f13;
+}
+.forecast-assumptions {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #5c728c;
+}
+.forecast-assumptions summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.forecast-assumptions p,
+.forecast-assumptions ul {
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.forecast-assumptions ul {
+  list-style: disc;
+  padding-left: 18px;
+}
+/* Filtro e ordenação das eletivas. */
+.elective-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip-group button {
+  border: 1px solid #d0dcea;
+  border-radius: 999px;
+  background: #ffffffb8;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #4f6681;
+}
+.chip-group button[aria-pressed="true"] {
+  border-color: #466fdb;
+  background: #466fdb;
+  color: #fff;
+}
+.chip-group button span {
+  margin-left: 4px;
+  opacity: 0.75;
+  font-variant-numeric: tabular-nums;
+}
+.elective-sort {
+  font-size: 11px;
+  color: #5c728c;
+}
+.elective-sort select {
+  min-height: 36px;
+  margin-left: 6px;
+  border: 1px solid #cbd7e5;
+  border-radius: 10px;
+  background: #ffffffb8;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+/* Importação do histórico em PDF. */
+.transcript-import {
+  margin-top: 16px;
+  border: 1px dashed #b7c8de;
+  border-radius: 14px;
+  background: #f7faffb8;
+  padding: 14px;
+}
+.transcript-import table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.transcript-import th,
+.transcript-import td {
+  border-bottom: 1px solid #e3eaf3;
+  padding: 6px 4px;
+  text-align: left;
+}
+.transcript-import th {
+  font-size: 11px;
+  font-weight: 600;
+  color: #5c728c;
+}
+/* Exploração pública das grades. */
+.program-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.program-tabs button {
+  border: 1px solid #d0dcea;
+  border-radius: 14px;
+  background: #ffffffb8;
+  padding: 10px 14px;
+  text-align: left;
+}
+.program-tabs button[aria-pressed="true"] {
+  border-color: #466fdb;
+  box-shadow: 0 0 0 3px #466fdb26;
+}
+.program-tabs strong {
+  display: block;
+  font-size: 14px;
+}
+.program-tabs small {
+  font-size: 11px;
+  color: #6a8098;
+}

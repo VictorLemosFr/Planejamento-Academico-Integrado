@@ -12,6 +12,8 @@ export function CourseDetails({
   readOnly = false,
   official = false,
   planned = false,
+  allowPlanning = true,
+  readOnlyHint,
 }: {
   course: Course | undefined;
   courses: Course[];
@@ -19,6 +21,9 @@ export function CourseDetails({
   readOnly?: boolean;
   official?: boolean;
   planned?: boolean;
+  /** Na grade pública só há simulação de aprovação, sem plano salvo. */
+  allowPlanning?: boolean;
+  readOnlyHint?: string;
   onAction: (kind: ActionKind) => void;
   onSelect: (id: string) => void;
   onClose: () => void;
@@ -141,9 +146,17 @@ export function CourseDetails({
                 references(course.prerequisite_ids)
               ) : (
                 <p className="mt-2 text-xs text-slate-500">
-                  Nenhum pré-requisito cadastrado.
+                  {course.prerequisite_status === "unverified"
+                    ? "Pré-requisitos ainda não confirmados para esta matriz."
+                    : "Nenhum pré-requisito cadastrado."}
                 </p>
               )}
+              {course.prerequisite_ids.length > 0 &&
+                course.prerequisite_status === "unverified" && (
+                  <p className="mt-2 text-[11px] text-amber-800">
+                    Pré-requisitos não confirmados pela coordenação.
+                  </p>
+                )}
             </section>
             <section className="mt-5">
               <h3 className="text-xs font-semibold text-slate-600">
@@ -174,7 +187,12 @@ export function CourseDetails({
                   Aprovação informada · somente leitura
                 </p>
               )}
-              {readOnly && !official && (
+              {readOnly && !official && readOnlyHint && (
+                <p className="rounded-lg bg-blue-50 p-3 text-sm leading-6 text-slate-700">
+                  {readOnlyHint}
+                </p>
+              )}
+              {readOnly && !official && !readOnlyHint && (
                 <div className="rounded-lg bg-blue-50 p-3">
                   <p className="text-sm leading-6 text-slate-700">
                     Para simular a conclusão desta disciplina, crie ou abra uma
@@ -204,26 +222,28 @@ export function CourseDetails({
                       Simular aprovação
                     </button>
                   )}
-                  {["available", "pending"].includes(course.status) && (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => onAction("plan")}
-                      className={buttonStyle}
-                    >
-                      Planejar para próximo semestre
-                    </button>
-                  )}
-                  {(course.status === "planned" || planned) && (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => onAction("unplan")}
-                      className={buttonStyle}
-                    >
-                      Remover do planejamento
-                    </button>
-                  )}
+                  {allowPlanning &&
+                    ["available", "pending"].includes(course.status) && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => onAction("plan")}
+                        className={buttonStyle}
+                      >
+                        Planejar para próximo semestre
+                      </button>
+                    )}
+                  {allowPlanning &&
+                    (course.status === "planned" || planned) && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => onAction("unplan")}
+                        className={buttonStyle}
+                      >
+                        Remover do planejamento
+                      </button>
+                    )}
                   {(course.status === "simulated" ||
                     (course.status === "completed" && !official)) && (
                     <>
