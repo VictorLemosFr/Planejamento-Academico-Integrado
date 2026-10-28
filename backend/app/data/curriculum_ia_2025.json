@@ -407,8 +407,8 @@
     "prerequisite_status": "unverified"
   },
   {
-    "id": "ia:﻿cin0044",
-    "source_code": "﻿CIN0044",
+    "id": "ia:cin0044",
+    "source_code": "CIN0044",
     "name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "short_name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "hours": 60,
@@ -519,8 +519,8 @@
   {
     "id": "ia:cin0134",
     "source_code": "CIN0134",
-    "name": "ARQUITETURA DE COMPUTADORES E SUSTEMAS OPERACIONAIS",
-    "short_name": "ARQUITETURA DE COMPUTADORES E SUSTEMAS OPERACIONAIS",
+    "name": "ARQUITETURA DE COMPUTADORES E SISTEMAS OPERACIONAIS",
+    "short_name": "ARQUITETURA DE COMPUTADORES E SISTEMAS OPERACIONAIS",
     "hours": 60,
     "period": null,
     "type": "elective",
@@ -761,8 +761,8 @@
   {
     "id": "ia:le037",
     "source_code": "LE037",
-    "name": "LINGUA INGLESA INSTRUMENTAL 1",
-    "short_name": "LINGUA INGLESA INSTRUMENTAL 1",
+    "name": "LÍNGUA INGLESA INSTRUMENTAL 1",
+    "short_name": "LÍNGUA INGLESA INSTRUMENTAL 1",
     "hours": 60,
     "period": null,
     "type": "elective",

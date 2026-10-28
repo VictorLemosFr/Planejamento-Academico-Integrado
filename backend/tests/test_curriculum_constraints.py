@@ -34,7 +34,7 @@ def test_seed_loads_separate_curricula_without_overwriting_local_data():
         assert len(list_courses(session, "CC-2024")) == 101
         assert len(list_courses(session, "IA-2025")) == 70
         assert len(list_courses(session, "EC-2024")) == 147
-        assert len(list_courses(session, "SI-demo")) == 56
+        assert len(list_courses(session, "SI-2024")) == 56
         assert session.get(Course, "ia:cin0123").name == "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO"
         session.get(Course, "cc:cin0133").name = "Local edit"
         session.commit()
