@@ -1,4 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
+import { drag } from "./drag";
 
 async function register(page: Page, name: string, period = "3") {
   await page.goto("/");
@@ -20,6 +21,7 @@ const card = (page: Page, name: string) =>
   page.getByRole("button", { name, exact: true });
 const editor = (page: Page) =>
   page.getByRole("region", { name: "Situação no histórico" });
+const cr = (page: Page) => page.locator('[data-kpi="cr"]');
 
 test("attempts, failures and grades are recorded on the map before saving", async ({
   page,
@@ -56,9 +58,11 @@ test("attempts, failures and grades are recorded on the map before saving", asyn
     page.getByRole("region", { name: "Alterações no histórico" }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Salvar histórico" }).click();
-  await expect(page.getByRole("status")).toContainText("Histórico salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Histórico salvo");
   // CR = (5·4 + 5·0 + 5·7) / 15 créditos
-  await expect(page.locator(".metric-card").last()).toContainText("3,67");
+  await expect(cr(page)).toContainText("3,67");
   await expect(card(page, "Introdução à Programação")).toContainText("Nota 7");
   await expect(card(page, "Introdução à Programação")).toContainText(
     "2 reprovações",
@@ -92,7 +96,7 @@ test("electives dragged into a past period become history records", async ({
     name: "1º período",
     exact: true,
   });
-  await elective.dragTo(firstPeriod);
+  await drag(page, elective, firstPeriod);
   await expect(
     firstPeriod.getByRole("button", {
       name: "Contabilidade de Custos e Gerencial",
@@ -114,7 +118,9 @@ test("electives dragged into a past period become history records", async ({
       .locator("option"),
   ).toHaveCount(4);
   await page.getByRole("button", { name: "Salvar histórico" }).click();
-  await expect(page.getByRole("status")).toContainText("Histórico salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Histórico salvo");
   await page.reload();
   await expect(
     firstPeriod.getByRole("button", {
@@ -132,7 +138,9 @@ test("simulated grades produce a simulated CR only in the simulation tab", async
   await editor(page).getByRole("button", { name: "+ Aprovada" }).click();
   await editor(page).getByLabel("Nota final").fill("6");
   await page.getByRole("button", { name: "Salvar histórico" }).click();
-  await expect(page.getByRole("status")).toContainText("Histórico salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Histórico salvo");
   await page
     .getByRole("navigation", { name: "Navegação principal" })
     .getByRole("link", { name: "Simulação" })
@@ -147,18 +155,16 @@ test("simulated grades produce a simulated CR only in the simulation tab", async
   await page.getByLabel("Nota simulada (entra no CR simulado)").fill("10");
   await page.getByLabel("Nota simulada (entra no CR simulado)").blur();
   // (5·6 + 6·10) / 11 créditos
-  await expect(page.locator(".metric-card").last()).toContainText("8,18");
-  await expect(page.locator(".metric-card").last()).toContainText(
-    "CR simulado",
-  );
+  await expect(cr(page)).toContainText("8,18");
+  await expect(cr(page)).toContainText("CR simulado");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("Plano salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Plano salvo");
   await page
     .getByRole("navigation", { name: "Navegação principal" })
     .getByRole("link", { name: "Meu histórico" })
     .click();
-  await expect(page.locator(".metric-card").last()).toContainText("6,0");
-  await expect(page.locator(".metric-card").last()).not.toContainText(
-    "simulado",
-  );
+  await expect(cr(page)).toContainText("6,0");
+  await expect(cr(page)).not.toContainText("simulado");
 });

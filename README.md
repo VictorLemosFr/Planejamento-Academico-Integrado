@@ -8,8 +8,12 @@ Projeto da disciplina **Integração e Evolução de Sistemas de Informação (I
 
 A aplicação entrega **cadastro ou login → histórico informado pelo estudante → progressão → simulação → plano salvo → recuperação após novo acesso**, com dados pessoais no PostgreSQL.
 
-- Mapa curricular por período, busca, filtros e detalhes de pré-requisitos.
-- Distribuição de cards por arraste, ordem e eletivas dentro do mapa, salva por alternativa; controles de movimentação também disponíveis no celular.
+- Mapa curricular por período, busca, filtros (inclusive "Críticas") e detalhes em abas: Resumo, Histórico e Dependências.
+- Setas de dependência ao selecionar uma disciplina (pré-requisito, libera, co-requisito), com as demais esmaecidas; botão *Caminho crítico* destaca a maior cadeia de obrigatórias pendentes; modo *Compacto* e *Legenda*.
+- Cards arrastáveis com mouse, toque (pressionar e segurar) e teclado (espaço, setas, espaço), via dnd-kit, com anúncios em português para leitores de tela. O seletor "Mover … para período" no painel continua como alternativa.
+- Faixa fixa de indicadores (CR ou CR simulado, % integralizado, previsão, alterações não salvas). A Simulação tem identidade de rascunho (borda tracejada violeta) para não ser confundida com o histórico real.
+- *Marcar período como aprovado* registra de uma vez as obrigatórias de um período já cursado; exceções são ajustadas card a card.
+- Tema escuro (segue o sistema; a escolha fica salva no navegador). Nomes em CAIXA ALTA das páginas do CIn aparecem em formato de título só na exibição.
 - Disciplinas aprovadas, em andamento e reprovadas informadas pelo estudante; aprovações hipotéticas ficam separadas nos planos.
 - Edição do próprio histórico por disciplina e semestre, transacional, versionada e idempotente. A importação JSON pela coordenação permanece para contas provisionadas anteriormente.
 - Várias alternativas para um semestre, com rascunhos locais, salvamento explícito, renomeação e exclusão.

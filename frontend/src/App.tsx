@@ -16,8 +16,11 @@ import { CurriculumMap } from "./components/CurriculumMap";
 import { CourseDetails } from "./components/CourseDetails";
 import { HistoryEditor } from "./components/HistoryEditor";
 import { PublicExplorer } from "./components/PublicExplorer";
-import { ProgressSummary, trackedPercent } from "./components/ProgressSummary";
-import { moveCourse } from "./courseLayout";
+import { ProgressSummary } from "./components/ProgressSummary";
+import { KpiStrip } from "./components/KpiStrip";
+import { ThemeToggle } from "./components/ThemeToggle";
+import { coursePeriod, moveCourse } from "./courseLayout";
+import { courseName } from "./display";
 import { AttemptsEditor } from "./components/AttemptsEditor";
 import {
   formatGrade,
@@ -462,7 +465,7 @@ function Student({
   const [newName, setNewName] = useState("");
   const [newTerm, setNewTerm] = useState("");
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<Status | "all">("all");
+  const [filter, setFilter] = useState<Status | "all" | "critical">("all");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [busy, setBusy] = useState(false);
@@ -683,14 +686,59 @@ function Student({
     setDraft({ ...draft, course_layout });
     setNotice("Distribuição alterada. Clique em Salvar para persistir.");
   }
+  /** Obrigatórias de um período já cursado que ainda não têm registro. */
+  function unrecorded(period: number) {
+    return (
+      data?.courses.filter(
+        (c) =>
+          c.type === "mandatory" &&
+          c.period === period &&
+          !records.some((r) => r.course_id === c.id),
+      ) ?? []
+    );
+  }
+  function approvePeriod(period: number) {
+    if (!startTerm) return;
+    const term = termOf(startTerm, period);
+    const missing = unrecorded(period);
+    if (!missing.length) return;
+    editHistory([
+      ...records,
+      ...missing.map((c) => ({
+        course_id: c.id,
+        academic_term: term,
+        status: "completed" as const,
+      })),
+    ]);
+    setNotice(
+      `${missing.length} disciplina${missing.length > 1 ? "s" : ""} do ${period}º período marcada${missing.length > 1 ? "s" : ""} como aprovada${missing.length > 1 ? "s" : ""}. Ajuste exceções e notas no mapa e clique em Salvar histórico.`,
+    );
+  }
+  const periodCount = Math.max(
+    8,
+    ...(data?.courses.map((c) => c.period ?? 0) ?? []),
+  );
+  const mapLayout =
+    mode === "history"
+      ? startTerm && data
+        ? historyLayout(data.courses, records, startTerm)
+        : {}
+      : (draft?.course_layout ?? {});
+  const canEditMap =
+    mode === "history" ? !!startTerm && !busy : !!draft && !busy;
+  const movable = (course: { type: string }) =>
+    mode === "simulation" || course.type === "elective";
+  const query = search.toLocaleLowerCase("pt-BR");
   const visible =
     data?.courses.filter(
       (c) =>
-        (filter === "all" || c.status === filter) &&
-        c.name
-          .toLocaleLowerCase("pt-BR")
-          .includes(search.toLocaleLowerCase("pt-BR")),
+        (filter === "all" ||
+          (filter === "critical" ? c.critical : c.status === filter)) &&
+        courseName(c).toLocaleLowerCase("pt-BR").includes(query),
     ) ?? [];
+  const related = new Set(
+    selected ? [...selected.prerequisite_ids, ...selected.dependent_ids] : [],
+  );
   return (
     <div className="app-shell min-h-dvh">
       <header className="app-header border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
@@ -713,6 +761,7 @@ function Student({
             <span className="break-all text-sm text-slate-600">
               {identity.user.email}
             </span>
+            <ThemeToggle />
             <button
               className={button}
               disabled={busy}
@@ -761,47 +810,35 @@ function Student({
         coordenação · o histórico é informado pelo estudante · a matrícula
         oficial continua no SIGAA.
       </div>
-      <main className="workspace mx-auto max-w-[1920px] px-4 py-5 sm:px-8">
-        {isStudent &&
-          data?.warnings.map((warning) => (
-            <p key={warning} className="mb-2 text-xs text-amber-800">
-              {warning}
-            </p>
-          ))}
-        {isStudent && (
-          <section
-            className="workspace-intro"
-            aria-label="Resumo da trajetória"
-          >
-            <div>
-              <p className="eyebrow">SEU PERCURSO ACADÊMICO</p>
-              <h2>
-                Planeje possibilidades.
-                <br />
-                <span>Construa sua trajetória.</span>
-              </h2>
-              <p>
-                Explore a grade, conecte disciplinas e prepare seu próximo
-                semestre.
-              </p>
-            </div>
-            <div
-              className="progress-orbit"
-              style={
-                {
-                  "--progress": `${trackedPercent(data?.integralization)}%`,
-                } as React.CSSProperties
-              }
-            >
-              <div>
-                <strong>
-                  {trackedPercent(data?.integralization)}
-                  <small>%</small>
-                </strong>
-                <span>da carga acompanhada</span>
-              </div>
-            </div>
-          </section>
+      <main
+        className={`workspace mode-${mode} mx-auto max-w-[1920px] px-4 py-5 sm:px-8`}
+      >
+        {isStudent && data && (
+          <KpiStrip
+            mode={mode}
+            cr={data.cr?.value}
+            simulatedCr={
+              mode === "simulation" ? draft?.cr?.simulated_value : null
+            }
+            ungraded={data.cr?.ungraded_attempts}
+            integralization={data.integralization}
+            forecast={data.forecast}
+            dirty={mode === "history" ? historyDirty : planDirty}
+            counts={
+              mode === "history"
+                ? [
+                    { label: "aprovadas", value: data.counts.completed },
+                    { label: "em andamento", value: data.counts.in_progress },
+                  ]
+                : [
+                    { label: "aprov. simuladas", value: data.counts.simulated },
+                    {
+                      label: "carga planejada",
+                      value: `${data.planned_hours ?? 0}h`,
+                    },
+                  ]
+            }
+          />
         )}
         {failure && (
           <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-4">
@@ -838,9 +875,63 @@ function Student({
                 </p>
               </section>
             )}
-            {history.data && progression.data && (
+            {history.data && progression.data && editingHistory && (
               <section className="mb-5">
-                {!editingHistory ? (
+                <HistoryEditor
+                  history={history.data}
+                  courses={progression.data.courses}
+                  onCancel={() => setEditingHistory(false)}
+                  onReadTranscript={api.readTranscript}
+                  onSave={async (payload) => {
+                    await api.saveHistory(payload);
+                    open(null);
+                    await Promise.all([
+                      history.refetch(),
+                      progression.refetch(),
+                      plans.refetch(),
+                    ]);
+                    setEditingHistory(false);
+                    setNotice("Histórico salvo.");
+                  }}
+                />
+              </section>
+            )}
+            <section
+              id="alternatives"
+              className="alternatives-panel mode-toolbar glass-panel mb-4 rounded-xl border border-slate-200 bg-white"
+              data-mode={mode}
+            >
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <h2 className="font-semibold">
+                    {mode === "history"
+                      ? "Histórico informado"
+                      : draft
+                        ? "Cenário hipotético"
+                        : "Simulação"}
+                  </h2>
+                  <span className="toolbar-meta">
+                    Revisão {data?.history_revision ?? "—"} ·{" "}
+                    {data?.current_period ?? "—"}º período
+                  </span>
+                  {history.data?.import && (
+                    <span className="toolbar-meta">
+                      Atualizado em{" "}
+                      {new Date(history.data.import.created_at).toLocaleString(
+                        "pt-BR",
+                      )}{" "}
+                      · {history.data.import.source}
+                      {history.data.import.source !==
+                        "Informado pelo estudante" && (
+                        <>
+                          {" "}
+                          · referência {history.data.import.source_reference}
+                        </>
+                      )}
+                    </span>
+                  )}
+                </div>
+                {mode === "history" && history.data && !editingHistory && (
                   <button
                     className={button}
                     onClick={() => {
@@ -849,74 +940,35 @@ function Student({
                   >
                     Editar histórico
                   </button>
-                ) : (
-                  <HistoryEditor
-                    history={history.data}
-                    courses={progression.data.courses}
-                    onCancel={() => setEditingHistory(false)}
-                    onReadTranscript={api.readTranscript}
-                    onSave={async (payload) => {
-                      await api.saveHistory(payload);
-                      open(null);
-                      await Promise.all([
-                        history.refetch(),
-                        progression.refetch(),
-                        plans.refetch(),
-                      ]);
-                      setEditingHistory(false);
-                      setNotice("Histórico salvo.");
-                    }}
-                  />
                 )}
-              </section>
-            )}
-            <section
-              id="alternatives"
-              className="alternatives-panel glass-panel mb-5 scroll-mt-5 rounded-xl border border-slate-200 bg-white p-4"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="font-semibold">
-                  {mode === "history"
-                    ? "Histórico informado"
-                    : draft
-                      ? "Cenário hipotético"
-                      : "Simulação"}
-                </h2>
-                <span className="text-xs text-slate-500">
-                  Revisão {data?.history_revision ?? "—"} ·{" "}
-                  {data?.current_period ?? "—"}º período
-                </span>
               </div>
-              {history.data?.import && (
-                <p className="mt-2 text-xs text-slate-500">
-                  Atualizado em{" "}
-                  {new Date(history.data.import.created_at).toLocaleString(
-                    "pt-BR",
-                  )}{" "}
-                  · {history.data.import.source}
-                  {history.data.import.source !==
-                    "Informado pelo estudante" && (
-                    <> · referência {history.data.import.source_reference}</>
-                  )}
-                </p>
+              {(history.data?.warnings.length ?? 0) +
+                (data?.warnings.length ?? 0) >
+                0 && (
+                <details className="toolbar-warnings mt-2">
+                  <summary>
+                    {(history.data?.warnings.length ?? 0) +
+                      (data?.warnings.length ?? 0)}{" "}
+                    aviso(s) sobre os dados
+                  </summary>
+                  {data?.warnings.map((warning) => (
+                    <p key={warning}>{warning}</p>
+                  ))}
+                  {history.data?.warnings.map((warning, i) => (
+                    <p key={i}>
+                      {warning.course_id} ({warning.academic_term}):{" "}
+                      {warning.message}
+                    </p>
+                  ))}
+                </details>
               )}
-              {history.data?.warnings.map((warning, i) => (
-                <p key={i} className="mt-2 text-xs text-amber-800">
-                  {warning.course_id} ({warning.academic_term}):{" "}
-                  {warning.message}
-                </p>
-              ))}
               {mode === "history" && (
-                <div className="history-mode mt-4">
-                  <p className="text-sm text-slate-600">
-                    Este é o que <strong>já aconteceu</strong>. Clique numa
-                    disciplina do mapa para registrar aprovação, reprovação e
-                    nota, ou arraste eletivas do catálogo para os períodos já
-                    cursados. Para testar cenários, use a aba{" "}
-                    <NavLink
-                      to="/simulacao"
-                      className="font-medium text-blue-700 underline"
-                    >
+                <div className="history-mode mt-2">
+                  <p className="toolbar-hint">
+                    O que <strong>já aconteceu</strong>: clique numa disciplina
+                    para registrar aprovação, reprovação e nota, ou arraste
+                    eletivas para os períodos cursados. Cenários ficam na{" "}
+                    <NavLink to="/simulacao" className="underline">
                       Simulação
                     </NavLink>
                     .
@@ -968,67 +1020,69 @@ function Student({
               )}
               {mode === "simulation" && (
                 <>
-                  <label className="mt-4 block max-w-lg text-xs text-slate-600">
-                    Alternativa salva
-                    <select
-                      className={input}
-                      value={draft?.id ?? ""}
-                      disabled={busy || plans.isLoading}
-                      onChange={(e) => {
-                        const id = e.target.value;
+                  <div className="toolbar-row mt-3">
+                    <label className="text-xs text-slate-600">
+                      Alternativa salva
+                      <select
+                        className={input}
+                        value={draft?.id ?? ""}
+                        disabled={busy || plans.isLoading}
+                        onChange={(e) => {
+                          const id = e.target.value;
+                          if (!discard()) return;
+                          void run(async () =>
+                            open(id ? await api.getPlan(id) : null),
+                          );
+                        }}
+                      >
+                        <option value="">Histórico informado</option>
+                        {plans.data?.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            {p.name} · {p.target_term}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <form
+                      className="flex flex-wrap items-end gap-3"
+                      onSubmit={(e) => {
+                        e.preventDefault();
                         if (!discard()) return;
-                        void run(async () =>
-                          open(id ? await api.getPlan(id) : null),
-                        );
+                        void run(async () => {
+                          open(await api.createPlan(newName, newTerm));
+                          setNewName("");
+                          await plans.refetch();
+                        });
                       }}
                     >
-                      <option value="">Histórico informado</option>
-                      {plans.data?.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} · {p.target_term}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                  <form
-                    className="mt-4 flex flex-wrap items-end gap-3"
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      if (!discard()) return;
-                      void run(async () => {
-                        open(await api.createPlan(newName, newTerm));
-                        setNewName("");
-                        await plans.refetch();
-                      });
-                    }}
-                  >
-                    <label className="min-w-0 text-xs text-slate-600">
-                      Nome da alternativa
-                      <input
-                        className={input}
-                        required
-                        maxLength={120}
-                        value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
-                      />
-                    </label>
-                    <label className="text-xs text-slate-600">
-                      Semestre-alvo
-                      <input
-                        className={input}
-                        required
-                        pattern="[0-9]{4}\.[12]"
-                        placeholder="2026.2"
-                        value={newTerm}
-                        onChange={(e) => setNewTerm(e.target.value)}
-                      />
-                    </label>
-                    <button className={button} disabled={busy}>
-                      Criar alternativa
-                    </button>
-                  </form>
+                      <label className="min-w-0 text-xs text-slate-600">
+                        Nome da alternativa
+                        <input
+                          className={input}
+                          required
+                          maxLength={120}
+                          value={newName}
+                          onChange={(e) => setNewName(e.target.value)}
+                        />
+                      </label>
+                      <label className="text-xs text-slate-600">
+                        Semestre-alvo
+                        <input
+                          className={input}
+                          required
+                          pattern="[0-9]{4}\.[12]"
+                          placeholder="2026.2"
+                          value={newTerm}
+                          onChange={(e) => setNewTerm(e.target.value)}
+                        />
+                      </label>
+                      <button className={button} disabled={busy}>
+                        Criar alternativa
+                      </button>
+                    </form>
+                  </div>
                   {draft && (
-                    <div className="mt-5 border-t border-slate-200 pt-4">
+                    <div className="mt-4 border-t border-slate-200 pt-3">
                       <div className="flex flex-wrap items-end gap-3">
                         <label className="text-xs text-slate-600">
                           Nome do plano
@@ -1106,11 +1160,10 @@ function Student({
                           Excluir alternativa
                         </button>
                       </div>
-                      <p className="mt-3 text-sm text-violet-800">
+                      <p className="toolbar-hint mt-2">
                         {dirty ? "Alterações pendentes" : "Versão salva"} ·
-                        somente aprovações simuladas liberam dependentes neste
-                        cenário. Planejar ou estar em andamento não libera
-                        pré-requisitos.
+                        somente aprovações simuladas liberam dependentes.
+                        Planejar não libera pré-requisitos.
                       </p>
                       {!draft.valid && (
                         <div className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-900">
@@ -1122,7 +1175,11 @@ function Student({
                             ([id, issues]) => (
                               <div key={id} className="mt-2">
                                 <span>
-                                  {data?.courses.find((c) => c.id === id)?.name}
+                                  {courseName(
+                                    data?.courses.find((c) => c.id === id) ?? {
+                                      name: id,
+                                    },
+                                  )}
                                   : {issues.join(" ")}
                                 </span>
                                 <button
@@ -1162,132 +1219,109 @@ function Student({
                 </>
               )}
             </section>
-            <div className="metrics-grid mb-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-              {[
-                ["Aprovações oficiais", data?.counts.completed],
-                ["Aprovações simuladas", data?.counts.simulated],
-                ["Em andamento", data?.counts.in_progress],
-                ["Carga planejada", `${data?.planned_hours ?? 0}h`],
-                mode === "simulation" &&
-                draft?.cr?.simulated_value !== null &&
-                draft?.cr?.simulated_value !== undefined
-                  ? ["CR simulado", formatGrade(draft.cr.simulated_value)]
-                  : [
-                      data?.cr?.ungraded_attempts
-                        ? `CR · ${data.cr.ungraded_attempts} sem nota`
-                        : "CR",
-                      formatGrade(data?.cr?.value),
-                    ],
-              ].map(([label, value]) => (
-                <div
-                  key={label}
-                  className="metric-card rounded-lg border border-slate-200 bg-white p-4"
-                >
-                  <p className="text-2xl font-semibold">{value ?? "—"}</p>
-                  <p className="mt-1 text-xs text-slate-500">{label}</p>
-                </div>
-              ))}
-            </div>
-            {data && (
-              <ProgressSummary
-                integralization={data.integralization}
-                forecast={data.forecast}
-                courses={data.courses}
-                onSelect={setSelectedId}
-              />
-            )}
-            <div className="filter-bar mb-5 flex flex-wrap gap-3">
-              <label className="text-xs">
-                Buscar disciplina
-                <input
-                  className={input}
-                  type="search"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </label>
-              <label className="text-xs">
-                Estado acadêmico
-                <select
-                  className={input}
-                  value={filter}
-                  onChange={(e) => setFilter(e.target.value as Status | "all")}
-                >
-                  {[
-                    ["all", "Todas"],
-                    ["completed", "Aprovação informada"],
-                    ["simulated", "Aprovação simulada"],
-                    ["in_progress", "Em andamento"],
-                    ["planned", "Planejadas"],
-                    ["available", "Disponíveis"],
-                    ["pending", "Pendentes"],
-                    ["locked", "Bloqueadas"],
-                  ].map(([value, label]) => (
-                    <option key={value} value={value}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
             {data && (
               <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
-                {mode === "history" ? (
+                <div className="min-w-0">
+                  {mode === "simulation" && (
+                    <p className="draft-banner" role="note">
+                      <strong>Rascunho</strong> · nada aqui altera seu histórico
+                    </p>
+                  )}
                   <CurriculumMap
-                    key="history"
+                    key={
+                      mode === "history" ? "history" : (draft?.id ?? "official")
+                    }
                     courses={visible}
                     allCourses={data.courses}
-                    layout={
-                      startTerm
-                        ? historyLayout(data.courses, records, startTerm)
-                        : {}
+                    layout={mapLayout}
+                    editable={canEditMap}
+                    canMove={movable}
+                    maxPeriod={mode === "history" ? currentPeriod : undefined}
+                    editHint={
+                      mode === "history"
+                        ? "Clique numa disciplina para registrar a situação. Arraste eletivas para os períodos já cursados."
+                        : draft
+                          ? undefined
+                          : "Crie ou abra uma alternativa para arrastar disciplinas entre os períodos."
                     }
-                    editable={!!startTerm && !busy}
-                    canMove={(course) => course.type === "elective"}
-                    maxPeriod={currentPeriod}
-                    editHint="Clique numa disciplina para registrar a situação. Arraste eletivas para os períodos já cursados."
-                    needsInfo={(course) =>
-                      course.type === "mandatory" &&
-                      course.period === 1 &&
-                      currentPeriod > 1 &&
-                      !records.some((r) => r.course_id === course.id)
+                    needsInfo={
+                      mode === "history"
+                        ? (course) =>
+                            course.type === "mandatory" &&
+                            course.period === 1 &&
+                            currentPeriod > 1 &&
+                            !records.some((r) => r.course_id === course.id)
+                        : undefined
                     }
-                    onMove={(id, period) => moveInHistory(id, period)}
+                    onMove={
+                      mode === "history"
+                        ? (id, period) => moveInHistory(id, period)
+                        : move
+                    }
                     selectedId={selectedId}
-                    relatedIds={
-                      new Set(
-                        selected
-                          ? [
-                              ...selected.prerequisite_ids,
-                              ...selected.dependent_ids,
-                            ]
-                          : [],
-                      )
-                    }
+                    relatedIds={related}
                     onSelect={setSelectedId}
-                  />
-                ) : (
-                  <CurriculumMap
-                    key={draft?.id ?? "official"}
-                    courses={visible}
-                    allCourses={data.courses}
-                    layout={draft?.course_layout}
-                    editable={!!draft && !busy}
-                    onMove={move}
-                    selectedId={selectedId}
-                    relatedIds={
-                      new Set(
-                        selected
-                          ? [
-                              ...selected.prerequisite_ids,
-                              ...selected.dependent_ids,
-                            ]
-                          : [],
-                      )
+                    filters={
+                      <div className="map-filters">
+                        <label className="text-xs">
+                          Buscar disciplina
+                          <input
+                            className={`${input} compact-input`}
+                            type="search"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                          />
+                        </label>
+                        <label className="text-xs">
+                          Estado acadêmico
+                          <select
+                            className={`${input} compact-input`}
+                            value={filter}
+                            onChange={(e) =>
+                              setFilter(
+                                e.target.value as Status | "all" | "critical",
+                              )
+                            }
+                          >
+                            {[
+                              ["all", "Todas"],
+                              ["critical", "Críticas (muitas dependentes)"],
+                              ["completed", "Aprovação informada"],
+                              ["simulated", "Aprovação simulada"],
+                              ["in_progress", "Em andamento"],
+                              ["planned", "Planejadas"],
+                              ["available", "Disponíveis"],
+                              ["pending", "Pendentes"],
+                              ["locked", "Bloqueadas"],
+                            ].map(([value, label]) => (
+                              <option key={value} value={value}>
+                                {label}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
                     }
-                    onSelect={setSelectedId}
+                    criticalPathIds={data.forecast?.critical_path_ids}
+                    periodAction={
+                      mode === "history" && startTerm
+                        ? (period) =>
+                            period < currentPeriod &&
+                            unrecorded(period).length > 0 ? (
+                              <button
+                                type="button"
+                                className="period-approve"
+                                disabled={busy}
+                                aria-label={`Marcar ${period}º período como aprovado`}
+                                onClick={() => approvePeriod(period)}
+                              >
+                                ✓ Marcar período como aprovado
+                              </button>
+                            ) : null
+                        : undefined
+                    }
                   />
-                )}
+                </div>
                 <CourseDetails
                   course={selected}
                   courses={data.courses}
@@ -1298,6 +1332,48 @@ function Student({
                   readOnly={!draft || selected?.status === "completed"}
                   official={selected?.status === "completed"}
                   planned={draft?.planned_ids.includes(selectedId ?? "")}
+                  moveSlot={
+                    selected && canEditMap && movable(selected) ? (
+                      <label className="move-control">
+                        Mover {courseName(selected)} para período
+                        <select
+                          aria-label={`Mover ${courseName(selected)} para período`}
+                          className={input}
+                          value={coursePeriod(selected, mapLayout) ?? "catalog"}
+                          disabled={busy}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            const period =
+                              value === "catalog" ? null : Number(value);
+                            if (mode === "history")
+                              moveInHistory(selected.id, period);
+                            else move(selected.id, period);
+                          }}
+                        >
+                          {selected.type === "elective" && (
+                            <option value="catalog">
+                              {mode === "history"
+                                ? "Fora do histórico (catálogo)"
+                                : "Catálogo de eletivas"}
+                            </option>
+                          )}
+                          {Array.from(
+                            {
+                              length:
+                                mode === "history"
+                                  ? currentPeriod
+                                  : periodCount,
+                            },
+                            (_, i) => i + 1,
+                          ).map((p) => (
+                            <option key={p} value={p}>
+                              {p}º período
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    ) : undefined
+                  }
                   historySlot={
                     mode === "history" && selected ? (
                       startTerm ? (
@@ -1365,6 +1441,16 @@ function Student({
                       </label>
                     ) : undefined
                   }
+                />
+              </div>
+            )}
+            {data && (
+              <div className="mt-6">
+                <ProgressSummary
+                  integralization={data.integralization}
+                  forecast={data.forecast}
+                  courses={data.courses}
+                  onSelect={setSelectedId}
                 />
               </div>
             )}

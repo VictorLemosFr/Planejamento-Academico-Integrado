@@ -58,7 +58,9 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     page.getByText("Alterações pendentes", { exact: false }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("Plano salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Plano salvo");
   await page.reload();
   await page
     .getByLabel("Alternativa salva")

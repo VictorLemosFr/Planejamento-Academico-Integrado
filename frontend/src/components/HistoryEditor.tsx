@@ -1,3 +1,4 @@
+import { titleCase } from "../display";
 import { useRef, useState } from "react";
 import type {
   Course,
@@ -174,7 +175,7 @@ export function HistoryEditor({
                     {proposal.records.map((r) => (
                       <tr key={key(r)}>
                         <td className="font-mono">{r.code}</td>
-                        <td>{r.name}</td>
+                        <td>{titleCase(r.name)}</td>
                         <td>{r.academic_term}</td>
                         <td>{statusLabels[r.status]}</td>
                         <td>{r.grade ?? "—"}</td>
@@ -279,7 +280,7 @@ export function HistoryEditor({
                 <option value="">Selecione</option>
                 {courses.map((course) => (
                   <option key={course.id} value={course.id}>
-                    {course.name}
+                    {titleCase(course.name)}
                   </option>
                 ))}
               </select>
