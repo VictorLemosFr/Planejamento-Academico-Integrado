@@ -2,6 +2,7 @@ from datetime import UTC, datetime, timedelta
 from secrets import token_urlsafe
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi.concurrency import run_in_threadpool
 from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 
@@ -28,6 +29,12 @@ from app.modules.personal.security import (
     token_hash,
 )
 from app.modules.personal.service import evaluate, history_view, import_history, plan_view
+from app.modules.personal.transcript import (
+    MAX_BYTES,
+    TranscriptError,
+    extract_text,
+    parse_transcript,
+)
 
 router = APIRouter(prefix="/api", tags=["Identidade, histórico e planos"])
 
@@ -229,6 +236,37 @@ def save_own_history(payload: SelfHistoryPayload, identity: Identity, session: D
     return import_history(
         session, student, identity[0], imported, list_courses(session, curriculum.id)
     )
+
+
+@router.post("/me/history/pdf")
+async def read_transcript(request: Request, identity: Identity, session: Database):
+    """Lê o PDF do histórico e devolve uma proposta; nada é gravado nesta chamada."""
+    if request.headers.get("content-type", "").split(";")[0].strip() != "application/pdf":
+        raise HTTPException(415, "Envie o histórico em PDF.")
+    declared = request.headers.get("content-length")
+    if declared and declared.isdigit() and int(declared) > MAX_BYTES:
+        raise HTTPException(413, "O PDF excede 5 MB.")
+    data = bytearray()
+    async for chunk in request.stream():
+        data.extend(chunk)
+        if len(data) > MAX_BYTES:
+            raise HTTPException(413, "O PDF excede 5 MB.")
+    try:
+        # A extração é custosa em CPU; roda fora do laço de eventos.
+        text = await run_in_threadpool(extract_text, bytes(data))
+    except TranscriptError as error:
+        raise HTTPException(422, str(error)) from error
+    finally:
+        data.clear()
+    student = student_for(session, identity[0])
+    result = parse_transcript(text, courses_for(session, student))
+    session.rollback()
+    if not result["records"] and not result["unmatched"]:
+        raise HTTPException(
+            422,
+            "Nenhuma disciplina encontrada. Confira se o arquivo é o histórico emitido pelo SIGAA.",
+        )
+    return result
 
 
 @router.get("/me/progression")
