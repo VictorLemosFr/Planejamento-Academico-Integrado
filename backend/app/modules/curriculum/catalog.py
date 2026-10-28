@@ -1,6 +1,7 @@
 """Matrizes atendidas e requisitos de integralização publicados pelo CIn.
 
-As cargas horárias vêm da seção "Mais informações" da página oficial de cada curso.
+Os requisitos de integralização vêm da seção "Mais informações" da página oficial de cada
+curso. Pré-requisitos, co-requisitos e cargas de cada disciplina foram conferidos nos PPCs.
 Campos ausentes na fonte ficam como ``None``; o sistema não estima esses valores.
 """
 

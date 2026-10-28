@@ -18,6 +18,11 @@ UNVERIFIED_PREREQUISITES = (
     "Os pré-requisitos desta matriz ainda não foram confirmados; "
     "o planejamento não comprova elegibilidade para matrícula."
 )
+PARTIALLY_VERIFIED = (
+    "Pré-requisitos conferidos no PPC do curso, exceto em {count} disciplina(s) sinalizada(s); "
+    "o planejamento não substitui a validação da matrícula no SIGAA."
+)
+COREQUISITE = "Co-requisito precisa ser cursado no mesmo semestre ou antes."
 
 
 def history_view(session, student):
@@ -185,6 +190,10 @@ def evaluate(
             issues.append("Disciplina simultaneamente planejada e aprovada na hipótese.")
         if graph.missing(cid, completed):
             issues.append("Pré-requisitos não satisfeitos.")
+        if cid in planned and any(
+            co not in completed | ongoing | planned for co in graph.corequisites(cid)
+        ):
+            issues.append(COREQUISITE)
         if issues:
             problems[cid] = issues
     result = []
@@ -240,13 +249,17 @@ def evaluate(
         },
         "valid": not problems,
         "problems": problems,
-        "warnings": [WARNING]
-        + (
-            [UNVERIFIED_PREREQUISITES]
-            if any(course.get("prerequisite_status") == "unverified" for course in courses)
-            else []
-        ),
+        "warnings": [WARNING] + verification_warning(courses),
     }
+
+
+def verification_warning(courses):
+    unverified = sum(course.get("prerequisite_status") == "unverified" for course in courses)
+    if not unverified:
+        return []
+    if unverified == len(courses):
+        return [UNVERIFIED_PREREQUISITES]
+    return [PARTIALLY_VERIFIED.format(count=unverified)]
 
 
 def plan_view(session, student, plan, courses, requirements=None):

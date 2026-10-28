@@ -54,3 +54,12 @@ class Prerequisite(Base):
     __table_args__ = (CheckConstraint("course_id <> prerequisite_id", name="no_self_prerequisite"),)
     course_id: Mapped[str] = mapped_column(ForeignKey("courses.id"), primary_key=True)
     prerequisite_id: Mapped[str] = mapped_column(ForeignKey("courses.id"), primary_key=True)
+
+
+class Corequisite(Base):
+    """Componente que deve ser cursado junto ou antes; não bloqueia como pré-requisito."""
+
+    __tablename__ = "corequisites"
+    __table_args__ = (CheckConstraint("course_id <> corequisite_id", name="no_self_corequisite"),)
+    course_id: Mapped[str] = mapped_column(ForeignKey("courses.id"), primary_key=True)
+    corequisite_id: Mapped[str] = mapped_column(ForeignKey("courses.id"), primary_key=True)
