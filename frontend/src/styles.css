@@ -3110,3 +3110,33 @@ kbd {
     color: #555;
   }
 }
+
+/* Histórico: obrigatória sem registro (atrasada ou fora deste semestre). */
+.course-card[data-gap] {
+  border-style: dashed;
+  border-left-style: solid;
+  background: transparent;
+}
+.course-card[data-gap="late"] {
+  --band: #cf861a;
+}
+[data-theme="dark"] .course-card[data-gap="late"] {
+  --band: #e0a043;
+}
+.course-card[data-gap="skipped"] {
+  --band: var(--line);
+}
+.course-card[data-gap="skipped"] h3 {
+  color: var(--muted);
+}
+.chip-gap {
+  border-style: dashed;
+  font-weight: 600;
+}
+.period-term {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}

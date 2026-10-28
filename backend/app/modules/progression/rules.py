@@ -3,8 +3,9 @@
 Res. nº 09/2009-CCEPE/UFPE:
 - art. 1º, II: 3 reprovações no mesmo componente (por nota ou falta, consecutivas ou não)
   levam à recusa de matrícula;
-- art. 3º: o CR é a média das notas finais ponderada pelos créditos dos componentes;
-  reprovação por falta conta como nota final zero.
+- art. 3º: o CR é a média ponderada das notas finais; reprovação por falta conta como
+  nota final zero. O texto fala em créditos, mas o SIGAA pondera pela carga horária, e é
+  com ele que o estudante compara (ver `coefficient`).
 """
 
 FAILURE_LIMIT = 3
@@ -22,30 +23,43 @@ def failure_level(failures):
     return None
 
 
-def credit_weight(course):
-    # Sem crédito publicado, estima pela carga teórica (15h por crédito).
-    return course.get("credits") or max(1, round(course["hours"] / 15))
+def hour_weight(course):
+    """Peso de cada componente no CR: a carga horária (CH), como faz o SIGAA da UFPE."""
+    return course["hours"]
 
 
-def weighted_average(entries):
-    """entries: pares (créditos, nota). Devolve None quando não há nota."""
+def weighted_average(entries, digits=4):
+    """entries: pares (peso, nota). Devolve None quando não há nota."""
     total = sum(weight for weight, _ in entries)
     if not total:
         return None
-    return round(sum(weight * grade for weight, grade in entries) / total, 2)
+    return round(sum(weight * grade for weight, grade in entries) / total, digits)
 
 
 def coefficient(records, by_id, simulated=None):
-    """CR por créditos: todas as tentativas com nota entram, inclusive reprovações."""
-    entries = [
-        (credit_weight(by_id[r["course_id"]]), float(r["grade"]))
+    """CR e MC como o SIGAA da UFPE calcula.
+
+    A Res. nº 09/2009-CCEPE fala em ponderar pelos créditos, mas o SIGAA pondera pela
+    carga horária: conferido com um histórico emitido pelo SIGAA, o CR e a MC
+    impressos só fecham com a CH.
+    - CR: todas as tentativas com nota, inclusive reprovações (falta vale zero).
+    - MC (média de conclusão): só as aprovações.
+    """
+    graded = [
+        r
         for r in records
         if r.get("grade") is not None
         and r["status"] in {"completed", "failed"}
         and r["course_id"] in by_id
     ]
+    entries = [(hour_weight(by_id[r["course_id"]]), float(r["grade"])) for r in graded]
+    approved = [
+        (hour_weight(by_id[r["course_id"]]), float(r["grade"]))
+        for r in graded
+        if r["status"] == "completed"
+    ]
     simulated_entries = [
-        (credit_weight(by_id[course_id]), float(grade))
+        (hour_weight(by_id[course_id]), float(grade))
         for course_id, grade in (simulated or {}).items()
         if course_id in by_id and grade is not None
     ]
@@ -54,10 +68,11 @@ def coefficient(records, by_id, simulated=None):
     )
     return {
         "value": weighted_average(entries),
+        "mc": weighted_average(approved),
         "simulated_value": weighted_average(entries + simulated_entries)
         if simulated_entries
         else None,
-        "credits": sum(weight for weight, _ in entries),
+        "hours": sum(weight for weight, _ in entries),
         "graded_attempts": len(entries),
         "ungraded_attempts": ungraded,
     }

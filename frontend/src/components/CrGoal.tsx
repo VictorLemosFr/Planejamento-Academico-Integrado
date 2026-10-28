@@ -8,23 +8,23 @@ const fmt = (value: number) =>
 
 /**
  * Calculadora de meta: que média preciso neste semestre para chegar ao CR
- * desejado? CR = Σ(créditos × nota) / Σ créditos (Res. nº 09/2009, art. 3º).
+ * desejado? Como no SIGAA, CR = Σ(carga horária × nota) / Σ carga horária.
  */
 export function CrGoal({
   cr,
-  defaultCredits,
+  defaultHours,
 }: {
   cr?: CoefficientSummary;
-  defaultCredits: number;
+  defaultHours: number;
 }) {
   const current = cr?.value ?? null;
-  const done = cr?.credits ?? 0;
+  const done = cr?.hours ?? 0;
   const [target, setTarget] = useState(() =>
     String(current !== null ? Math.min(10, Math.ceil(current + 0.5)) : 7),
   );
-  const [credits, setCredits] = useState(String(defaultCredits || 20));
+  const [hours, setHours] = useState(String(defaultHours || 300));
   const goal = Number(target.replace(",", "."));
-  const next = Number(credits);
+  const next = Number(hours);
   const valid =
     Number.isFinite(goal) &&
     goal >= 0 &&
@@ -58,20 +58,21 @@ export function CrGoal({
           />
         </label>
         <label>
-          Créditos neste semestre
+          Carga neste semestre (h)
           <input
             className="field"
             type="number"
-            min="1"
-            max="60"
-            value={credits}
-            onChange={(e) => setCredits(e.target.value)}
+            min="15"
+            max="900"
+            step="15"
+            value={hours}
+            onChange={(e) => setHours(e.target.value)}
           />
         </label>
       </div>
       <div className="goal-result" role="status" aria-live="polite">
         {!valid ? (
-          <p>Informe um CR entre 0 e 10 e os créditos do semestre.</p>
+          <p>Informe um CR entre 0 e 10 e a carga do semestre.</p>
         ) : needed! <= 0 ? (
           <p>
             <strong>Meta garantida.</strong> Qualquer média mantém seu CR acima
@@ -83,20 +84,20 @@ export function CrGoal({
             <strong className="goal-number">
               {fmt(Math.ceil(needed! * 100) / 100)}
             </strong>{" "}
-            em {next} créditos para chegar a CR {fmt(goal)}.
+            em {next}h de disciplinas para chegar a CR {fmt(goal)}.
           </p>
         ) : (
           <p>
             <strong>Não dá em um semestre.</strong> Com 10 em tudo, seu CR chega
             a {fmt(Math.floor(ceiling! * 100) / 100)}
             {semesters
-              ? `; mantendo média 10 com ${next} créditos por semestre, seriam ${semesters} semestres.`
+              ? `; mantendo média 10 com ${next}h por semestre, seriam ${semesters} semestres.`
               : "."}
           </p>
         )}
         <p className="muted small">
-          Conta com {done} créditos já com nota. Reprovação por falta entra como
-          zero.
+          Conta com {done}h já com nota, como o SIGAA (peso = carga horária).
+          Reprovação por falta entra como zero.
         </p>
       </div>
     </section>

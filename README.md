@@ -17,6 +17,9 @@ A aplicação entrega **cadastro ou login → histórico informado pelo estudant
 - **Próximo semestre:** sugere disciplinas liberadas até a carga desejada, priorizando o caminho crítico, as atrasadas e as que liberam mais; cria uma alternativa com a sugestão.
 - **Comparar:** até três alternativas lado a lado (previsão, integralização, CR simulado, carga), com a melhor de cada linha destacada.
 - **Compartilhar e exportar:** link somente leitura de um plano salvo (`/compartilhado/<token>`, revogável, sem notas, CR, reprovações ou e-mail; migração `0011`) e "Exportar PDF", que imprime um relatório por período.
+- **CR e MC como o SIGAA:** média das notas ponderada pela carga horária (CH), com reprovação por falta valendo zero; a MC (média de conclusão) usa só as aprovações. A Res. nº 09/2009 fala em créditos, mas o SIGAA pondera pela CH: conferido com um histórico emitido pelo SIGAA, o CR e a MC impressos só fecham assim.
+- **Importação do PDF do SIGAA:** lê a coluna Média (inclusive notas sem vírgula, como "7"), o ingresso e o período atual do cabeçalho, ignora a lista de obrigatórias pendentes e mostra o CR/MC impressos para conferência.
+- **Período atual:** "Marcar período como cursando" registra o semestre atual de uma vez; obrigatórias sem registro aparecem como "Não cursada" (períodos anteriores) ou "Não cursando agora" (período atual), e a Visão geral avisa o que ficou para depois. Cada coluna do mapa mostra o semestre letivo (ex.: "2026.2 · atual").
 - **Busca rápida:** `Ctrl+K` (`⌘K` no Mac) encontra disciplinas, páginas e ações.
 - Faixa fixa de indicadores (CR ou CR simulado, % integralizado, previsão, alterações não salvas). A Simulação tem identidade de rascunho (borda tracejada violeta) para não ser confundida com o histórico real.
 - *Marcar período como aprovado* registra de uma vez as obrigatórias de um período já cursado; exceções são ajustadas card a card.

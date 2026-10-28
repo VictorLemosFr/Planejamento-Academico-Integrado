@@ -78,8 +78,10 @@ export function HistoryEditor({
             ...found,
           ];
     setRecords(merged);
-    if (proposal.start_term && (!startTerm || proposal.start_term < startTerm))
-      setStartTerm(proposal.start_term);
+    // O cabeçalho do SIGAA informa ingresso e período atual; valem mais que o palpite.
+    if (proposal.start_term) setStartTerm(proposal.start_term);
+    if (proposal.current_period)
+      setCurrentPeriod(String(proposal.current_period));
     setProposal(null);
     setNotice(
       `${found.length} registros do PDF aplicados. Revise e clique em Salvar histórico.`,
@@ -159,7 +161,20 @@ export function HistoryEditor({
                 {proposal.records.length} registro
                 {proposal.records.length !== 1 ? "s" : ""} encontrado
                 {proposal.records.length !== 1 ? "s" : ""} na sua matriz.
+                {proposal.current_period
+                  ? ` Ingresso em ${proposal.start_term}, ${proposal.current_period}º período.`
+                  : ""}
               </p>
+              {proposal.sigaa_indices?.cr != null && (
+                <p className="mt-1 text-xs text-slate-600">
+                  O SIGAA informa CR{" "}
+                  {proposal.sigaa_indices.cr.toLocaleString("pt-BR")}
+                  {proposal.sigaa_indices.mc != null &&
+                    ` e MC ${proposal.sigaa_indices.mc.toLocaleString("pt-BR")}`}
+                  . Depois de salvar, confira na Visão geral: o cálculo daqui
+                  segue o mesmo (média ponderada pela carga horária).
+                </p>
+              )}
               {proposal.records.length > 0 && (
                 <table>
                   <thead>

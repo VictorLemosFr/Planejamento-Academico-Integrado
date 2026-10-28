@@ -106,6 +106,11 @@ def choose(options, context):
 
 
 GRADE = re.compile(r"(?<![\d,.])(\d{1,2})[,.](\d{1,2})(?![\d,.])")
+# A coluna Média do SIGAA vem logo antes da situação: "6,5", "7" (sem vírgula) ou "-".
+MEDIA = re.compile(r"^(?:10(?:[,.]0{1,4})?|\d(?:[,.]\d{1,4})?)$")
+START = re.compile(r"PERIODO LETIVO INICIAL:\s*(20\d{2})\s*[./]\s*([12])")
+CURRENT = re.compile(r"PERIODO LETIVO ATUAL:\s*(\d{1,2})\b")
+INDEX = re.compile(r"\b(CR|MC)\s*:\s*(\d{1,2}(?:[.,]\d+)?)")
 ABSENCE = {"REPF", "REPMF", "REPNF", "REPROVADO POR FALTA"}
 
 
@@ -117,6 +122,14 @@ def final_grade(context, word):
     if word in ABSENCE:
         return 0.0
     before = context[: context.rfind(word)] if word else context
+    tokens = before.split()
+    if tokens:
+        last = tokens[-1]
+        if set(last) <= {"-"}:
+            return None
+        if MEDIA.match(last):
+            return float(last.replace(",", "."))
+    # Outros layouts: o último decimal entre 0 e 10 antes da situação.
     grades = [float(f"{a}.{b}") for a, b in GRADE.findall(before)]
     grades = [grade for grade in grades if 0 <= grade <= 10]
     return grades[-1] if grades else None
@@ -128,7 +141,21 @@ def parse_transcript(text, courses):
     lines = [plain(line) for line in text.splitlines()]
     records, unmatched, ignored = {}, [], []
     last_term = None
+    header = "\n".join(lines)
+    start = START.search(header)
+    current = CURRENT.search(header)
+    indices = {
+        name.lower(): float(value.replace(",", ".")) for name, value in INDEX.findall(header)
+    }
+    # A lista de obrigatórias pendentes repete códigos sem semestre: não é histórico.
+    skipping = False
     for index, line in enumerate(lines):
+        if "PENDENTES" in line and "COMPONENTES" in line:
+            skipping = True
+        elif "CURSADOS" in line and "COMPONENTES" in line:
+            skipping = False
+        if skipping:
+            continue
         terms = list(TERM.finditer(line))
         codes = list(CODE.finditer(line))
         if not codes:
@@ -184,5 +211,14 @@ def parse_transcript(text, courses):
         "records": ordered,
         "unmatched": unmatched,
         "ignored": ignored,
-        "start_term": ordered[0]["academic_term"] if ordered else None,
+        "start_term": (
+            f"{start.group(1)}.{start.group(2)}"
+            if start
+            else ordered[0]["academic_term"]
+            if ordered
+            else None
+        ),
+        "current_period": int(current.group(1)) if current else None,
+        # CR e MC impressos pelo SIGAA, para o estudante conferir o cálculo daqui.
+        "sigaa_indices": indices or None,
     }

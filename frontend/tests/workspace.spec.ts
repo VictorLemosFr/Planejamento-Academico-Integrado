@@ -59,7 +59,7 @@ test("overview answers how am I, how much is left and what to do next", async ({
     .locator("#cr-goal-title")
     .locator("xpath=ancestor::section[1]");
   await goal.getByLabel("CR desejado").fill("8");
-  await goal.getByLabel("Créditos neste semestre").fill("20");
+  await goal.getByLabel("Carga neste semestre (h)").fill("300");
   await expect(goal.getByRole("status")).toContainText("média 8");
   await expect(
     page.getByRole("region", { name: "Coeficiente de rendimento" }),
@@ -248,4 +248,32 @@ test("mobile shows the navigation as a bottom tab bar without horizontal scroll"
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+});
+
+test("a current-period course the student skipped is shown as not taken", async ({
+  page,
+}) => {
+  await register(page, "skipped-course");
+  await goHistory(page);
+  await expect(
+    page.getByRole("region", { name: "3º período", exact: true }),
+  ).toContainText("2026.1 · atual");
+  await page
+    .getByRole("button", { name: "Marcar 3º período como cursando" })
+    .click();
+  const algorithms = card(page, "Algoritmos");
+  await expect(algorithms).toHaveAttribute("data-status", "in_progress");
+  await algorithms.click();
+  await page
+    .getByRole("region", { name: "Situação no histórico" })
+    .getByRole("button", { name: "Marcar como não cursada" })
+    .click();
+  await expect(algorithms).toContainText("Não cursando agora");
+  await expect(algorithms).toHaveAttribute("data-gap", "skipped");
+  await page.getByRole("button", { name: "Salvar histórico" }).click();
+  await expect(notice(page)).toContainText("Histórico salvo");
+  await nav(page, "Visão geral");
+  await expect(
+    page.getByRole("note").filter({ hasText: "ficou para depois" }),
+  ).toContainText("Algoritmos");
 });
