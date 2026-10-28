@@ -42,7 +42,6 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     .click();
   await goSimulation(page);
   await page.getByLabel("Nome da alternativa").fill("Alternativa A");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await expect(
     page.getByText("Cenário hipotético", { exact: true }),
@@ -66,7 +65,7 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
   await page.reload();
   await page
     .getByLabel("Alternativa salva")
-    .selectOption({ label: "Alternativa A · 2026.2" });
+    .selectOption({ label: "Alternativa A" });
   await expect(
     page.getByRole("button", {
       name: "Estruturas de Dados Orientadas a Objetos",
@@ -74,7 +73,6 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     }),
   ).toContainText("Aprovação simulada");
   await page.getByLabel("Nome da alternativa").fill("Alternativa B");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await page.getByRole("button", { name: "Sair", exact: true }).click();
   await signIn(page);
@@ -84,7 +82,7 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
   ).toHaveCount(3);
   await page
     .getByLabel("Alternativa salva")
-    .selectOption({ label: "Alternativa A · 2026.2" });
+    .selectOption({ label: "Alternativa A" });
   await expect(
     page.getByRole("button", {
       name: "Estruturas de Dados Orientadas a Objetos",
@@ -107,7 +105,6 @@ test("the official map directs pending courses to an alternative", async ({
   await page.getByRole("link", { name: "Criar ou abrir alternativa" }).click();
   await expect(page.getByLabel("Alternativa salva")).toBeInViewport();
   await page.getByLabel("Nome da alternativa").fill("Simulação de conclusão");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await page
     .getByRole("button", {
@@ -152,7 +149,6 @@ test("save failure and conflict do not claim success or discard draft", async ({
   await signIn(page);
   await goSimulation(page);
   await page.getByLabel("Nome da alternativa").fill("Falha");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await page.getByLabel("Nome do plano").fill("Rascunho local");
   await page.route("**/api/plans/*", async (route) => {
@@ -184,7 +180,6 @@ test("expired session clears personal content", async ({ page }) => {
     }),
   );
   await page.getByLabel("Nome da alternativa").fill("Expirada");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await expect(page.getByLabel("E-mail")).toBeVisible();
   await expect(

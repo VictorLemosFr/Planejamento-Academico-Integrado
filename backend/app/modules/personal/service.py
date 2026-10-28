@@ -179,7 +179,9 @@ def evaluate(
         if kind in {"approve", "plan"}:
             if course_id in refused:
                 raise ValueError(REFUSED)
-            if graph.missing(course_id, official | hypothetical):
+            # Planejar para o próximo semestre aceita pré-requisito em andamento agora.
+            satisfied = official | hypothetical | (ongoing if kind == "plan" else set())
+            if graph.missing(course_id, satisfied):
                 raise ValueError("Conclua os pré-requisitos antes de simular esta ação.")
             if kind == "approve":
                 hypothetical.add(course_id)
@@ -196,15 +198,26 @@ def evaluate(
             planned.discard(course_id)
     # Placement is a visual arrangement; it never grants academic completion.
     by_id = {course["id"]: course for course in courses}
-    if action and action["kind"] == "unplan" and by_id[action["course_id"]]["type"] == "elective":
+    # Tirar do plano devolve a disciplina à posição da matriz (eletivas, ao catálogo).
+    if action and action["kind"] == "unplan":
         layout.pop(action["course_id"], None)
-    next_period = min(history["current_period"] + 1, 20)
+    current = history["current_period"]
+    next_period = min(current + 1, 20)
     next_order = (
         max((pos["order"] for pos in layout.values() if pos["period"] == next_period), default=-1)
         + 1
     )
+
+    def period_of(cid):
+        position = layout.get(cid)
+        return position["period"] if position else by_id[cid]["period"]
+
+    # Cada coluna é um semestre: planejar é pôr a disciplina numa coluna futura.
+    # "Planejar para o próximo semestre" e planos sem coluna futura vão para a seguinte.
     for cid in sorted(planned):
-        if by_id[cid]["type"] == "elective" and cid not in layout:
+        explicit = action and action["kind"] == "plan" and action["course_id"] == cid
+        period = period_of(cid)
+        if explicit or period is None or period <= current:
             layout[cid] = {"period": next_period, "order": next_order}
             next_order += 1
     completed = official | hypothetical
@@ -217,12 +230,25 @@ def evaluate(
             issues.append("Disciplina em andamento no histórico registrado.")
         if cid in hypothetical & planned:
             issues.append("Disciplina simultaneamente planejada e aprovada na hipótese.")
-        if graph.missing(cid, completed):
+        if cid in hypothetical and graph.missing(cid, completed):
             issues.append("Pré-requisitos não satisfeitos.")
-        if cid in planned and any(
-            co not in completed | ongoing | planned for co in graph.corequisites(cid)
-        ):
-            issues.append(COREQUISITE)
+        if cid in planned:
+            # Pré-requisito: aprovado, em andamento agora ou planejado num semestre anterior.
+            here = period_of(cid)
+            late = [
+                p
+                for p in graph.missing(cid, completed)
+                if not (p in ongoing and here > current)
+                and not (p in planned and period_of(p) < here)
+            ]
+            if late:
+                names = ", ".join(by_id[p]["short_name"] for p in late)
+                issues.append(f"Pré-requisitos não satisfeitos: {names} precisa vir antes.")
+            if any(
+                co not in completed | ongoing and not (co in planned and period_of(co) <= here)
+                for co in graph.corequisites(cid)
+            ):
+                issues.append(COREQUISITE)
         if cid in refused:
             issues.append(REFUSED)
         if issues:
@@ -243,6 +269,9 @@ def evaluate(
             status = "simulated"
         elif cid in ongoing:
             status = "in_progress"
+        elif cid in planned:
+            # Planejada num semestre futuro, mesmo que o pré-requisito venha antes no plano.
+            status = "planned"
         course_attempts = [
             {
                 "academic_term": r["academic_term"],

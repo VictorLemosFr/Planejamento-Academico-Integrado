@@ -31,9 +31,10 @@ import { PrintReport } from "./components/PrintReport";
 import { ImportDialog } from "./components/ImportDialog";
 import { statusMeta } from "./components/CourseCard";
 import { Overview } from "./pages/Overview";
-import { NextSemester } from "./pages/NextSemester";
+import { Suggestions, type SuggestedPick } from "./pages/Suggestions";
 import { ComparePlans } from "./pages/ComparePlans";
 import { coursePeriod, moveCourse } from "./courseLayout";
+import { planCompletion } from "./planner";
 import { courseName } from "./display";
 import {
   formatGrade,
@@ -75,14 +76,18 @@ const titles: Record<Page, string> = {
   overview: "Visão geral",
   history: "Meu histórico",
   simulation: "Simulação",
-  next: "Próximo semestre",
+  next: "Sugestões de plano",
   compare: "Comparar alternativas",
 };
 function pageOf(pathname: string): Page {
   if (pathname.startsWith("/historico")) return "history";
   if (pathname.startsWith("/simulacao") || pathname.startsWith("/planejamento"))
     return "simulation";
-  if (pathname.startsWith("/proximo-semestre")) return "next";
+  if (
+    pathname.startsWith("/sugestoes") ||
+    pathname.startsWith("/proximo-semestre")
+  )
+    return "next";
   if (pathname.startsWith("/comparar")) return "compare";
   return "overview";
 }
@@ -104,7 +109,6 @@ export function Student({
   const [saved, setSaved] = useState<Plan | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
-  const [newTerm, setNewTerm] = useState("");
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<Status | "all" | "critical">("all");
   const [error, setError] = useState("");
@@ -158,6 +162,8 @@ export function Student({
   const program = identity.student
     ? programNames[identity.student.program]
     : "Coordenação";
+  const termLabel = (period: number) =>
+    startTerm ? termOf(startTerm, period) : `${period}º período`;
   const nextTerm =
     progression.data?.forecast?.first_remaining_term ??
     (startTerm ? termOf(startTerm, currentPeriod + 1) : calendarTerm(1));
@@ -279,38 +285,49 @@ export function Student({
     await plans.refetch();
     return { plan, created: true };
   }
+  /** Na Simulação, o que já foi cursado fica onde foi cursado; o resto segue o plano. */
+  function planLayout(base: Plan | null, courses = base?.courses ?? []) {
+    const fromHistory = startTerm
+      ? historyLayout(courses, records, startTerm)
+      : {};
+    const taken = new Set(records.map((r) => r.course_id));
+    const own = Object.fromEntries(
+      Object.entries(base?.course_layout ?? {}).filter(
+        ([id]) => !taken.has(id),
+      ),
+    );
+    return { ...own, ...fromHistory };
+  }
   function arrange(
     base: Plan,
     courseId: string,
     period: number | null,
     beforeId?: string,
   ) {
-    const course_layout = moveCourse(
-      base.courses,
-      base.course_layout,
-      courseId,
-      period,
-      beforeId,
+    const shown = planLayout(base);
+    const moved = moveCourse(base.courses, shown, courseId, period, beforeId);
+    if (moved === shown) return false;
+    const taken = new Set(records.map((r) => r.course_id));
+    const course_layout = Object.fromEntries(
+      Object.entries(moved).filter(([id]) => !taken.has(id)),
     );
-    if (course_layout === base.course_layout) return false;
-    if (period === null && base.planned_ids.includes(courseId)) {
-      void run(async () => {
-        const result = await api.evaluatePlan(base.id, {
-          version: base.version,
-          history_revision: base.history_revision,
-          planned_ids: base.planned_ids,
-          hypothetical_ids: base.hypothetical_ids,
-          course_layout,
-          action: { kind: "unplan", course_id: courseId },
-        });
-        setDraft({ ...base, ...result });
-        setNotice(
-          "Eletiva devolvida ao catálogo. Clique em Salvar para persistir.",
-        );
+    // Coluna futura = planejada para aquele semestre; catálogo = fora do plano.
+    const planned_ids =
+      period !== null && period > currentPeriod
+        ? [...new Set([...base.planned_ids, courseId])]
+        : base.planned_ids.filter((id) => id !== courseId);
+    setDraft({ ...base, course_layout, planned_ids });
+    void run(async () => {
+      const result = await api.evaluatePlan(base.id, {
+        version: base.version,
+        history_revision: base.history_revision,
+        planned_ids,
+        hypothetical_ids: base.hypothetical_ids,
+        course_layout,
+        simulated_grades: base.simulated_grades ?? {},
       });
-      return true;
-    }
-    setDraft({ ...base, course_layout });
+      setDraft({ ...base, ...result });
+    });
     return true;
   }
   function move(
@@ -323,7 +340,7 @@ export function Student({
     if (draft) {
       if (arrange(draft, courseId, period, beforeId))
         setNotice(
-          `${prefix}Distribuição alterada. Clique em Salvar para persistir.`,
+          `${prefix}${period !== null && period > currentPeriod ? `Planejada para ${termLabel(period)}.` : "Fora do plano."} Clique em Salvar para persistir.`,
         );
       return;
     }
@@ -331,7 +348,7 @@ export function Student({
       const { plan } = await ensureDraft();
       arrange(plan, courseId, period, beforeId);
       setNotice(
-        `${prefix}Criamos a alternativa “${plan.name}” (${plan.target_term}) para guardar sua arrumação. Clique em Salvar para persistir.`,
+        `${prefix}Criamos a alternativa “${plan.name}” para guardar seu plano. Clique em Salvar para persistir.`,
       );
     });
   }
@@ -498,31 +515,31 @@ export function Student({
     if (course.period === currentPeriod) return "skipped" as const;
     return null;
   }
-  function createFromSuggestion(ids: string[], name: string, term: string) {
+  function createFromSuggestion(picks: SuggestedPick[], name: string) {
     if (!discard() || !progression.data) return;
-    const ongoing = progression.data.in_progress_ids;
     void run(async () => {
-      const plan = await api.createPlan(name, term);
-      // As sugeridas vão para o período do semestre-alvo no mapa do plano.
-      const target = startTerm ? periodOf(startTerm, term) : currentPeriod + 1;
-      let course_layout = plan.course_layout;
-      if (target >= 1 && target <= 20)
-        for (const id of ids)
-          course_layout = moveCourse(plan.courses, course_layout, id, target);
-      // As cadeiras em andamento entram como aprovação simulada: assim o plano
-      // libera o que depende delas, como na sugestão.
+      const plan = await api.createPlan(name, nextTerm);
+      // Cada disciplina sugerida vai para a coluna do seu semestre.
+      let course_layout = planLayout(plan);
+      for (const { id, period } of picks)
+        course_layout = moveCourse(plan.courses, course_layout, id, period);
+      const taken = new Set(records.map((r) => r.course_id));
+      course_layout = Object.fromEntries(
+        Object.entries(course_layout).filter(([id]) => !taken.has(id)),
+      );
       const result = await api.evaluatePlan(plan.id, {
         version: plan.version,
         history_revision: plan.history_revision,
-        planned_ids: ids,
-        hypothetical_ids: ongoing,
+        planned_ids: picks.map((p) => p.id),
+        hypothetical_ids: [],
         course_layout,
       });
       open(await api.savePlan({ ...plan, ...result }));
       await plans.refetch();
       navigate("/simulacao");
+      const terms = new Set(picks.map((p) => p.period)).size;
       setNotice(
-        `Alternativa “${name}” criada com ${ids.length} disciplinas planejadas. As que estão em andamento aparecem como aprovação simulada.`,
+        `Alternativa “${name}” criada: ${picks.length} disciplinas em ${terms} semestre${terms > 1 ? "s" : ""}. Arraste para ajustar e salve.`,
       );
     });
   }
@@ -547,7 +564,12 @@ export function Student({
       ? startTerm && data
         ? historyLayout(data.courses, records, startTerm)
         : {}
-      : (draft?.course_layout ?? {});
+      : planLayout(draft, data?.courses);
+  const plannable = (course: { status: string }) =>
+    !["completed", "in_progress", "simulated"].includes(course.status);
+  const completion = draft
+    ? planCompletion({ ...draft, course_layout: mapLayout })
+    : null;
   const query = search.toLocaleLowerCase("pt-BR");
   const visible =
     data?.courses.filter(
@@ -730,7 +752,7 @@ export function Student({
           </>
         )}
         {page === "next" && real && (
-          <NextSemester
+          <Suggestions
             data={real}
             startTerm={startTerm}
             currentPeriod={currentPeriod}
@@ -740,7 +762,11 @@ export function Student({
           />
         )}
         {page === "compare" && plans.data && (
-          <ComparePlans plans={plans.data} onOpen={openPlan} />
+          <ComparePlans
+            plans={plans.data}
+            onOpen={openPlan}
+            termLabel={termLabel}
+          />
         )}
       </AppShell>
     );
@@ -785,6 +811,18 @@ export function Student({
             ungraded={data.cr?.ungraded_attempts}
             integralization={data.integralization}
             forecast={data.forecast}
+            plan={
+              completion
+                ? {
+                    term:
+                      completion.complete && completion.lastPeriod
+                        ? termLabel(completion.lastPeriod)
+                        : null,
+                    unscheduled: completion.unscheduled,
+                    electiveHours: completion.missingElectiveHours,
+                  }
+                : undefined
+            }
             dirty={mode === "history" ? historyDirty : planDirty}
             counts={
               mode === "history"
@@ -975,7 +1013,7 @@ export function Student({
                     <option value="">Histórico informado</option>
                     {plans.data?.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.name} · {p.target_term}
+                        {p.name}
                       </option>
                     ))}
                   </select>
@@ -986,7 +1024,7 @@ export function Student({
                     e.preventDefault();
                     if (!discard()) return;
                     void run(async () => {
-                      open(await api.createPlan(newName, newTerm));
+                      open(await api.createPlan(newName, nextTerm));
                       setNewName("");
                       await plans.refetch();
                     });
@@ -1002,17 +1040,6 @@ export function Student({
                       onChange={(e) => setNewName(e.target.value)}
                     />
                   </label>
-                  <label className="text-xs text-slate-600">
-                    Semestre-alvo
-                    <input
-                      className={input}
-                      required
-                      pattern="[0-9]{4}\.[12]"
-                      placeholder={nextTerm}
-                      value={newTerm}
-                      onChange={(e) => setNewTerm(e.target.value)}
-                    />
-                  </label>
                   <button className={button} disabled={busy}>
                     Criar alternativa
                   </button>
@@ -1020,8 +1047,10 @@ export function Student({
               </div>
               {!draft && (
                 <p className="toolbar-hint mt-2">
-                  Arraste qualquer disciplina no mapa: o primeiro movimento cria
-                  um rascunho para você.
+                  Uma alternativa é um plano até a formatura: cada coluna é um
+                  semestre. Arraste qualquer disciplina para uma coluna futura e
+                  o rascunho é criado sozinho, ou gere um plano em{" "}
+                  <NavLink to="/sugestoes">Sugestões</NavLink>.
                 </p>
               )}
               {draft && (
@@ -1040,26 +1069,10 @@ export function Student({
                         }}
                       />
                     </label>
-                    <label className="text-xs text-slate-600">
-                      Semestre do plano
-                      <input
-                        className={input}
-                        value={draft.target_term}
-                        disabled={busy}
-                        onChange={(e) => {
-                          setNotice("");
-                          setDraft({ ...draft, target_term: e.target.value });
-                        }}
-                      />
-                    </label>
                     <button
                       className={primary}
                       disabled={
-                        busy ||
-                        !dirty ||
-                        !draft.valid ||
-                        !draft.name.trim() ||
-                        !/^\d{4}\.[12]$/.test(draft.target_term)
+                        busy || !dirty || !draft.valid || !draft.name.trim()
                       }
                       onClick={() =>
                         void run(async () => {
@@ -1172,10 +1185,14 @@ export function Student({
                 allCourses={data.courses}
                 layout={mapLayout}
                 editable={!busy}
+                canMove={mode === "simulation" ? plannable : undefined}
+                minPeriod={
+                  mode === "simulation" ? currentPeriod + 1 : undefined
+                }
                 editHint={
                   mode === "history"
                     ? "Arraste uma disciplina para o período em que a cursou. Clique para registrar situação e nota; clique de novo para desmarcar."
-                    : "Arraste os cards entre os períodos. Solte sobre um card para inserir antes dele; clique de novo num card para desmarcar."
+                    : "Cada coluna é um semestre. Arraste uma disciplina para a coluna em que pretende cursá-la; clique de novo num card para desmarcar."
                 }
                 needsInfo={
                   mode === "history"
@@ -1200,7 +1217,17 @@ export function Student({
                         period > currentPeriod ? "Futuro → Simulação" : null
                     : undefined
                 }
-                gapOf={mode === "history" ? gapOf : undefined}
+                gapOf={
+                  mode === "history"
+                    ? gapOf
+                    : (course) =>
+                        course.type === "mandatory" &&
+                        plannable(course) &&
+                        course.status !== "planned" &&
+                        (coursePeriod(course, mapLayout) ?? 0) <= currentPeriod
+                          ? "unscheduled"
+                          : null
+                }
                 periodLabel={
                   startTerm
                     ? (period) =>
@@ -1283,6 +1310,7 @@ export function Student({
               onClose={() => setSelectedId(null)}
               readOnly={!draft || selected?.status === "completed"}
               official={selected?.status === "completed"}
+              planLabel={`Planejar para ${termLabel(currentPeriod + 1)}`}
               planned={draft?.planned_ids.includes(selectedId ?? "")}
               impactSlot={
                 selected && real ? (
@@ -1303,8 +1331,16 @@ export function Student({
                     <select
                       aria-label={`Mover ${courseName(selected)} para período`}
                       className={input}
-                      value={coursePeriod(selected, mapLayout) ?? "catalog"}
-                      disabled={busy}
+                      value={
+                        mode === "simulation" &&
+                        (coursePeriod(selected, mapLayout) ?? 99) <=
+                          currentPeriod
+                          ? "none"
+                          : (coursePeriod(selected, mapLayout) ?? "catalog")
+                      }
+                      disabled={
+                        busy || (mode === "simulation" && !plannable(selected))
+                      }
                       onChange={(e) => {
                         const value = e.target.value;
                         const period =
@@ -1321,16 +1357,30 @@ export function Student({
                             : "Catálogo de eletivas"}
                         </option>
                       )}
-                      {Array.from({ length: periodCount }, (_, i) => i + 1).map(
-                        (p) => (
+                      {mode === "simulation" && (
+                        <option value="none" disabled>
+                          Sem semestre no plano
+                        </option>
+                      )}
+                      {Array.from(
+                        {
+                          length:
+                            mode === "simulation"
+                              ? Math.max(periodCount, currentPeriod + 4)
+                              : periodCount,
+                        },
+                        (_, i) => i + 1,
+                      )
+                        .filter((p) => mode === "history" || p > currentPeriod)
+                        .map((p) => (
                           <option key={p} value={p}>
                             {p}º período
+                            {startTerm ? ` · ${termOf(startTerm, p)}` : ""}
                             {mode === "history" && p > currentPeriod
                               ? " (Simulação)"
                               : ""}
                           </option>
-                        ),
-                      )}
+                        ))}
                     </select>
                   </label>
                 ) : undefined
@@ -1420,7 +1470,7 @@ export function Student({
           <PrintReport
             title={
               mode === "simulation" && draft
-                ? `Plano “${draft.name}” · ${draft.target_term}`
+                ? `Plano “${draft.name}”`
                 : `Histórico acadêmico · ${program}`
             }
             subtitle={`${program} · matriz ${curriculum?.id ?? ""}`}

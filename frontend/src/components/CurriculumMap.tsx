@@ -176,6 +176,7 @@ export function CurriculumMap({
   onMove,
   canMove = () => true,
   maxPeriod = 20,
+  minPeriod = 1,
   editHint,
   needsInfo = () => false,
   criticalPathIds = [],
@@ -197,6 +198,8 @@ export function CurriculumMap({
   /** No histórico só eletivas se movem, e apenas para períodos já cursados. */
   canMove?: (course: Course) => boolean;
   maxPeriod?: number;
+  /** Simulação: o plano começa no próximo semestre; colunas anteriores são histórico. */
+  minPeriod?: number;
   editHint?: string;
   needsInfo?: (course: Course) => boolean;
   /** Maior cadeia de pré-requisitos pendente, vinda da previsão. */
@@ -208,7 +211,7 @@ export function CurriculumMap({
   periodNote?: (period: number) => string | null;
   /** Semestre letivo da coluna, por exemplo "2026.2 · atual". */
   periodLabel?: (period: number) => ReactNode;
-  gapOf?: (course: Course) => "late" | "skipped" | null;
+  gapOf?: (course: Course) => "late" | "skipped" | "unscheduled" | null;
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [electiveFilter, setElectiveFilter] = useState<ElectiveFilter>("all");
@@ -336,7 +339,7 @@ export function CurriculumMap({
     const course = byId.get(id);
     if (!course || beforeId === id) return;
     if (period === null && course.type !== "elective") return;
-    if (period !== null && period > maxPeriod) return;
+    if (period !== null && (period > maxPeriod || period < minPeriod)) return;
     onMove?.(id, period, beforeId);
   }
 
@@ -541,9 +544,11 @@ export function CurriculumMap({
                 <Droppable
                   key={period}
                   id={`period-${period}`}
-                  disabled={!editable || period > maxPeriod}
+                  disabled={
+                    !editable || period > maxPeriod || period < minPeriod
+                  }
                   label={`${period}º período`}
-                  className={`period-column ${editable && period > maxPeriod ? "is-locked-period" : ""}`}
+                  className={`period-column ${editable && (period > maxPeriod || period < minPeriod) ? "is-locked-period" : ""}`}
                 >
                   <div className="period-head">
                     <h3>
@@ -567,7 +572,7 @@ export function CurriculumMap({
                     {items.map(card)}
                     {!items.length && (
                       <p className="empty-period">
-                        {editable && period <= maxPeriod
+                        {editable && period <= maxPeriod && period >= minPeriod
                           ? "Solte uma disciplina aqui"
                           : "Nenhuma neste filtro."}
                       </p>

@@ -141,3 +141,33 @@ def test_0009_adds_requisites_and_fixes_only_known_hours():
         with admin.begin() as connection:
             connection.execute(text(f'DROP SCHEMA "{schema}" CASCADE'))
         admin.dispose()
+
+
+def test_multi_semester_plan_respects_prerequisite_order():
+    """Coluna = semestre: o pré-requisito pode estar planejado num semestre anterior."""
+    courses = [
+        {"id": "a", "name": "A", "short_name": "A", "hours": 60, "period": 1,
+         "type": "mandatory", "prerequisite_ids": []},
+        {"id": "b", "name": "B", "short_name": "B", "hours": 60, "period": 2,
+         "type": "mandatory", "prerequisite_ids": ["a"]},
+        {"id": "c", "name": "C", "short_name": "C", "hours": 60, "period": 3,
+         "type": "mandatory", "prerequisite_ids": ["b"]},
+    ]  # fmt: skip
+    history = {"revision": 0, "awaiting_import": False, "current_period": 2, "records": [
+        {"course_id": "a", "academic_term": "2025.1", "status": "in_progress"},
+    ]}  # fmt: skip
+    # Estando no 2º período: A em andamento, B no 3º e C no 4º.
+    layout = {"b": {"period": 3, "order": 0}, "c": {"period": 4, "order": 0}}
+    ok = evaluate(courses, history, planned_ids=["b", "c"], course_layout=layout)
+    assert ok["valid"], ok["problems"]
+    assert {c["id"]: c["status"] for c in ok["courses"]}["c"] == "planned"
+    # C antes de B não dá.
+    swapped = {"b": {"period": 4, "order": 0}, "c": {"period": 3, "order": 0}}
+    bad = evaluate(courses, history, planned_ids=["b", "c"], course_layout=swapped)
+    assert not bad["valid"] and "B precisa vir antes" in bad["problems"]["c"][0]
+    # Planejado sem coluna futura vai para o próximo semestre.
+    moved = evaluate(courses, history, planned_ids=["b"])
+    assert moved["course_layout"]["b"]["period"] == 3
+    # "Planejar" aceita pré-requisito em andamento agora.
+    action = evaluate(courses, history, action={"kind": "plan", "course_id": "b"})
+    assert action["planned_ids"] == ["b"] and action["valid"]
