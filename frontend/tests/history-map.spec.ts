@@ -147,12 +147,9 @@ test("simulated grades produce a simulated CR only in the simulation tab", async
     .getByRole("link", { name: "Simulação" })
     .click();
   await page.getByLabel("Nome da alternativa").fill("CR alto");
-  await page.getByLabel("Semestre-alvo").fill("2025.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await card(page, "Desenvolvimento de Software").click();
-  await page
-    .getByRole("button", { name: "Planejar para próximo semestre" })
-    .click();
+  await page.getByRole("button", { name: /^Planejar para/ }).click();
   await page.getByLabel("Nota simulada (entra no CR simulado)").fill("10");
   await page.getByLabel("Nota simulada (entra no CR simulado)").blur();
   // Como o SIGAA, peso = carga horária: (120h·6 + 120h·10) / 240h

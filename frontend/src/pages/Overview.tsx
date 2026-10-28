@@ -118,9 +118,8 @@ export function Overview({
     ...data.official_completed_ids,
     ...data.in_progress_ids,
   ]);
-  const firstPeriod = data.in_progress_ids.length
-    ? currentPeriod + 1
-    : currentPeriod;
+  // O semestre atual já está em curso: o caminho começa no próximo.
+  const firstPeriod = currentPeriod + 1;
   const projection = forecast
     ? projectSemesters(data.courses, {
         budget: forecast.pace_hours_per_semester ?? 360,
@@ -228,7 +227,7 @@ export function Overview({
             {skipped.map(courseShortName).join(", ")}, do {currentPeriod}º
             período, {skipped.length > 1 ? "ficaram" : "ficou"} para depois.
           </span>
-          <Link to="/proximo-semestre">
+          <Link to="/sugestoes">
             Planejar <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
@@ -314,9 +313,9 @@ export function Overview({
             caminho crítico de {forecast?.critical_path_semesters ?? "—"}
           </p>
           <div className="panel-actions">
-            <Link to="/proximo-semestre">
-              <CalendarPlus size={15} aria-hidden="true" /> Montar próximo
-              semestre
+            <Link to="/sugestoes">
+              <CalendarPlus size={15} aria-hidden="true" /> Ver sugestões de
+              plano
             </Link>
           </div>
         </section>
@@ -326,7 +325,7 @@ export function Overview({
         <section className="panel" aria-labelledby="path-title">
           <div className="panel-head">
             <h2 id="path-title">Um caminho possível</h2>
-            <Link to="/proximo-semestre" className="link">
+            <Link to="/sugestoes" className="link">
               Ver plano completo <ArrowRight size={14} aria-hidden="true" />
             </Link>
           </div>

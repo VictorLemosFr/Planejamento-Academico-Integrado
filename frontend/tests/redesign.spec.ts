@@ -111,7 +111,6 @@ test("simulation looks like a draft and cards drag between periods", async ({
     "nada aqui altera seu histórico",
   );
   await page.getByLabel("Nome da alternativa").fill("Arrastar");
-  await page.getByLabel("Semestre-alvo").fill("2025.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await expect(
     page.getByRole("heading", { name: "Cenário hipotético", exact: true }),
@@ -122,16 +121,16 @@ test("simulation looks like a draft and cards drag between periods", async ({
   await expect(
     card(fifth, "Matemática Discreta para Computação"),
   ).toBeVisible();
-  await expect(page.getByText("Distribuição alterada")).toBeVisible();
+  await expect(page.getByText(/Planejada para/)).toBeVisible();
 
   // O seletor no painel continua como alternativa acessível ao arraste.
   await card(page, "Matemática Discreta para Computação").click();
   await page
     .getByLabel("Mover Matemática Discreta para Computação para período")
-    .selectOption("2");
+    .selectOption("3");
   await expect(
     card(
-      page.getByRole("region", { name: "2º período", exact: true }),
+      page.getByRole("region", { name: "3º período", exact: true }),
       "Matemática Discreta para Computação",
     ),
   ).toBeVisible();

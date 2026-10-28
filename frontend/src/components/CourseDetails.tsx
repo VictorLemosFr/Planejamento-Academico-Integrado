@@ -21,6 +21,7 @@ export function CourseDetails({
   simulationSlot,
   moveSlot,
   impactSlot,
+  planLabel = "Planejar para próximo semestre",
 }: {
   course: Course | undefined;
   courses: Course[];
@@ -38,6 +39,7 @@ export function CourseDetails({
   moveSlot?: ReactNode;
   /** "E se eu reprovar?", com base no histórico real. */
   impactSlot?: ReactNode;
+  planLabel?: string;
   onAction: (kind: ActionKind) => void;
   onSelect: (id: string) => void;
   onClose: () => void;
@@ -240,7 +242,7 @@ export function CourseDetails({
                           onClick={() => onAction("plan")}
                           className={buttonStyle}
                         >
-                          Planejar para próximo semestre
+                          {planLabel}
                         </button>
                       )}
                     {allowPlanning &&
@@ -251,7 +253,7 @@ export function CourseDetails({
                           onClick={() => onAction("unplan")}
                           className={buttonStyle}
                         >
-                          Remover do planejamento
+                          Remover do plano
                         </button>
                       )}
                     {(course.status === "simulated" ||

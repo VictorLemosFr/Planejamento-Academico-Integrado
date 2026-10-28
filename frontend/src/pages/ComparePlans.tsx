@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { formatGrade } from "../academicTerms";
 import { courseShortName } from "../display";
 import type { Plan } from "../types";
+import { planCompletion } from "../planner";
 import { trackedPercent } from "../components/ProgressSummary";
 
 type Metric = {
@@ -14,9 +15,9 @@ type Metric = {
   better?: "high" | "low";
 };
 
-const metrics: Metric[] = [
+const baseMetrics: Metric[] = [
   {
-    label: "Previsão de conclusão",
+    label: "Previsão mínima",
     value: (p) => p.forecast?.estimated_semesters ?? null,
     format: (v, p) =>
       p.forecast?.estimated_completion_term
@@ -57,10 +58,29 @@ const metrics: Metric[] = [
 export function ComparePlans({
   plans,
   onOpen,
+  termLabel,
 }: {
   plans: Plan[];
   onOpen: (id: string) => void;
+  termLabel: (period: number) => string;
 }) {
+  // Formatura no plano: o último semestre com disciplina, se nada ficou de fora.
+  const metrics: Metric[] = [
+    {
+      label: "Formatura no plano",
+      value: (p) => {
+        const done = planCompletion(p);
+        return done.complete ? done.lastPeriod : null;
+      },
+      format: (v, p) => {
+        if (v) return termLabel(v);
+        const done = planCompletion(p);
+        return `Parcial · ${done.unscheduled} obrig. sem semestre`;
+      },
+      better: "low",
+    },
+    ...baseMetrics,
+  ];
   const [chosen, setChosen] = useState<string[]>(() =>
     plans.slice(0, 3).map((p) => p.id),
   );
@@ -73,8 +93,8 @@ export function ComparePlans({
           e o CR simulado de cada plano.
         </p>
         <div className="panel-actions">
-          <Link to="/proximo-semestre">
-            Montar uma sugestão <ArrowRight size={14} aria-hidden="true" />
+          <Link to="/sugestoes">
+            Gerar uma sugestão <ArrowRight size={14} aria-hidden="true" />
           </Link>
           <Link to="/simulacao">
             Criar na Simulação <ArrowRight size={14} aria-hidden="true" />
@@ -102,7 +122,7 @@ export function ComparePlans({
                 )
               }
             />
-            {plan.name} · {plan.target_term}
+            {plan.name}
           </label>
         ))}
       </fieldset>
@@ -115,7 +135,6 @@ export function ComparePlans({
                 {selected.map((p) => (
                   <th key={p.id} scope="col">
                     {p.name}
-                    <small>{p.target_term}</small>
                   </th>
                 ))}
               </tr>

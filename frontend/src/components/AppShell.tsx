@@ -1,7 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, NavLink } from "react-router";
 import {
-  CalendarPlus,
   ChevronsLeft,
   ChevronsRight,
   Columns3,
@@ -12,6 +11,7 @@ import {
   LayoutDashboard,
   LogIn,
   Search,
+  Sparkles,
 } from "lucide-react";
 import { CommandPalette, type Command } from "./CommandPalette";
 import { ThemeToggle } from "./ThemeToggle";
@@ -30,7 +30,7 @@ export const studentNav = [
   { to: "/", label: "Visão geral", icon: LayoutDashboard, end: true },
   { to: "/historico", label: "Meu histórico", icon: History },
   { to: "/simulacao", label: "Simulação", icon: FlaskConical },
-  { to: "/proximo-semestre", label: "Próximo semestre", icon: CalendarPlus },
+  { to: "/sugestoes", label: "Sugestões", icon: Sparkles },
   { to: "/comparar", label: "Comparar", icon: Columns3 },
   { to: "/grades", label: "Explorar grades", icon: Compass },
 ];

@@ -17,6 +17,7 @@ export function KpiStrip({
   counts,
   dirty = false,
   action,
+  plan,
 }: {
   mode: "history" | "simulation" | "public" | "shared";
   cr?: number | null;
@@ -28,6 +29,8 @@ export function KpiStrip({
   dirty?: boolean;
   /** Botão de salvar do modo atual, para não duplicar ações pela página. */
   action?: ReactNode;
+  /** Simulação: quando este plano forma, ou o que falta pôr num semestre. */
+  plan?: { term: string | null; unscheduled: number; electiveHours: number };
 }) {
   const percent = trackedPercent(integralization);
   const showSimulated = mode === "simulation" && simulatedCr != null;
@@ -62,7 +65,26 @@ export function KpiStrip({
           <b style={{ width: `${percent}%` }} />
         </i>
       </div>
-      {forecast && (
+      {plan && (
+        <div className="kpi" data-kpi="plan">
+          <strong>{plan.term ?? "Plano parcial"}</strong>
+          <span>
+            {plan.term
+              ? "formatura neste plano"
+              : [
+                  plan.unscheduled
+                    ? `${plan.unscheduled} obrigatória(s) sem semestre`
+                    : "",
+                  plan.electiveHours
+                    ? `${plan.electiveHours}h de eletivas sem semestre`
+                    : "",
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+          </span>
+        </div>
+      )}
+      {forecast && !plan && (
         <div className="kpi" data-kpi="forecast">
           <strong>
             {forecast.estimated_semesters} sem.

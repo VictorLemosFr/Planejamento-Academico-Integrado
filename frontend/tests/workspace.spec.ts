@@ -169,11 +169,11 @@ test("next semester suggestion becomes an alternative and alternatives compare s
 }) => {
   await register(page, "planner-student", "2");
   await approveFirstPeriod(page);
-  await nav(page, "Próximo semestre");
+  await nav(page, "Sugestões");
   const suggested = page.getByRole("table", { name: "Disciplinas sugeridas" });
   await expect(suggested.locator("tbody tr").nth(1)).toBeVisible();
   await expect(suggested).toContainText("Caminho crítico");
-  await page.getByLabel("Carga desejada").selectOption("180");
+  await page.getByLabel("Carga por semestre").selectOption("180");
   await expect(suggested.locator("tfoot")).toContainText("de 180h");
   await page
     .getByRole("button", { name: "Criar alternativa com esta sugestão" })
@@ -182,16 +182,16 @@ test("next semester suggestion becomes an alternative and alternatives compare s
   await expect(
     page.getByRole("heading", { name: "Cenário hipotético" }),
   ).toBeVisible();
-  await expect(notice(page)).toContainText("criada com");
+  await expect(notice(page)).toContainText("criada:");
 
   await page.getByLabel("Nome da alternativa").fill("Plano leve");
-  await page.getByLabel("Semestre-alvo").fill("2025.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await nav(page, "Comparar");
   const comparison = page.getByRole("region", { name: "Comparação" });
   await expect(comparison).toContainText("Plano leve");
-  await expect(comparison).toContainText("Sugestão 2025.2");
-  await expect(comparison).toContainText("Previsão de conclusão");
+  await expect(comparison).toContainText("Sugestão 2026.1");
+  await expect(comparison).toContainText("Formatura no plano");
+  await expect(comparison).toContainText("Previsão mínima");
   await comparison
     .getByRole("button", { name: "Abrir na Simulação" })
     .first()
@@ -207,7 +207,6 @@ test("a saved plan is shared read-only, revoked and exported", async ({
   await register(page, "share-student", "2");
   await nav(page, "Simulação");
   await page.getByLabel("Nome da alternativa").fill("Para o orientador");
-  await page.getByLabel("Semestre-alvo").fill("2025.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await page.getByRole("button", { name: "Compartilhar" }).click();
   const share = page.getByRole("region", { name: "Compartilhar plano" });
@@ -316,4 +315,65 @@ test("the SIGAA PDF fills the history in one step from the overview", async ({
   await expect(
     page.getByRole("heading", { name: "Preencha seu histórico acadêmico" }),
   ).toHaveCount(0);
+});
+
+test("a plan to graduation puts every course in a real semester", async ({
+  page,
+}) => {
+  await register(page, "full-plan");
+  await goHistory(page);
+  await page
+    .getByRole("button", { name: "Marcar 1º período como aprovado" })
+    .click();
+  await page
+    .getByRole("button", { name: "Marcar 2º período como aprovado" })
+    .click();
+  await page
+    .getByRole("button", { name: "Marcar 3º período como cursando" })
+    .click();
+  await page.getByRole("button", { name: "Salvar histórico" }).click();
+  await expect(notice(page)).toContainText("Histórico salvo");
+
+  await nav(page, "Sugestões");
+  await page.getByLabel("Quantos semestres").selectOption({ index: 4 });
+  await page.getByLabel("Escolher eletivas de perfil por mim").check();
+  await expect(
+    page.getByRole("list", { name: "Semestres sugeridos" }),
+  ).toContainText("2026.2");
+  await page
+    .getByRole("button", { name: /Criar alternativa com estes/ })
+    .click();
+  await expect(page).toHaveURL(/\/simulacao/);
+  const plan = page.locator('[data-kpi="plan"]');
+  await expect(plan).toBeVisible();
+  await expect(plan).not.toContainText("obrigatória(s) sem semestre");
+  // As colunas mostram o semestre; o 4º período é o primeiro do plano.
+  await expect(
+    page.getByRole("region", { name: "4º período", exact: true }),
+  ).toContainText("2026.2");
+  await expect(
+    page
+      .getByRole("region", { name: "4º período", exact: true })
+      .locator('.course-card[data-status="planned"]')
+      .first(),
+  ).toBeVisible();
+});
+
+test("courses left behind show they still need a semester in the plan", async ({
+  page,
+}) => {
+  await register(page, "unscheduled-plan");
+  await nav(page, "Simulação");
+  await page.getByLabel("Nome da alternativa").fill("Plano vazio");
+  await page.getByRole("button", { name: "Criar alternativa" }).click();
+  await expect(card(page, "Sistemas Digitais")).toContainText(
+    "Sem semestre no plano",
+  );
+  await expect(page.locator('[data-kpi="plan"]')).toContainText(
+    "Plano parcial",
+  );
+  // Colunas do histórico não aceitam planejamento.
+  await expect(
+    page.getByRole("region", { name: "2º período", exact: true }),
+  ).toHaveClass(/is-locked-period/);
 });

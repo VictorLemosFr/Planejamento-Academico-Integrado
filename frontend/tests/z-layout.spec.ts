@@ -21,7 +21,6 @@ async function goSimulation(page: import("@playwright/test").Page) {
 }
 async function create(page: Page, name: string) {
   await page.getByLabel("Nome da alternativa").fill(name);
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page
     .getByRole("button", { name: "Criar alternativa", exact: true })
     .click();
@@ -89,7 +88,7 @@ test("dragging between and within periods is saved per alternative after a new l
   await login(page);
   await page
     .getByLabel("Alternativa salva")
-    .selectOption({ label: "Mapa arrastável · 2026.2" });
+    .selectOption({ label: "Mapa arrastável" });
   await expect(
     target.getByRole("button", {
       name: "Matemática Discreta para Computação",
@@ -124,12 +123,7 @@ test("planned electives enter the map and can be moved and saved using mobile co
       exact: true,
     })
     .click();
-  await page
-    .getByRole("button", {
-      name: "Planejar para próximo semestre",
-      exact: true,
-    })
-    .click();
+  await page.getByRole("button", { name: /^Planejar para/ }).click();
   await page
     .getByRole("button", { name: "Fechar detalhes", exact: true })
     .last()
@@ -175,7 +169,7 @@ test("planned electives enter the map and can be moved and saved using mobile co
   await page.reload();
   await page
     .getByLabel("Alternativa salva")
-    .selectOption({ label: "Eletivas no mapa · 2026.2" });
+    .selectOption({ label: "Eletivas no mapa" });
   await expect(
     page
       .getByRole("region", { name: "4º período", exact: true })
@@ -221,7 +215,7 @@ test("planned electives enter the map and can be moved and saved using mobile co
   await page.reload();
   await page
     .getByLabel("Alternativa salva")
-    .selectOption({ label: "Eletivas no mapa · 2026.2" });
+    .selectOption({ label: "Eletivas no mapa" });
   await expect(
     catalog.getByRole("button", {
       name: "Contabilidade de Custos e Gerencial",

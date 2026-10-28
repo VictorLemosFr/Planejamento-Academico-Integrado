@@ -160,12 +160,12 @@ export interface Semester {
 
 /**
  * Um caminho possível até a formatura: repete a sugestão semestre a semestre,
- * considerando aprovado o que foi escolhido. As eletivas de perfil entram como
- * horas, ocupando o que sobra da carga.
+ * considerando aprovado o que foi escolhido. Com `includeElectives`, escolhe
+ * eletivas de perfil liberadas; sem isso, as eletivas entram só como horas.
  */
 export function projectSemesters(
   courses: Course[],
-  options: Omit<Options, "includeElectives">,
+  options: Omit<Options, "includeElectives"> & { includeElectives?: boolean },
   limit = 16,
 ) {
   const assumed = new Set(options.assumed);
@@ -176,13 +176,19 @@ export function projectSemesters(
       (c) => c.type === "mandatory" && !assumed.has(c.id),
     );
     if (!pending && profile <= 0) break;
-    const { picks, hours } = suggestSemester(courses, {
+    const {
+      picks,
+      hours,
+      electiveHours: chosen,
+    } = suggestSemester(courses, {
       ...options,
       assumed,
       period: options.period + index,
-      includeElectives: false,
-      profileRemaining: 0,
+      includeElectives: !!options.includeElectives,
+      profileRemaining: options.includeElectives ? profile : 0,
     });
+    profile -= chosen;
+    // O que não coube em eletivas de verdade fica como horas a escolher.
     const electiveHours = Math.min(
       profile,
       Math.max(0, options.budget - hours),
@@ -193,7 +199,48 @@ export function projectSemesters(
     }
     picks.forEach((p) => assumed.add(p.course.id));
     profile -= electiveHours;
-    semesters.push({ index, picks, mandatoryHours: hours, electiveHours });
+    semesters.push({
+      index,
+      picks,
+      mandatoryHours: hours - chosen,
+      electiveHours: electiveHours + chosen,
+    });
   }
   return { semesters, stuck: false };
+}
+
+/**
+ * Quando um plano forma: o último semestre com disciplina planejada, desde que
+ * todas as obrigatórias pendentes e as horas de eletivas de perfil tenham semestre.
+ */
+export function planCompletion(plan: {
+  courses: Course[];
+  planned_ids: string[];
+  course_layout: Record<string, { period: number }>;
+  forecast?: { remaining_profile_elective_hours: number } | null;
+}) {
+  const planned = new Set(plan.planned_ids);
+  const pending = plan.courses.filter(
+    (c) =>
+      c.type === "mandatory" &&
+      !["completed", "simulated", "in_progress"].includes(c.status),
+  );
+  const unscheduled = pending.filter((c) => !planned.has(c.id));
+  const periodOf = (c: Course) =>
+    plan.course_layout[c.id]?.period ?? c.period ?? 0;
+  const plannedCourses = plan.courses.filter((c) => planned.has(c.id));
+  const electiveHours = plannedCourses
+    .filter((c) => c.type === "elective")
+    .reduce((sum, c) => sum + c.hours, 0);
+  const missingElectiveHours = Math.max(
+    0,
+    (plan.forecast?.remaining_profile_elective_hours ?? 0) - electiveHours,
+  );
+  const lastPeriod = Math.max(0, ...plannedCourses.map(periodOf));
+  return {
+    lastPeriod: lastPeriod || null,
+    unscheduled: unscheduled.length,
+    missingElectiveHours,
+    complete: !unscheduled.length && !missingElectiveHours && lastPeriod > 0,
+  };
 }

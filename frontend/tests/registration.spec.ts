@@ -75,7 +75,6 @@ for (const [program, term, course] of [
     ).toContainText("Histórico salvo");
     await goSimulation(page);
     await page.getByLabel("Nome da alternativa").fill(`Plano ${program}`);
-    await page.getByLabel("Semestre-alvo").fill("2026.2");
     await page.getByRole("button", { name: "Criar alternativa" }).click();
     await page.reload();
     await expect(
@@ -83,7 +82,7 @@ for (const [program, term, course] of [
     ).toBeVisible();
     await page
       .getByLabel("Alternativa salva")
-      .selectOption({ label: `Plano ${program} · 2026.2` });
+      .selectOption({ label: `Plano ${program}` });
   });
 }
 
