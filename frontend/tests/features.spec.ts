@@ -67,9 +67,19 @@ test("public explorer simulates approvals without an account", async ({
   expect(locked.length).toBeGreaterThan(0);
   expect(new Set(locked)).toEqual(new Set(["locked"]));
 
+  // O TCC de CC fica no 9º período e precisa aparecer na grade.
+  await expect(
+    page
+      .getByRole("region", { name: "9º período", exact: true })
+      .getByRole("button", { name: "TRABALHO DE CONCLUSÃO DE CURSO" }),
+  ).toBeVisible();
+
   await tabs
     .getByRole("button", { name: /EC · Engenharia da Computação/ })
     .click();
+  await expect(
+    page.getByRole("region", { name: "10º período", exact: true }),
+  ).toBeVisible();
   await page
     .getByRole("button", {
       name: "LABORATÓRIO DE SISTEMAS DIGITAIS",

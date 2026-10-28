@@ -73,8 +73,10 @@ export function CurriculumMap({
   const [dropTarget, setDropTarget] = useState<string | null>(null);
   const [electiveFilter, setElectiveFilter] = useState<ElectiveFilter>("all");
   const [electiveSort, setElectiveSort] = useState<ElectiveSort>("status");
+  // CC tem 9 períodos e EC tem 10: a grade usa o maior período da matriz.
   const periodCount = Math.max(
     8,
+    ...allCourses.map((c) => c.period ?? 0),
     ...Object.values(layout).map((p) => p.period),
   );
   const periods = Array.from({ length: periodCount }, (_, i) => i + 1);
