@@ -41,6 +41,10 @@ def test_parser_reads_terms_statuses_and_wrapped_names():
         ("cc:cin0135", "2025.2"): "in_progress",
         ("ia:b", "2025.2"): "completed",
     }
+    grades = {(r["course_id"], r["academic_term"]): r["grade"] for r in result["records"]}
+    assert grades[("cc:cin0133", "2025.1")] == 9.5
+    assert grades[("cc:ma026", "2025.1")] == 0.0  # reprovação por falta vale zero
+    assert grades[("cc:ma026", "2025.2")] is None
     assert result["start_term"] == "2025.1"
     assert [item["code"] for item in result["unmatched"]] == ["IF9999"]
     assert [item["code"] for item in result["ignored"]] == ["CIN0130"]

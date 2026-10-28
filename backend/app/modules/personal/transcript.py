@@ -105,6 +105,23 @@ def choose(options, context):
     return scored[0] if first > second else None
 
 
+GRADE = re.compile(r"(?<![\d,.])(\d{1,2})[,.](\d{1,2})(?![\d,.])")
+ABSENCE = {"REPF", "REPMF", "REPNF", "REPROVADO POR FALTA"}
+
+
+def final_grade(context, word):
+    """Nota final: o último decimal entre 0 e 10 antes da situação (a frequência passa de 10).
+
+    Reprovação por falta vale zero no CR (Res. nº 09/2009-CCEPE, art. 3º).
+    """
+    if word in ABSENCE:
+        return 0.0
+    before = context[: context.rfind(word)] if word else context
+    grades = [float(f"{a}.{b}") for a, b in GRADE.findall(before)]
+    grades = [grade for grade in grades if 0 <= grade <= 10]
+    return grades[-1] if grades else None
+
+
 def parse_transcript(text, courses):
     """Converte o texto do histórico em registros da matriz e pendências para revisão."""
     known = candidates_by_code(courses)
@@ -125,6 +142,7 @@ def parse_transcript(text, courses):
             term = f"{before[-1].group(1)}.{before[-1].group(2)}" if before else last_term
             segment = line[match.end() : end]
             status = STATUS.findall(segment)
+            context = segment
             # Nomes longos podem quebrar a linha; a situação aparece logo abaixo.
             lookahead = 1
             while not status and lookahead <= 2 and index + lookahead < len(lines):
@@ -132,6 +150,7 @@ def parse_transcript(text, courses):
                 if CODE.search(following):
                     break
                 status = STATUS.findall(following)
+                context = following
                 lookahead += 1
             word = status[-1] if status else None
             kind = classify(word) if word else None
@@ -154,6 +173,7 @@ def parse_transcript(text, courses):
                 "course_id": course["id"],
                 "academic_term": term,
                 "status": kind,
+                "grade": None if kind == "in_progress" else final_grade(context, word),
                 "code": code,
                 "name": course["name"],
             }

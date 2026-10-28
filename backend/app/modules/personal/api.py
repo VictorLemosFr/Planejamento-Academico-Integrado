@@ -351,6 +351,11 @@ def simulation(plan_id: str, payload: EvaluateDraft, identity: Identity, session
                 else plan.course_layout
             ),
             requirements=requirements_for(session, student),
+            simulated_grades=(
+                payload.simulated_grades
+                if payload.simulated_grades is not None
+                else plan.simulated_grades
+            ),
         )
     except ValueError as error:
         raise HTTPException(422, str(error)) from error
@@ -373,6 +378,11 @@ def save_plan(plan_id: str, payload: SavePlan, identity: Identity, session: Data
                 if payload.course_layout is not None
                 else plan.course_layout
             ),
+            simulated_grades=(
+                payload.simulated_grades
+                if payload.simulated_grades is not None
+                else plan.simulated_grades
+            ),
         )
     except ValueError as error:
         raise HTTPException(422, str(error)) from error
@@ -384,6 +394,7 @@ def save_plan(plan_id: str, payload: SavePlan, identity: Identity, session: Data
         evaluated["planned_ids"],
     )
     plan.course_layout = evaluated["course_layout"]
+    plan.simulated_grades = evaluated["simulated_grades"]
     plan.version += 1
     plan.updated_at = now()
     result = plan_view(session, student, plan, courses, requirements_for(session, student))

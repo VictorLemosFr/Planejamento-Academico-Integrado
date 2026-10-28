@@ -36,6 +36,7 @@ def list_courses(session: Session, curriculum_id: str = "SI-2024"):
             "short_name": course.short_name,
             "period": course.period,
             "hours": course.hours,
+            "credits": course.credits,
             "type": course.type,
             "prerequisite_ids": prerequisites.get(course.id, []),
             "corequisite_ids": corequisites.get(course.id, []),

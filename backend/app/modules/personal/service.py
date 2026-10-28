@@ -9,6 +9,7 @@ from sqlalchemy import select
 from app.modules.constraints.service import CurriculumGraph
 from app.modules.personal.models import AcademicRecord, HistoryImport
 from app.modules.planning.forecast import summarize
+from app.modules.progression.rules import FAILURE_LIMIT, RULE_SOURCE, coefficient, failure_level
 from app.modules.progression.service import course_status
 
 WARNING = (
@@ -23,6 +24,7 @@ PARTIALLY_VERIFIED = (
     "o planejamento não substitui a validação da matrícula no SIGAA."
 )
 COREQUISITE = "Co-requisito precisa ser cursado no mesmo semestre ou antes."
+REFUSED = f"Matrícula recusada nesta disciplina após {FAILURE_LIMIT} reprovações ({RULE_SOURCE})."
 
 
 def history_view(session, student):
@@ -82,6 +84,20 @@ def import_history(session, student, author, payload, courses):
                 422, [{"loc": field, "msg": "Tentativa duplicada ou contraditória."}]
             )
         seen.add(key)
+    attempts = {}
+    for record in data["records"]:
+        attempts.setdefault(record["course_id"], []).append(record)
+    for course_id, items in attempts.items():
+        failures = 0
+        for record in sorted(items, key=lambda r: r["academic_term"]):
+            if failures >= FAILURE_LIMIT:
+                name = graph.courses[course_id]["name"]
+                raise HTTPException(
+                    422,
+                    f"{name}: após {FAILURE_LIMIT} reprovações a matrícula é recusada "
+                    f"({RULE_SOURCE}); não há tentativa seguinte.",
+                )
+            failures += record["status"] == "failed"
     # Canonical order makes equivalent full files idempotent.
     data["records"].sort(key=lambda r: (r["course_id"], r["academic_term"]))
     digest = sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
@@ -138,10 +154,16 @@ def evaluate(
     action=None,
     course_layout=None,
     requirements=None,
+    simulated_grades=None,
 ):
     graph = CurriculumGraph(courses)
     official, ongoing = official_sets(history)
     hypothetical, planned = set(hypothetical_ids), set(planned_ids)
+    attempts = {}
+    for record in sorted(history["records"], key=lambda r: r["academic_term"]):
+        attempts.setdefault(record["course_id"], []).append(record)
+    failures = {cid: sum(r["status"] == "failed" for r in items) for cid, items in attempts.items()}
+    refused = {cid for cid, count in failures.items() if count >= FAILURE_LIMIT} - official
     layout = {cid: dict(position) for cid, position in (course_layout or {}).items()}
     graph.require_known(hypothetical | planned | layout.keys())
     if action:
@@ -150,6 +172,8 @@ def evaluate(
         if kind in {"approve", "revoke"} and course_id in official:
             raise ValueError("Aprovações oficiais são somente leitura.")
         if kind in {"approve", "plan"}:
+            if course_id in refused:
+                raise ValueError(REFUSED)
             if graph.missing(course_id, official | hypothetical):
                 raise ValueError("Conclua os pré-requisitos antes de simular esta ação.")
             if kind == "approve":
@@ -194,8 +218,15 @@ def evaluate(
             co not in completed | ongoing | planned for co in graph.corequisites(cid)
         ):
             issues.append(COREQUISITE)
+        if cid in refused:
+            issues.append(REFUSED)
         if issues:
             problems[cid] = issues
+    grades = {
+        cid: round(float(grade), 2)
+        for cid, grade in (simulated_grades or {}).items()
+        if cid in hypothetical | planned
+    }
     result = []
     for course in courses:
         cid = course["id"]
@@ -207,9 +238,23 @@ def evaluate(
             status = "simulated"
         elif cid in ongoing:
             status = "in_progress"
+        course_attempts = [
+            {
+                "academic_term": r["academic_term"],
+                "status": r["status"],
+                "grade": r.get("grade"),
+            }
+            for r in attempts.get(cid, [])
+        ]
+        approved = [a for a in course_attempts if a["status"] == "completed"]
         result.append(
             {
                 **course,
+                "attempts": course_attempts,
+                "failures": failures.get(cid, 0),
+                "failure_level": failure_level(failures.get(cid, 0)),
+                "grade": approved[-1]["grade"] if approved else None,
+                "simulated_grade": grades.get(cid),
                 "status": status,
                 "missing_prerequisite_ids": missing,
                 "dependent_ids": sorted(graph.descendants(cid)),
@@ -224,6 +269,10 @@ def evaluate(
     return {
         "integralization": integralization,
         "forecast": forecast,
+        "cr": coefficient(history["records"], by_id, grades),
+        "simulated_grades": grades,
+        "failure_limit": FAILURE_LIMIT,
+        "failure_rule": RULE_SOURCE,
         "course_layout": layout,
         "current_period": history["current_period"],
         "history_revision": history["revision"],
@@ -277,5 +326,6 @@ def plan_view(session, student, plan, courses, requirements=None):
             plan.planned_ids,
             course_layout=plan.course_layout,
             requirements=requirements,
+            simulated_grades=plan.simulated_grades,
         ),
     }

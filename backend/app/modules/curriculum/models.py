@@ -45,6 +45,7 @@ class Course(Base):
     name: Mapped[str] = mapped_column(String(255))
     short_name: Mapped[str] = mapped_column(String(100))
     hours: Mapped[int]
+    credits: Mapped[int | None] = mapped_column(nullable=True)
     period: Mapped[int | None]
     type: Mapped[str] = mapped_column(String(20))
 

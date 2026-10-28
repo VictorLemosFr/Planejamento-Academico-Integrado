@@ -5,6 +5,7 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 1",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 1",
     "hours": 60,
+    "credits": 4,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -17,6 +18,7 @@
     "name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "short_name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "hours": 120,
+    "credits": 5,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -29,6 +31,7 @@
     "name": "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO",
     "short_name": "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -41,6 +44,7 @@
     "name": "INTRODUÇÃO À INTELIGÊNCIA ARTIFICIAL",
     "short_name": "INTRODUÇÃO À INTELIGÊNCIA ARTIFICIAL",
     "hours": 60,
+    "credits": 3,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -53,6 +57,7 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 2",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 2",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -67,6 +72,7 @@
     "name": "ÁLGEBRA VETORIAL E LINEAR PARA COMPUTAÇÃO",
     "short_name": "ÁLGEBRA VETORIAL E LINEAR PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [],
@@ -79,6 +85,7 @@
     "name": "ESTRUTURAS DE DADOS ORIENTADAS A OBJETOS",
     "short_name": "ESTRUTURAS DE DADOS ORIENTADAS A OBJETOS",
     "hours": 60,
+    "credits": 3,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -93,6 +100,7 @@
     "name": "DESENVOLVIMENTO DE SOFTWARE",
     "short_name": "DESENVOLVIMENTO DE SOFTWARE",
     "hours": 120,
+    "credits": 6,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -107,6 +115,7 @@
     "name": "CIÊNCIA DE DADOS",
     "short_name": "CIÊNCIA DE DADOS",
     "hours": 30,
+    "credits": 2,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -124,6 +133,7 @@
     "name": "BANCO DE DADOS",
     "short_name": "BANCO DE DADOS",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -138,6 +148,7 @@
     "name": "ALGORITMOS",
     "short_name": "ALGORITMOS",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -152,6 +163,7 @@
     "name": "ESTATÍSTICA E PROBABILIDADE PARA COMPUTAÇÃO",
     "short_name": "ESTATÍSTICA E PROBABILIDADE PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -166,6 +178,7 @@
     "name": "APRENDIZADO DE MÁQUINA 1",
     "short_name": "APRENDIZADO DE MÁQUINA 1",
     "hours": 60,
+    "credits": 3,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -182,6 +195,7 @@
     "name": "INTELIGÊNCIA ARTIFICIAL SIMBÓLICA",
     "short_name": "INTELIGÊNCIA ARTIFICIAL SIMBÓLICA",
     "hours": 60,
+    "credits": 3,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -196,6 +210,7 @@
     "name": "LÓGICA PARA COMPUTAÇÃO",
     "short_name": "LÓGICA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -210,6 +225,7 @@
     "name": "ÉTICA EM INTELIGÊNCIA ARTIFICIAL",
     "short_name": "ÉTICA EM INTELIGÊNCIA ARTIFICIAL",
     "hours": 30,
+    "credits": 2,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -224,6 +240,7 @@
     "name": "APRENDIZADO NÃO SUPERVISIONADO",
     "short_name": "APRENDIZADO NÃO SUPERVISIONADO",
     "hours": 60,
+    "credits": 3,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -240,6 +257,7 @@
     "name": "APRENDIZADO DE MÁQUINA 2",
     "short_name": "APRENDIZADO DE MÁQUINA 2",
     "hours": 60,
+    "credits": 3,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -254,6 +272,7 @@
     "name": "REDES NEURAIS",
     "short_name": "REDES NEURAIS",
     "hours": 60,
+    "credits": 3,
     "period": 4,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -270,6 +289,7 @@
     "name": "TEORIA DA COMPUTAÇÃO",
     "short_name": "TEORIA DA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -284,6 +304,7 @@
     "name": "APRENDIZADO POR REFORÇO",
     "short_name": "APRENDIZADO POR REFORÇO",
     "hours": 60,
+    "credits": 3,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -300,6 +321,7 @@
     "name": "APRENDIZADO PROFUNDO",
     "short_name": "APRENDIZADO PROFUNDO",
     "hours": 60,
+    "credits": 3,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -314,6 +336,7 @@
     "name": "AVALIAÇÃO DE MODELOS DE INTELIGÊNCIA ARTIFICIAL",
     "short_name": "AVALIAÇÃO DE MODELOS DE INTELIGÊNCIA ARTIFICIAL",
     "hours": 60,
+    "credits": 3,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -329,6 +352,7 @@
     "name": "ENGENHARIA DE SOFTWARE PARA INTELIGÊNCIA ARTIFICIAL",
     "short_name": "ENGENHARIA DE SOFTWARE PARA INTELIGÊNCIA ARTIFICIAL",
     "hours": 60,
+    "credits": 3,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -344,6 +368,7 @@
     "name": "INTELIGÊNCIA ARTIFICIAL GENERATIVA E MODELOS DE LINGUAGEM",
     "short_name": "INTELIGÊNCIA ARTIFICIAL GENERATIVA E MODELOS DE LINGUAGEM",
     "hours": 60,
+    "credits": 3,
     "period": 6,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -358,6 +383,7 @@
     "name": "METODOLOGIA CIENTÍFICA",
     "short_name": "METODOLOGIA CIENTÍFICA",
     "hours": 60,
+    "credits": 3,
     "period": 8,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -372,6 +398,7 @@
     "name": "TRABALHO DE CONCLUSÃO DE CURSO",
     "short_name": "TRABALHO DE CONCLUSÃO DE CURSO",
     "hours": 60,
+    "credits": 2,
     "period": 9,
     "type": "mandatory",
     "prerequisite_ids": [
@@ -386,6 +413,7 @@
     "name": "ANÁLISE E PREVISÃO DE SÉRIES TEMPORAIS",
     "short_name": "ANÁLISE E PREVISÃO DE SÉRIES TEMPORAIS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -400,6 +428,7 @@
     "name": "INOVAÇÕES EM SAÚDE COM INTELIGÊNCIA ARTIFICIAL",
     "short_name": "INOVAÇÕES EM SAÚDE COM INTELIGÊNCIA ARTIFICIAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -414,6 +443,7 @@
     "name": "INTELIGÊNCIA ARTIFICIAL EXPLICÁVEL",
     "short_name": "INTELIGÊNCIA ARTIFICIAL EXPLICÁVEL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -428,6 +458,7 @@
     "name": "LARGE LANGUAGE MODEL OPERATIONS",
     "short_name": "LARGE LANGUAGE MODEL OPERATIONS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -442,6 +473,7 @@
     "name": "MACHINE LEARNING OPERATIONS",
     "short_name": "MACHINE LEARNING OPERATIONS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -456,6 +488,7 @@
     "name": "MODELOS DE FUNDAÇÃO E MODELOS DE VISÃO E LINGUAGEM",
     "short_name": "MODELOS DE FUNDAÇÃO E MODELOS DE VISÃO E LINGUAGEM",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -470,6 +503,7 @@
     "name": "AGENTES AUTÔNOMOS",
     "short_name": "AGENTES AUTÔNOMOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -484,6 +518,7 @@
     "name": "COMPUTAÇÃO QUÂNTICA",
     "short_name": "COMPUTAÇÃO QUÂNTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -498,6 +533,7 @@
     "name": "APRENDIZAGEM DE MÁQUINA QUÂNTICA",
     "short_name": "APRENDIZAGEM DE MÁQUINA QUÂNTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -514,6 +550,7 @@
     "name": "APLICAÇÕES DE APRENDIZAGEM DE MÁQUINA",
     "short_name": "APLICAÇÕES DE APRENDIZAGEM DE MÁQUINA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -530,6 +567,7 @@
     "name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "short_name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -546,6 +584,7 @@
     "name": "INTELIGÊNCIA ARTIFICIAL COLETIVA",
     "short_name": "INTELIGÊNCIA ARTIFICIAL COLETIVA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -560,6 +599,7 @@
     "name": "PROCESSAMENTO DE IMAGEM",
     "short_name": "PROCESSAMENTO DE IMAGEM",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -574,6 +614,7 @@
     "name": "VISÃO COMPUTACIONAL",
     "short_name": "VISÃO COMPUTACIONAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -588,6 +629,7 @@
     "name": "OTIMIZAÇÃO",
     "short_name": "OTIMIZAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -602,6 +644,7 @@
     "name": "ÉTICAS E ASPECTOS JURÍDICOS DA COMPUTAÇÃO",
     "short_name": "ÉTICAS E ASPECTOS JURÍDICOS DA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -614,6 +657,7 @@
     "name": "DATA WAREHOUSING",
     "short_name": "DATA WAREHOUSING",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -628,6 +672,7 @@
     "name": "GESTÃO DE NEGÓCIOS",
     "short_name": "GESTÃO DE NEGÓCIOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -640,6 +685,7 @@
     "name": "CRIATIVIDADE COMPUTACIONAL",
     "short_name": "CRIATIVIDADE COMPUTACIONAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -652,6 +698,7 @@
     "name": "SISTEMAS DIGITAIS",
     "short_name": "SISTEMAS DIGITAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -664,6 +711,7 @@
     "name": "ARQUITETURA DE COMPUTADORES E SISTEMAS OPERACIONAIS",
     "short_name": "ARQUITETURA DE COMPUTADORES E SISTEMAS OPERACIONAIS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -678,6 +726,7 @@
     "name": "PROGRAMAÇÃO FUNCIONAL",
     "short_name": "PROGRAMAÇÃO FUNCIONAL",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -692,6 +741,7 @@
     "name": "COMPILADORES",
     "short_name": "COMPILADORES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -707,6 +757,7 @@
     "name": "VISUALIZAÇÃO DE DADOS",
     "short_name": "VISUALIZAÇÃO DE DADOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -722,6 +773,7 @@
     "name": "ANÁLISE E MINERAÇÃO DE REDES COMPLEXAS",
     "short_name": "ANÁLISE E MINERAÇÃO DE REDES COMPLEXAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -738,6 +790,7 @@
     "name": "BANCOS DE DADOS NÃO CONVENCIONAIS",
     "short_name": "BANCOS DE DADOS NÃO CONVENCIONAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -752,6 +805,7 @@
     "name": "COMPUTAÇÃO BIOINSPIRADA",
     "short_name": "COMPUTAÇÃO BIOINSPIRADA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -768,6 +822,7 @@
     "name": "TECNOLOGIA, DIVERSIDADE, EQUIDADE E INCLUSÃO",
     "short_name": "TECNOLOGIA, DIVERSIDADE, EQUIDADE E INCLUSÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -780,6 +835,7 @@
     "name": "ANÁLISE E ESPECIFICAÇÃO AVANÇADA DE REQUISITOS DE SISTEMAS",
     "short_name": "ANÁLISE E ESPECIFICAÇÃO AVANÇADA DE REQUISITOS DE SISTEMAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -794,6 +850,7 @@
     "name": "ARQUITETURA DE SISTEMAS",
     "short_name": "ARQUITETURA DE SISTEMAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -809,6 +866,7 @@
     "name": "PROGRAMAÇÃO COM NOVAS TECNOLOGIAS",
     "short_name": "PROGRAMAÇÃO COM NOVAS TECNOLOGIAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -823,6 +881,7 @@
     "name": "FUNDAMENTOS DE TESTE DE SOFTWARE",
     "short_name": "FUNDAMENTOS DE TESTE DE SOFTWARE",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -837,6 +896,7 @@
     "name": "MÉTODOS FORMAIS",
     "short_name": "MÉTODOS FORMAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -852,6 +912,7 @@
     "name": "TESTES DE SOFTWARE AVANÇADO",
     "short_name": "TESTES DE SOFTWARE AVANÇADO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -866,6 +927,7 @@
     "name": "TRANSFORMAÇÃO DE CÓDIGO E MODELOS",
     "short_name": "TRANSFORMAÇÃO DE CÓDIGO E MODELOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -880,6 +942,7 @@
     "name": "SEMINÁRIOS EM ENGENHARIA DE SOFTWARE",
     "short_name": "SEMINÁRIOS EM ENGENHARIA DE SOFTWARE",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -894,6 +957,7 @@
     "name": "RECUPERAÇÃO DA INFORMAÇÃO",
     "short_name": "RECUPERAÇÃO DA INFORMAÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -908,6 +972,7 @@
     "name": "PROCESSAMENTO DE LINGUAGEM NATURAL",
     "short_name": "PROCESSAMENTO DE LINGUAGEM NATURAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -922,6 +987,7 @@
     "name": "GOVERNANÇA DE DADOS",
     "short_name": "GOVERNANÇA DE DADOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -936,6 +1002,7 @@
     "name": "GERÊNCIA DE CONFIGURAÇÃO DE SOFTWARE, SERVIÇOS E SISTEMAS",
     "short_name": "GERÊNCIA DE CONFIGURAÇÃO DE SOFTWARE, SERVIÇOS E SISTEMAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -950,6 +1017,7 @@
     "name": "ENGENHARIA DE REQUISITOS",
     "short_name": "ENGENHARIA DE REQUISITOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [
@@ -964,6 +1032,7 @@
     "name": "INTRODUÇÃO A LIBRAS",
     "short_name": "INTRODUÇÃO A LIBRAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
@@ -976,6 +1045,7 @@
     "name": "LÍNGUA INGLESA INSTRUMENTAL 1",
     "short_name": "LÍNGUA INGLESA INSTRUMENTAL 1",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
