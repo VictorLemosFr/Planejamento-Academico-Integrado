@@ -30,7 +30,7 @@ def test_failure_levels_follow_the_resolution():
     ]
 
 
-def test_cr_weights_every_graded_attempt_by_credits():
+def test_cr_and_mc_weight_every_graded_attempt_by_hours():
     records = [
         {"course_id": "a", "status": "failed", "grade": 0.0},
         {"course_id": "a", "status": "completed", "grade": 8.0},
@@ -39,12 +39,34 @@ def test_cr_weights_every_graded_attempt_by_credits():
         {"course_id": "b", "status": "in_progress"},
     ]
     cr = coefficient(records, COURSES)
-    # (5*0 + 5*8 + 4*10) / 14
-    assert cr["value"] == round(80 / 14, 2)
-    assert cr["credits"] == 14 and cr["graded_attempts"] == 3 and cr["ungraded_attempts"] == 1
+    # Como o SIGAA: peso = carga horária. (120*0 + 120*8 + 60*10) / 300
+    assert cr["value"] == round(1560 / 300, 4)
+    # MC: só aprovações. (120*8 + 60*10) / 180
+    assert cr["mc"] == round(1560 / 180, 4)
+    assert cr["hours"] == 300 and cr["graded_attempts"] == 3 and cr["ungraded_attempts"] == 1
     simulated = coefficient(records, COURSES, {"c": 10.0})
-    # c sem crédito publicado: 60h / 15 = 4 créditos estimados.
-    assert simulated["simulated_value"] == round(120 / 18, 2)
+    assert simulated["simulated_value"] == round(2160 / 360, 4)
+
+
+def test_cr_follows_sigaa_hour_weighting():
+    # Dados fictícios. Ponderar pela CH (como o SIGAA) e não pelos créditos muda o
+    # resultado quando a mesma carga tem créditos diferentes.
+    by_id = {
+        "a": {"id": "a", "hours": 60, "credits": 4},
+        "b": {"id": "b", "hours": 120, "credits": 5},
+        "c": {"id": "c", "hours": 60, "credits": 3},
+        "d": {"id": "d", "hours": 60, "credits": 4},
+    }
+    records = [
+        {"course_id": "a", "status": "completed", "grade": 9.0},
+        {"course_id": "b", "status": "completed", "grade": 6.5},
+        {"course_id": "c", "status": "completed", "grade": 8.0},
+        {"course_id": "d", "status": "failed", "grade": 2.0},
+    ]
+    cr = coefficient(records, by_id)
+    # (60·9 + 120·6,5 + 60·8 + 60·2) / 300 e, só aprovações, / 240.
+    assert cr["value"] == 6.4
+    assert cr["mc"] == 7.5
 
 
 def signup(client, program="SI", term="2024.1", period=4):
@@ -92,8 +114,8 @@ def test_three_failures_refuse_enrollment_and_block_planning(client):
     ip = next(c for c in progression["courses"] if c["id"] == "ip")
     assert ip["failures"] == 3 and ip["failure_level"] == "refused"
     assert [a["grade"] for a in ip["attempts"]] == [3.0, 0.0, 4.5]
-    # (5*3 + 5*0 + 5*4.5 + 4*9) / 19
-    assert progression["cr"]["value"] == round(73.5 / 19, 2)
+    # (120*3 + 120*0 + 120*4.5 + 60*9) / 420
+    assert progression["cr"]["value"] == round(1440 / 420, 4)
 
     fourth = attempts(("ip", "2025.2", "completed", 7.0))
     blocked = client.put(
@@ -145,8 +167,8 @@ def test_simulated_grades_are_saved_with_the_plan(client):
     # Só vale nota simulada de disciplina planejada ou aprovada na hipótese.
     assert saved["simulated_grades"] == {"ds": 10.0}
     assert saved["cr"]["value"] == 6.0
-    # (5*6 + 6*10) / 11; Desenvolvimento de Software tem 6 créditos no PPC.
-    assert saved["cr"]["simulated_value"] == round(90 / 11, 2)
+    # (120*6 + 120*10) / 240: IP e Desenvolvimento de Software têm 120h.
+    assert saved["cr"]["simulated_value"] == 8.0
     assert client.get(f"/api/plans/{plan['id']}").json()["simulated_grades"] == {"ds": 10.0}
 
 
@@ -240,7 +262,7 @@ def test_preview_evaluates_without_saving(client):
     preview = client.post("/api/me/history/preview", headers=headers, json=draft).json()
     status = {c["id"]: c["status"] for c in preview["courses"]}
     assert status["ip"] == "completed" and status["ds"] == "available"
-    assert preview["cr"]["value"] == round((5 * 8 + 3 * 2) / 8, 2)
+    assert preview["cr"]["value"] == round((120 * 8 + 60 * 2) / 180, 4)
     assert client.get("/api/me/history").json()["revision"] == 0
     four = attempts(*[("cad", f"202{i}.1", "failed", 1.0) for i in range(4, 8)])
     rejected = client.post(

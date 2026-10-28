@@ -50,6 +50,38 @@ def test_parser_reads_terms_statuses_and_wrapped_names():
     assert [item["code"] for item in result["ignored"]] == ["CIN0130"]
 
 
+SIGAA_LAYOUT = """Histórico Escolar (FICTÍCIO)
+Índices Acadêmicos                                     CR:6.4     MC:7.5
+Ano / Período Letivo Inicial:   2025.2
+Período Letivo Atual:           3
+                     Componentes Curriculares Cursados/Cursando
+  2025.2    CIN0130  SISTEMAS DIGITAIS                       72   60   02    91,0   9,0   APRN
+                     Dra. PROFESSORA FICTÍCIA (60h)
+  2025.2    CIN0133  INTRODUÇÃO À PROGRAMAÇÃO                144  120  02   100,0    7    APR
+  2026.1    MA026    CALCULO DIFERENCIAL E INTEGRAL 1         72   60   E13  100,0   2,0   REP
+  2026.2  * CIN0135  ESTRUTURAS DE DADOS ORIENTADAS A OBJETOS 72   60   01   100,0    -    MATR
+            Componentes Curriculares Obrigatórios Pendentes: 2
+  MA026    CALCULO DIFERENCIAL E INTEGRAL 1                Matriculado   60 h
+  CIN0131  CONCEPÇÃO DE ARTEFATOS DIGITAIS                               60 h
+"""
+
+
+def test_sigaa_layout_reads_media_column_header_and_skips_pending_list():
+    result = parse_transcript(SIGAA_LAYOUT, COURSES)
+    grades = {(r["course_id"], r["academic_term"]): r["grade"] for r in result["records"]}
+    assert grades == {
+        ("cc:cin0130", "2025.2"): 9.0,
+        # Média sem vírgula ("7") também é nota; a frequência 100,0 nunca é.
+        ("cc:cin0133", "2025.2"): 7.0,
+        ("cc:ma026", "2026.1"): 2.0,
+        ("cc:cin0135", "2026.2"): None,
+    }
+    # A lista de pendentes não vira registro nem aviso.
+    assert result["unmatched"] == [] and result["ignored"] == []
+    assert result["start_term"] == "2025.2" and result["current_period"] == 3
+    assert result["sigaa_indices"] == {"cr": 6.4, "mc": 7.5}
+
+
 def test_ambiguous_code_without_name_is_left_for_review():
     result = parse_transcript("2025.1 CIN0123 60 01 APR", COURSES)
     assert result["records"] == []

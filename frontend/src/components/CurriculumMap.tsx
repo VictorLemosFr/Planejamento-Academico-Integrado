@@ -182,6 +182,8 @@ export function CurriculumMap({
   periodAction,
   filters,
   periodNote,
+  periodLabel,
+  gapOf,
 }: {
   courses: Course[];
   allCourses?: Course[];
@@ -204,6 +206,9 @@ export function CurriculumMap({
   filters?: ReactNode;
   /** Etiqueta curta no cabeçalho do período (ex.: futuro vai para a Simulação). */
   periodNote?: (period: number) => string | null;
+  /** Semestre letivo da coluna, por exemplo "2026.2 · atual". */
+  periodLabel?: (period: number) => ReactNode;
+  gapOf?: (course: Course) => "late" | "skipped" | null;
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [electiveFilter, setElectiveFilter] = useState<ElectiveFilter>("all");
@@ -356,6 +361,7 @@ export function CurriculumMap({
                 onSelect(selectedId === course.id ? null : course.id)
               }
               needsInfo={needsInfo(course)}
+              gap={gapOf?.(course)}
               dragHandle={handle}
             />
             {enabled && placementWarning(course, allCourses, layout) && (
@@ -540,7 +546,14 @@ export function CurriculumMap({
                   className={`period-column ${editable && period > maxPeriod ? "is-locked-period" : ""}`}
                 >
                   <div className="period-head">
-                    <h3>{period}º período</h3>
+                    <h3>
+                      {period}º período
+                      {periodLabel && (
+                        <span className="period-term">
+                          {periodLabel(period)}
+                        </span>
+                      )}
+                    </h3>
                     <p>
                       {items.length} disciplina{items.length !== 1 ? "s" : ""} ·{" "}
                       {hours}h

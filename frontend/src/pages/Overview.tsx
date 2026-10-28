@@ -16,8 +16,8 @@ import { BigValue } from "../components/BigValue";
 import { CrGoal } from "../components/CrGoal";
 import { trackedPercent } from "../components/ProgressSummary";
 
-const credit = (course?: Course) =>
-  course?.credits ?? Math.max(1, Math.round((course?.hours ?? 60) / 15));
+// Peso no CR: a carga horária, como no SIGAA.
+const weightOf = (course?: Course) => course?.hours ?? 60;
 
 /** CR acumulado ao fim de cada semestre com nota. */
 export function crTimeline(records: HistoryRecord[], courses: Course[]) {
@@ -30,7 +30,7 @@ export function crTimeline(records: HistoryRecord[], courses: Course[]) {
     for (const r of records) {
       if (r.academic_term !== term || r.status === "in_progress") continue;
       if (r.grade === null || r.grade === undefined) continue;
-      const weight = credit(byId.get(r.course_id));
+      const weight = weightOf(byId.get(r.course_id));
       weighted += weight * Number(r.grade);
       total += weight;
     }
@@ -97,6 +97,16 @@ export function Overview({
       (c.period ?? 99) < currentPeriod &&
       !recorded.has(c.id),
   );
+  // Do período atual, mas fora deste semestre (só depois que o atual foi preenchido).
+  const currentTerm = startTerm ? termOf(startTerm, currentPeriod) : null;
+  const skipped = records.some((r) => r.academic_term === currentTerm)
+    ? data.courses.filter(
+        (c) =>
+          c.type === "mandatory" &&
+          c.period === currentPeriod &&
+          !recorded.has(c.id),
+      )
+    : [];
   const atRisk = data.courses.filter(
     (c) => c.failure_level === "critical" || c.failure_level === "refused",
   );
@@ -120,9 +130,9 @@ export function Overview({
       ? termOf(startTerm, firstPeriod + index)
       : `${firstPeriod + index}º período`;
   const timeline = crTimeline(records, data.courses);
-  const ongoingCredits = data.courses
+  const currentLoad = data.courses
     .filter((c) => c.status === "in_progress")
-    .reduce((sum, c) => sum + credit(c), 0);
+    .reduce((sum, c) => sum + weightOf(c), 0);
   const activity = [...records]
     .sort((a, b) => b.academic_term.localeCompare(a.academic_term))
     .slice(0, 6);
@@ -160,6 +170,18 @@ export function Overview({
           </Link>
         </div>
       )}
+      {skipped.length > 0 && (
+        <div className="banner" role="note">
+          <Info size={16} aria-hidden="true" />
+          <span>
+            {skipped.map(courseShortName).join(", ")}, do {currentPeriod}º
+            período, {skipped.length > 1 ? "ficaram" : "ficou"} para depois.
+          </span>
+          <Link to="/proximo-semestre">
+            Planejar <ArrowRight size={14} aria-hidden="true" />
+          </Link>
+        </div>
+      )}
       {atRisk.map((c) => (
         <div key={c.id} className="banner warn" role="note">
           <TriangleAlert size={16} aria-hidden="true" />
@@ -181,7 +203,7 @@ export function Overview({
             Coeficiente de rendimento
             <span
               className="info"
-              title="Média das notas ponderada pelos créditos; reprovação por falta conta como zero (Res. nº 09/2009-CCEPE)"
+              title="Média das notas ponderada pela carga horária, como no SIGAA; reprovação por falta conta como zero (Res. nº 09/2009-CCEPE)"
             >
               <Info size={13} aria-label="Como é calculado" />
             </span>
@@ -191,7 +213,7 @@ export function Overview({
             <Sparkline points={timeline} />
           </div>
           <p className="stat-note">
-            {cr?.credits ?? 0} créditos com nota
+            MC {formatGrade(cr?.mc)} · {cr?.hours ?? 0}h com nota
             {cr?.ungraded_attempts
               ? ` · ${cr.ungraded_attempts} tentativa(s) sem nota`
               : ""}
@@ -301,7 +323,7 @@ export function Overview({
             </p>
           )}
         </section>
-        <CrGoal cr={cr} defaultCredits={ongoingCredits} />
+        <CrGoal cr={cr} defaultHours={currentLoad} />
       </div>
 
       <section className="panel" aria-labelledby="activity-title">

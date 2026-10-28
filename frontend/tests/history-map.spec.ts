@@ -62,7 +62,7 @@ test("attempts, failures and grades are recorded on the map before saving", asyn
   await expect(
     page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
   ).toContainText("Histórico salvo");
-  // CR = (5·4 + 5·0 + 5·7) / 15 créditos
+  // CR = (120h·4 + 120h·0 + 120h·7) / 360h
   await expect(cr(page)).toContainText("3,67");
   await expect(card(page, "Introdução à Programação")).toContainText("Nota 7");
   await expect(card(page, "Introdução à Programação")).toContainText(
@@ -155,8 +155,8 @@ test("simulated grades produce a simulated CR only in the simulation tab", async
     .click();
   await page.getByLabel("Nota simulada (entra no CR simulado)").fill("10");
   await page.getByLabel("Nota simulada (entra no CR simulado)").blur();
-  // (5·6 + 6·10) / 11 créditos
-  await expect(cr(page)).toContainText("8,18");
+  // Como o SIGAA, peso = carga horária: (120h·6 + 120h·10) / 240h
+  await expect(cr(page)).toContainText("8,0");
   await expect(cr(page)).toContainText("CR simulado");
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
   await expect(

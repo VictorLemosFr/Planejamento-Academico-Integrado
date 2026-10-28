@@ -16,7 +16,10 @@ export interface Attempt {
 export interface CoefficientSummary {
   value: number | null;
   simulated_value: number | null;
-  credits: number;
+  /** Média de conclusão: só as aprovações, como no SIGAA. */
+  mc?: number | null;
+  /** Carga horária com nota: o peso do CR no SIGAA. */
+  hours: number;
   graded_attempts: number;
   ungraded_attempts: number;
 }
@@ -169,6 +172,8 @@ export interface TranscriptProposal {
   unmatched: TranscriptIssue[];
   ignored: TranscriptIssue[];
   start_term: string | null;
+  current_period?: number | null;
+  sigaa_indices?: { cr?: number; mc?: number } | null;
 }
 export interface TranscriptIssue {
   code: string;

@@ -428,22 +428,46 @@ export function Student({
       ) ?? []
     );
   }
+  /**
+   * Períodos já cursados viram "aprovadas"; o período atual vira "cursando". O que o
+   * estudante não fez continua sem registro e aparece como "Não cursada/Não cursando".
+   */
   function approvePeriod(period: number) {
     if (!startTerm) return;
     const term = termOf(startTerm, period);
     const missing = unrecorded(period);
     if (!missing.length) return;
+    const current = period === currentPeriod;
     editHistory([
       ...records,
       ...missing.map((c) => ({
         course_id: c.id,
         academic_term: term,
-        status: "completed" as const,
+        status: current ? ("in_progress" as const) : ("completed" as const),
       })),
     ]);
+    const n = missing.length;
+    const plural = n > 1 ? "s" : "";
     setNotice(
-      `${missing.length} disciplina${missing.length > 1 ? "s" : ""} do ${period}º período marcada${missing.length > 1 ? "s" : ""} como aprovada${missing.length > 1 ? "s" : ""}. Ajuste exceções e notas no mapa e clique em Salvar histórico.`,
+      current
+        ? `${n} disciplina${plural} do ${period}º período marcada${plural} como cursando. Se não está cursando alguma, abra o card e clique em “Marcar como não cursada”; depois, Salvar histórico.`
+        : `${n} disciplina${plural} do ${period}º período marcada${plural} como aprovada${plural}. Ajuste exceções e notas no mapa e clique em Salvar histórico.`,
     );
+  }
+  /** Obrigatória sem registro em período já cursado (atrasada) ou no atual (fora agora). */
+  function gapOf(course: {
+    id: string;
+    type: string;
+    period: number | null;
+    status: string;
+  }) {
+    if (course.type !== "mandatory" || course.period === null) return null;
+    if (records.some((r) => r.course_id === course.id)) return null;
+    if (course.status === "completed" || course.status === "in_progress")
+      return null;
+    if (course.period < currentPeriod) return "late" as const;
+    if (course.period === currentPeriod) return "skipped" as const;
+    return null;
   }
   function createFromSuggestion(ids: string[], name: string, term: string) {
     if (!discard() || !progression.data) return;
@@ -1117,6 +1141,13 @@ export function Student({
                         period > currentPeriod ? "Futuro → Simulação" : null
                     : undefined
                 }
+                gapOf={mode === "history" ? gapOf : undefined}
+                periodLabel={
+                  startTerm
+                    ? (period) =>
+                        `${termOf(startTerm, period)}${period === currentPeriod ? " · atual" : ""}`
+                    : undefined
+                }
                 filters={
                   <div className="map-filters">
                     <label className="text-xs">
@@ -1162,16 +1193,22 @@ export function Student({
                 periodAction={
                   mode === "history" && startTerm
                     ? (period) =>
-                        period < currentPeriod &&
+                        period <= currentPeriod &&
                         unrecorded(period).length > 0 ? (
                           <button
                             type="button"
                             className="period-approve"
                             disabled={busy}
-                            aria-label={`Marcar ${period}º período como aprovado`}
+                            aria-label={
+                              period === currentPeriod
+                                ? `Marcar ${period}º período como cursando`
+                                : `Marcar ${period}º período como aprovado`
+                            }
                             onClick={() => approvePeriod(period)}
                           >
-                            ✓ Marcar período como aprovado
+                            {period === currentPeriod
+                              ? "◷ Marcar período como cursando"
+                              : "✓ Marcar período como aprovado"}
                           </button>
                         ) : null
                     : undefined

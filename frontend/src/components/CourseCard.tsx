@@ -82,6 +82,7 @@ export function CourseCard({
   needsInfo = false,
   dragHandle,
   buttonRef,
+  gap,
 }: {
   course: Course;
   selected: boolean;
@@ -94,6 +95,11 @@ export function CourseCard({
   /** Eventos de arraste do dnd-kit; o clique continua selecionando. */
   dragHandle?: HTMLAttributes<HTMLButtonElement>;
   buttonRef?: Ref<HTMLButtonElement>;
+  /**
+   * Histórico: obrigatória sem registro. "late" = de período já cursado (atrasada);
+   * "skipped" = do período atual, mas o estudante não está cursando.
+   */
+  gap?: "late" | "skipped" | null;
 }) {
   const meta = statusMeta[course.status];
   const failures = course.failures ?? 0;
@@ -111,6 +117,7 @@ export function CourseCard({
       data-dimmed={dimmed || undefined}
       data-critical-path={onCriticalPath || undefined}
       data-draggable={dragHandle ? true : undefined}
+      data-gap={gap || undefined}
       className={`course-card w-full text-left ${selected ? "is-selected" : ""}`}
     >
       <div className="card-top">
@@ -128,6 +135,12 @@ export function CourseCard({
       <div className="card-foot">
         {needsInfo && (
           <span className="chip chip-warn">Informe a situação</span>
+        )}
+        {!needsInfo && gap === "late" && (
+          <span className="chip chip-warn">Não cursada</span>
+        )}
+        {!needsInfo && gap === "skipped" && (
+          <span className="chip chip-gap">Não cursando agora</span>
         )}
         {failures > 0 && course.failure_level && (
           <span
