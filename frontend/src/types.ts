@@ -17,6 +17,7 @@ export interface Course {
   hours: number;
   type: "mandatory" | "elective";
   prerequisite_ids: string[];
+  corequisite_ids?: string[];
   prerequisite_status?: "verified" | "unverified";
   status: Status;
   missing_prerequisite_ids: string[];
@@ -109,6 +110,7 @@ export interface PublicCurriculum extends Requirements {
   course_count: number;
   mandatory_count: number;
   prerequisites_verified: boolean;
+  unverified_count: number;
 }
 export interface Integralization {
   mandatory: {

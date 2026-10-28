@@ -1,6 +1,6 @@
 # API: identidade, histórico e planos
 
-O contrato OpenAPI completo está em `/docs` e `/openapi.json`. SI, CC, IA e EC usam transcrições das matrizes atuais publicadas pelo CIn. Todas ainda dependem de conferência institucional. O planejamento considera apenas pré-requisitos cadastrados; nenhum deles está confirmado por fonte institucional (`prerequisite_status: "unverified"`). Não há validação de oferta, horários ou limites institucionais de carga.
+O contrato OpenAPI completo está em `/docs` e `/openapi.json`. SI, CC, IA e EC usam transcrições das matrizes atuais publicadas pelo CIn. Todas ainda dependem de conferência institucional. Pré-requisitos (`prerequisite_ids`) e co-requisitos (`corequisite_ids`) foram conferidos nos PPCs; disciplinas sem confirmação mantêm `prerequisite_status: "unverified"`. Um plano que inclui uma disciplina com co-requisito não concluído, em andamento ou planejado no mesmo cenário é marcado como inválido com a mensagem "Co-requisito precisa ser cursado no mesmo semestre ou antes." Não há validação de oferta, horários ou limites institucionais de carga.
 
 ## Sessão e acesso
 
@@ -55,7 +55,7 @@ As respostas de progressão, simulação e planos incluem `integralization` (hor
 
 Sem sessão:
 
-- `GET /api/public/curricula` lista as matrizes, com requisitos de integralização, quantidade de disciplinas e se os pré-requisitos estão confirmados.
+- `GET /api/public/curricula` lista as matrizes, com requisitos de integralização, quantidade de disciplinas, se todos os pré-requisitos estão confirmados (`prerequisites_verified`) e quantas disciplinas ainda não estão (`unverified_count`).
 - `GET /api/public/curricula/{id}` devolve a grade avaliada sem histórico.
 - `POST /api/public/curricula/{id}/simulations` recebe `{current_period, start_term?, hypothetical_ids, action?: "approve" | "revoke", course_id?}` e devolve a grade com aprovações hipotéticas, integralização e previsão. Nada é gravado.
 

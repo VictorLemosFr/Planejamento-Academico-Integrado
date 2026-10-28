@@ -630,8 +630,9 @@ function Student({
             </a>
           </>
         )}{" "}
-        · pendente de validação institucional · o histórico é informado pelo
-        estudante · a matrícula oficial continua no SIGAA.
+        · pré-requisitos conferidos no PPC do curso, sem validação da
+        coordenação · o histórico é informado pelo estudante · a matrícula
+        oficial continua no SIGAA.
       </div>
       <main className="workspace mx-auto max-w-[1920px] px-4 py-5 sm:px-8">
         {isStudent &&
