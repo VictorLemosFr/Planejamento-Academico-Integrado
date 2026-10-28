@@ -8,6 +8,7 @@ from sqlalchemy import select
 
 from app.modules.constraints.service import CurriculumGraph
 from app.modules.personal.models import AcademicRecord, HistoryImport
+from app.modules.planning.forecast import summarize
 from app.modules.progression.service import course_status
 
 WARNING = (
@@ -125,7 +126,13 @@ def import_history(session, student, author, payload, courses):
 
 
 def evaluate(
-    courses, history, hypothetical_ids=(), planned_ids=(), action=None, course_layout=None
+    courses,
+    history,
+    hypothetical_ids=(),
+    planned_ids=(),
+    action=None,
+    course_layout=None,
+    requirements=None,
 ):
     graph = CurriculumGraph(courses)
     official, ongoing = official_sets(history)
@@ -200,7 +207,14 @@ def evaluate(
                 "critical": len(graph.descendants(cid)) >= 6,
             }
         )
+    integralization, forecast = (
+        summarize(courses, completed, ongoing, requirements, history)
+        if requirements is not None
+        else (None, None)
+    )
     return {
+        "integralization": integralization,
+        "forecast": forecast,
         "course_layout": layout,
         "current_period": history["current_period"],
         "history_revision": history["revision"],
@@ -235,7 +249,7 @@ def evaluate(
     }
 
 
-def plan_view(session, student, plan, courses):
+def plan_view(session, student, plan, courses, requirements=None):
     return {
         "id": plan.id,
         "name": plan.name,
@@ -249,5 +263,6 @@ def plan_view(session, student, plan, courses):
             plan.hypothetical_ids,
             plan.planned_ids,
             course_layout=plan.course_layout,
+            requirements=requirements,
         ),
     }

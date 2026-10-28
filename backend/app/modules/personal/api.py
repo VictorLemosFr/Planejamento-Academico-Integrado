@@ -7,7 +7,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.core.config import get_settings
 from app.modules.curriculum.models import Curriculum
-from app.modules.curriculum.repository import list_courses
+from app.modules.curriculum.repository import list_courses, requirements_view
 from app.modules.personal.models import LoginSession, Plan, Student, User, now
 from app.modules.personal.schemas import (
     EvaluateDraft,
@@ -95,6 +95,10 @@ def courses_for(session, student):
     if curriculum is None:
         raise HTTPException(409, "Não há matriz curricular para este curso e semestre de ingresso.")
     return list_courses(session, curriculum.id)
+
+
+def requirements_for(session, student):
+    return requirements_view(student_curriculum(session, student))
 
 
 def own_plan(session, student, plan_id):
@@ -230,7 +234,11 @@ def save_own_history(payload: SelfHistoryPayload, identity: Identity, session: D
 @router.get("/me/progression")
 def progression(identity: Identity, session: Database):
     student = student_for(session, identity[0])
-    return evaluate(courses_for(session, student), history_view(session, student))
+    return evaluate(
+        courses_for(session, student),
+        history_view(session, student),
+        requirements=requirements_for(session, student),
+    )
 
 
 @router.put("/admin/students/{registration}/history")
@@ -253,8 +261,9 @@ def upload_history(
 def plans(identity: Identity, session: Database):
     student = student_for(session, identity[0])
     courses = courses_for(session, student)
+    requirements = requirements_for(session, student)
     return [
-        plan_view(session, student, plan, courses)
+        plan_view(session, student, plan, courses, requirements)
         for plan in session.scalars(
             select(Plan).where(Plan.student_id == student.id).order_by(Plan.created_at)
         )
@@ -267,7 +276,9 @@ def create_plan(payload: NewPlan, identity: Identity, session: Database):
     plan = Plan(student_id=student.id, **payload.model_dump())
     session.add(plan)
     session.flush()
-    result = plan_view(session, student, plan, courses_for(session, student))
+    result = plan_view(
+        session, student, plan, courses_for(session, student), requirements_for(session, student)
+    )
     session.commit()
     return result
 
@@ -276,7 +287,11 @@ def create_plan(payload: NewPlan, identity: Identity, session: Database):
 def get_plan(plan_id: str, identity: Identity, session: Database):
     student = student_for(session, identity[0])
     return plan_view(
-        session, student, own_plan(session, student, plan_id), courses_for(session, student)
+        session,
+        student,
+        own_plan(session, student, plan_id),
+        courses_for(session, student),
+        requirements_for(session, student),
     )
 
 
@@ -297,6 +312,7 @@ def simulation(plan_id: str, payload: EvaluateDraft, identity: Identity, session
                 if payload.course_layout is not None
                 else plan.course_layout
             ),
+            requirements=requirements_for(session, student),
         )
     except ValueError as error:
         raise HTTPException(422, str(error)) from error
@@ -332,7 +348,7 @@ def save_plan(plan_id: str, payload: SavePlan, identity: Identity, session: Data
     plan.course_layout = evaluated["course_layout"]
     plan.version += 1
     plan.updated_at = now()
-    result = plan_view(session, student, plan, courses)
+    result = plan_view(session, student, plan, courses, requirements_for(session, student))
     session.commit()
     return result
 
