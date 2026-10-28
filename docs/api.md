@@ -1,6 +1,6 @@
 # API: identidade, histórico e planos
 
-O contrato OpenAPI completo está em `/docs` e `/openapi.json`. SI usa grade demonstrativa; CC, IA e EC usam transcrições das matrizes atuais publicadas pelo CIn. Todas ainda dependem de conferência institucional. O planejamento considera apenas pré-requisitos cadastrados; os das três novas matrizes ainda não foram confirmados. Não há validação de oferta, horários ou limites institucionais de carga.
+O contrato OpenAPI completo está em `/docs` e `/openapi.json`. SI, CC, IA e EC usam transcrições das matrizes atuais publicadas pelo CIn. Todas ainda dependem de conferência institucional. O planejamento considera apenas pré-requisitos cadastrados; nenhum deles está confirmado por fonte institucional (`prerequisite_status: "unverified"`). Não há validação de oferta, horários ou limites institucionais de carga.
 
 ## Sessão e acesso
 
@@ -9,7 +9,7 @@ O contrato OpenAPI completo está em `/docs` e `/openapi.json`. SI usa grade dem
 - `GET /api/auth/me`: mesma resposta de identidade, sem renovar a expiração.
 - `POST /api/auth/logout`: revoga a sessão e limpa o cookie.
 
-CC e EC selecionam a matriz para ingressos a partir de `2024.1`; IA, a partir de `2025.1`. SI conserva a grade demonstrativa. Para turmas anteriores ou matriz ainda não carregada, `student.curriculum.available` é `false`; leitura de histórico continua possível, mas escrita e planejamento retornam `409`.
+SI, CC e EC selecionam a matriz para ingressos a partir de `2024.1`; IA, a partir de `2025.1`. Contas legadas de SI sem semestre de ingresso continuam na matriz de SI. Para turmas anteriores ou matriz ainda não carregada, `student.curriculum.available` é `false`; leitura de histórico continua possível, mas escrita e planejamento retornam `409`.
 
 Login e cadastro exigem `Origin` exatamente igual a uma entrada de `ALLOWED_ORIGINS`. Escritas autenticadas exigem também `X-CSRF-Token` retornado pelo login ou `/auth/me`. Clientes da coordenação devem guardar o cookie e enviar ambos os cabeçalhos. Swagger e scripts não recebem exceção a essas regras. Nenhum bearer token é aceito.
 
@@ -31,6 +31,33 @@ As sessões duram oito horas. O banco armazena apenas SHA-256 do identificador a
 ```
 
 As tentativas devem pertencer à matriz do estudante e não podem anteceder o semestre de ingresso. O salvamento substitui a versão vigente; repetir o mesmo conteúdo é idempotente. Os dados são **autodeclarados** e servem apenas ao planejamento: não alteram nem comprovam o histórico do SIGAA. O semestre de ingresso também pode ser informado por contas antigas na primeira edição.
+
+### Leitura do histórico em PDF
+
+`POST /api/me/history/pdf` recebe o PDF do histórico do SIGAA no corpo, com `Content-Type: application/pdf`, sessão e token CSRF. O limite é 5 MB e 40 páginas; PDF protegido por senha é recusado. A resposta é apenas uma proposta e nada é gravado:
+
+```json
+{
+  "records": [{"course_id": "ip", "academic_term": "2025.1", "status": "completed", "code": "CIN0133", "name": "Introdução à Programação"}],
+  "unmatched": [{"code": "IF9999", "academic_term": "2025.2", "status_text": "APR", "reason": "Código fora da matriz do curso."}],
+  "ignored": [{"code": "CIN0130", "academic_term": "2025.2", "status_text": "TRANC", "reason": "Situação sem efeito no planejamento."}],
+  "start_term": "2025.1"
+}
+```
+
+A leitura procura, em cada linha, um código da matriz do estudante, um semestre `AAAA.N` e uma situação do SIGAA (`APR`, `APRN`, `DISP`, `CUMP`, `INCORP` → aprovada; `REP`, `REPF`, `REPN`, `REPMF` → reprovada; `MATR` → cursando; `TRANC`, `CANC` → ignorada). Códigos repetidos na matriz são desempatados pelo nome; sem desempate, voltam em `unmatched`. O estudante revisa a proposta e salva pelo `PUT /api/me/history` habitual.
+
+### Integralização e previsão
+
+As respostas de progressão, simulação e planos incluem `integralization` (horas concluídas e em andamento de obrigatórias e eletivas de perfil, requisitos publicados e cargas não acompanhadas) e `forecast` (cadeia mínima de pré-requisitos, semestres no ritmo médio da matriz, estimativa, semestre de conclusão e premissas). Sem disciplinas em andamento, o semestre atual conta como o primeiro dos restantes.
+
+## Grade pública
+
+Sem sessão:
+
+- `GET /api/public/curricula` lista as matrizes, com requisitos de integralização, quantidade de disciplinas e se os pré-requisitos estão confirmados.
+- `GET /api/public/curricula/{id}` devolve a grade avaliada sem histórico.
+- `POST /api/public/curricula/{id}/simulations` recebe `{current_period, start_term?, hypothetical_ids, action?: "approve" | "revoke", course_id?}` e devolve a grade com aprovações hipotéticas, integralização e previsão. Nada é gravado.
 
 ## Importação administrativa legada
 

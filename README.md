@@ -17,7 +17,15 @@ A aplicação entrega **cadastro ou login → histórico informado pelo estudant
 - Sessões opacas de oito horas, senhas Argon2, proteção de origem/CSRF e isolamento por estudante.
 - Cadastro público de estudantes com escolha entre CC, SI, IA e EC, semestre de ingresso e período atual, sem aprovação manual da matrícula.
 
-A grade de 56 disciplinas de SI continua demonstrativa. Foram transcritas as matrizes públicas atuais do CIn para CC (101 disciplinas), IA (70) e EC (147), incluindo obrigatórias e eletivas. CC e EC atendem ingressantes desde 2024.1; IA, desde 2025.1. Turmas anteriores podem criar conta, mas não recebem uma matriz inadequada. A transcrição ainda depende de conferência institucional. Os pré-requisitos de CC, IA e EC não estão confirmados nas fontes consultadas; o planejador sinaliza essa limitação e não comprova elegibilidade. Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, previsão e recomendações ficam para entregas posteriores. O protótipo HTML original permanece em `prototipo/`; a demonstração antiga exige configuração explícita.
+As quatro matrizes atuais foram transcritas das páginas públicas do CIn: SI (56 disciplinas), CC (101), IA (70) e EC (147), incluindo obrigatórias e eletivas de perfil. SI, CC e EC atendem ingressantes desde 2024.1; IA, desde 2025.1. Turmas anteriores podem criar conta, mas não recebem uma matriz inadequada; contas legadas de SI sem semestre de ingresso continuam na matriz de SI. A transcrição ainda depende de conferência institucional. As páginas públicas não publicam pré-requisitos: eles constam nos PPCs, de acesso restrito ao e-mail do CIn. Os pré-requisitos de SI vieram do protótipo e os de CC, IA e EC não foram cadastrados; o planejador sinaliza essa limitação e não comprova elegibilidade.
+
+- **Integralização:** carga concluída e em andamento de obrigatórias e eletivas de perfil, comparada aos requisitos publicados de cada curso. Eletivas livres, atividades complementares e extensão são exibidas, mas não acompanhadas.
+- **Previsão mínima de conclusão:** o maior entre a maior cadeia de obrigatórias pendentes (caminho mais longo do grafo de pré-requisitos) e a carga restante no ritmo médio da própria matriz. As premissas aparecem na interface.
+- **Grade pública** em `/grades`: qualquer pessoa navega pelas quatro matrizes e simula aprovações sem conta e sem gravar dados.
+- **Eletivas com filtro e ordenação:** disponíveis, bloqueadas, planejadas ou concluídas; ordem por situação, nome, carga ou número de dependentes.
+- **Importação do histórico em PDF do SIGAA:** o arquivo é lido em memória e descartado; os registros encontrados aparecem para revisão e só são gravados quando o estudante salva o histórico.
+
+Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres e recomendações ficam para entregas posteriores. O protótipo HTML original permanece em `prototipo/`; a demonstração antiga exige configuração explícita.
 
 ## Stack
 
@@ -50,7 +58,7 @@ uv run python -m app.seed
 uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-O seed insere as disciplinas ausentes das quatro matrizes, sem substituir registros existentes. Não o utilize como rotina de atualização de uma grade oficial. A API oferece documentação interativa em `http://127.0.0.1:8000/docs`.
+O seed insere as disciplinas ausentes das quatro matrizes, sem substituir registros existentes. Não o utilize como rotina de atualização de uma grade oficial: correções de dados em bancos já populados são feitas por migrações, como a `0008`, que só altera valores conhecidos como errados. A API oferece documentação interativa em `http://127.0.0.1:8000/docs`.
 
 Em outro terminal, inicie o frontend:
 
@@ -122,7 +130,7 @@ TEST_DATABASE_URL=postgresql+psycopg://pai:pai@127.0.0.1:54329/pai npm test
 
 Os testes criam esquemas aleatórios e removem somente esses esquemas ao terminar. Cobrem banco vazio e grade existente, seed repetido, dois salvamentos concorrentes, importações simultâneas idênticas e reconexão do pool. Sem `TEST_DATABASE_URL`, os testes específicos de PostgreSQL são marcados como ignorados; a suíte de API usa SQLite em memória. Os testes de navegador incluem o fluxo persistido, duas alternativas, novo login, sessão expirada, conflito, histórico ausente e tela móvel, além das demonstrações antigas.
 
-Na validação local desta entrega, os 70 testes do backend passaram com PostgreSQL real, incluindo migrações, concorrência, isolamento entre matrizes, cadastro e edição do histórico pelo estudante. Os 3 testes de componentes e os 17 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem cadastro, histórico e planos nos quatro cursos, distribuição de disciplinas e eletivas por alternativa, ordem dos cards e recuperação após novo login.
+Na validação local desta entrega, os 90 testes do backend passaram com PostgreSQL real, incluindo migrações (inclusive a correção de dados da 0008), concorrência, isolamento entre matrizes, previsão, integralização, grade pública e leitura de PDF fictício. Os 3 testes de componentes e os 21 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem cadastro, histórico e planos nos quatro cursos, distribuição de disciplinas e eletivas por alternativa, ordem dos cards, recuperação após novo login, grade pública, filtro de eletivas, resumo de integralização e importação de um histórico fictício em PDF (`frontend/tests/fixtures/`).
 
 ## Executar somente o protótipo original
 
@@ -141,12 +149,12 @@ Abra [prototipo/index.html](prototipo/index.html) diretamente em um navegador. E
 backend/
   app/
     core/                  # configuração e acesso ao banco
-    data/                  # dados demonstrativos do protótipo
+    data/                  # matrizes transcritas do CIn e cenários do protótipo
     modules/
       curriculum/          # entidades e leitura da grade
       constraints/         # grafo e pré-requisitos
       progression/         # estados acadêmicos derivados
-      planning/            # simulação demonstrativa e contratos
+      planning/            # previsão, integralização, simulação e contratos
       personal/            # identidade, histórico e planos persistidos
   alembic/                 # migrações de esquema
   tests/
