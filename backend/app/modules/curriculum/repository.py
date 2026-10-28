@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.modules.curriculum.catalog import PROGRAM_NAMES, REQUIREMENT_FIELDS
 from app.modules.curriculum.models import Course, Prerequisite
 
 
@@ -34,3 +35,15 @@ def list_courses(session: Session, curriculum_id: str = "SI-2024"):
         }
         for course in courses
     ]
+
+
+def requirements_view(curriculum):
+    """Requisitos publicados da matriz, usados na integralização e na previsão."""
+    return {
+        "id": curriculum.id,
+        "program": curriculum.program,
+        "program_name": PROGRAM_NAMES.get(curriculum.program, curriculum.program),
+        "valid_from": curriculum.valid_from,
+        "source_url": curriculum.source_url,
+        **{field: getattr(curriculum, field) for field in REQUIREMENT_FIELDS},
+    }

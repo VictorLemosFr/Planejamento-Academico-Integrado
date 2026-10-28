@@ -51,3 +51,14 @@ class Scenario(BaseModel):
     completed_ids: list[str]
     planned_ids: list[str]
     trail_ids: list[str]
+
+
+class PublicEvaluation(BaseModel):
+    """Simulação sem conta: nada é gravado e as aprovações são apenas hipotéticas."""
+
+    model_config = ConfigDict(extra="forbid")
+    current_period: int = Field(default=1, ge=1, le=20)
+    start_term: str | None = Field(default=None, pattern=r"^\d{4}\.[12]$")
+    hypothetical_ids: list[str] = Field(default_factory=list, max_length=500)
+    action: Literal["approve", "revoke"] | None = None
+    course_id: str | None = Field(default=None, min_length=1, max_length=40)
