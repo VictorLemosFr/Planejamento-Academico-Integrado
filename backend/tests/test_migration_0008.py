@@ -151,7 +151,8 @@ def test_0008_fixes_known_values_and_moves_references(tmp_path):
                 hours = dict(
                     value(text("SELECT id, hours FROM courses WHERE id IN ('ip', 'cad')")).all()
                 )
-                assert hours == {"ip": 60, "cad": 120}
+                # A página de SI inverte as cargas; vale a carga cursada: IP 120h e CAD 60h.
+                assert hours == {"ip": 120, "cad": 60}
                 codes = dict(
                     value(text("SELECT id, source_code FROM courses WHERE id = 'ip'")).all()
                 )

@@ -53,8 +53,6 @@ TDEI_OLD = "Tecnologia, Diversidade, Equidade e Inclusão"
 TDEI = "Tecnologia, Diversidade e Inclusão"
 # (id, coluna, valor errado conhecido, valor correto)
 FIXES = (
-    ("ip", "hours", 120, 60),
-    ("cad", "hours", 60, 120),
     ("tdei", "name", TDEI_OLD, TDEI),
     ("tdei", "short_name", TDEI_OLD, TDEI),
     ("cc:cin0039", "name", "COMPUTAÇÃO QU NTICA", "COMPUTAÇÃO QUÂNTICA"),

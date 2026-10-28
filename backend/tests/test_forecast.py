@@ -161,7 +161,7 @@ def test_public_curriculum_simulates_without_an_account(public_client):
     status = {c["id"]: c["status"] for c in approved["courses"]}
     assert approved["hypothetical_ids"] == ["ip"]
     assert status["ip"] == "simulated" and status["edoo"] == "available"
-    assert approved["integralization"]["mandatory"]["completed"] == 60
+    assert approved["integralization"]["mandatory"]["completed"] == 120
 
     blocked = public_client.post(
         "/api/public/curricula/SI-2024/simulations",
