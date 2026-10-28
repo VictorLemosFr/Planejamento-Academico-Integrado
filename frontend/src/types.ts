@@ -198,8 +198,47 @@ export interface Plan extends Progression {
   name: string;
   target_term: string;
   version: number;
+  share_token?: string | null;
   created_at: string;
   updated_at: string;
+}
+export interface ForecastPoint {
+  estimated_semesters: number;
+  estimated_completion_term: string | null;
+  critical_path_semesters: number;
+  earliest_completion_term: string | null;
+}
+export interface FailureImpact {
+  course_id: string;
+  applicable: boolean;
+  reason: string | null;
+  in_progress?: boolean;
+  failures_after: number;
+  failure_level_after: FailureLevel;
+  refused_after: boolean;
+  failure_limit: number;
+  before?: ForecastPoint;
+  after?: ForecastPoint;
+  delay_semesters?: number;
+  extra_hours?: number;
+  on_critical_path?: boolean;
+  blocked_ids?: string[];
+}
+export interface SharedPlan {
+  name: string;
+  target_term: string;
+  updated_at: string;
+  curriculum: { id: string; program: Program };
+  course_layout: CourseLayout;
+  integralization?: Integralization | null;
+  forecast?: Forecast | null;
+  counts: Record<Status, number>;
+  planned_hours: number;
+  planned_ids: string[];
+  hypothetical_ids: string[];
+  current_period: number;
+  courses: Course[];
+  warnings: string[];
 }
 export interface Draft {
   course_layout?: CourseLayout;

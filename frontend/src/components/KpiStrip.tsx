@@ -18,7 +18,7 @@ export function KpiStrip({
   dirty = false,
   action,
 }: {
-  mode: "history" | "simulation" | "public";
+  mode: "history" | "simulation" | "public" | "shared";
   cr?: number | null;
   simulatedCr?: number | null;
   ungraded?: number;
@@ -30,7 +30,7 @@ export function KpiStrip({
   action?: ReactNode;
 }) {
   const percent = trackedPercent(integralization);
-  const showSimulated = mode !== "history" && simulatedCr != null;
+  const showSimulated = mode === "simulation" && simulatedCr != null;
   return (
     <section
       className="kpi-strip"
@@ -42,9 +42,11 @@ export function KpiStrip({
           ? "Histórico real"
           : mode === "simulation"
             ? "Simulação · rascunho"
-            : "Exploração · nada é salvo"}
+            : mode === "shared"
+              ? "Compartilhado · somente leitura"
+              : "Exploração · nada é salvo"}
       </span>
-      {mode !== "public" && (
+      {(mode === "history" || mode === "simulation") && (
         <div className="kpi" data-kpi="cr">
           <strong>{formatGrade(showSimulated ? simulatedCr : cr)}</strong>
           <span>

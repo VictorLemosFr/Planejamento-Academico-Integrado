@@ -181,12 +181,14 @@ export function CurriculumMap({
   criticalPathIds = [],
   periodAction,
   filters,
+  periodNote,
 }: {
   courses: Course[];
   allCourses?: Course[];
   selectedId: string | null;
   relatedIds: Set<string>;
-  onSelect: (id: string) => void;
+  /** Recebe null quando o card já selecionado é clicado de novo. */
+  onSelect: (id: string | null) => void;
   layout?: CourseLayout;
   editable?: boolean;
   onMove?: (id: string, period: number | null, beforeId?: string) => void;
@@ -200,6 +202,8 @@ export function CurriculumMap({
   periodAction?: (period: number) => ReactNode;
   /** Busca e filtro da página, na mesma linha do título para o mapa subir. */
   filters?: ReactNode;
+  /** Etiqueta curta no cabeçalho do período (ex.: futuro vai para a Simulação). */
+  periodNote?: (period: number) => string | null;
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [electiveFilter, setElectiveFilter] = useState<ElectiveFilter>("all");
@@ -348,7 +352,9 @@ export function CurriculumMap({
               related={relatedIds.has(course.id)}
               dimmed={!!focus && !focus.has(course.id)}
               onCriticalPath={pathSet.has(course.id)}
-              onSelect={() => onSelect(course.id)}
+              onSelect={() =>
+                onSelect(selectedId === course.id ? null : course.id)
+              }
               needsInfo={needsInfo(course)}
               dragHandle={handle}
             />
@@ -539,6 +545,9 @@ export function CurriculumMap({
                       {items.length} disciplina{items.length !== 1 ? "s" : ""} ·{" "}
                       {hours}h
                     </p>
+                    {periodNote?.(period) && (
+                      <span className="period-note">{periodNote(period)}</span>
+                    )}
                     {periodAction?.(period)}
                   </div>
                   <div className="period-cards">

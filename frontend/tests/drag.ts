@@ -21,3 +21,11 @@ export async function drag(page: Page, source: Locator, target: Locator) {
   );
   await page.mouse.up();
 }
+
+/** Depois de entrar, a primeira tela é a Visão geral; o mapa fica em "Meu histórico". */
+export async function goHistory(page: Page) {
+  await page
+    .getByRole("navigation", { name: "Navegação principal" })
+    .getByRole("link", { name: "Meu histórico" })
+    .click();
+}

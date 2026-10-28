@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { drag } from "./drag";
+import { drag, goHistory } from "./drag";
 
 async function register(page: Page, name: string, period = "3") {
   await page.goto("/");
@@ -12,6 +12,7 @@ async function register(page: Page, name: string, period = "3") {
   await page.getByLabel("Período atual").fill(period);
   await page.getByLabel("Curso").selectOption("SI");
   await page.getByRole("button", { name: "Cadastrar" }).click();
+  await goHistory(page);
   await expect(
     page.getByRole("heading", { name: "Histórico informado", exact: true }),
   ).toBeVisible();
@@ -147,5 +148,5 @@ test("dark theme is remembered across reloads", async ({ page }) => {
   const background = await page.evaluate(
     () => getComputedStyle(document.documentElement).backgroundColor,
   );
-  expect(background).toBe("rgb(14, 22, 34)");
+  expect(background).toBe("rgb(15, 18, 24)");
 });

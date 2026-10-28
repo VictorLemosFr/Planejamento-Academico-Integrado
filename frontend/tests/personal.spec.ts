@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { goHistory } from "./drag";
 
 async function signIn(
   page: import("@playwright/test").Page,
@@ -11,6 +12,7 @@ async function signIn(
   await expect(
     page.getByRole("button", { name: "Sair", exact: true }),
   ).toBeVisible();
+  await goHistory(page);
 }
 
 async function goSimulation(page: import("@playwright/test").Page) {

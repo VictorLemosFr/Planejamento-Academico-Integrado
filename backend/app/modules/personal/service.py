@@ -8,7 +8,7 @@ from sqlalchemy import select
 
 from app.modules.constraints.service import CurriculumGraph
 from app.modules.personal.models import AcademicRecord, HistoryImport
-from app.modules.planning.forecast import summarize
+from app.modules.planning.forecast import failure_impact, summarize
 from app.modules.progression.rules import FAILURE_LIMIT, RULE_SOURCE, coefficient, failure_level
 from app.modules.progression.service import course_status
 
@@ -322,6 +322,7 @@ def plan_view(session, student, plan, courses, requirements=None):
         "name": plan.name,
         "target_term": plan.target_term,
         "version": plan.version,
+        "share_token": plan.share_token,
         "created_at": plan.created_at,
         "updated_at": plan.updated_at,
         **evaluate(
@@ -333,4 +334,66 @@ def plan_view(session, student, plan, courses, requirements=None):
             requirements=requirements,
             simulated_grades=plan.simulated_grades,
         ),
+    }
+
+
+def failure_impact_view(courses, history, requirements, course_id):
+    """E se eu reprovar? Compara a previsão real com a reprovação em `course_id`."""
+    CurriculumGraph(courses).require_known({course_id})
+    official, ongoing = official_sets(history)
+    failures = sum(
+        r["status"] == "failed" for r in history["records"] if r["course_id"] == course_id
+    )
+    return failure_impact(courses, official, ongoing, requirements, history, course_id, failures)
+
+
+# O link compartilhado mostra o plano, nunca notas, CR, reprovações ou identidade.
+SHARED_COURSE_FIELDS = {
+    "id",
+    "name",
+    "short_name",
+    "type",
+    "period",
+    "hours",
+    "credits",
+    "source_code",
+    "status",
+    "prerequisite_ids",
+    "prerequisite_status",
+    "corequisite_ids",
+    "dependent_ids",
+    "missing_prerequisite_ids",
+    "critical",
+}
+SHARED_FIELDS = {
+    "name",
+    "target_term",
+    "updated_at",
+    "course_layout",
+    "integralization",
+    "forecast",
+    "counts",
+    "planned_hours",
+    "planned_ids",
+    "hypothetical_ids",
+    "current_period",
+    "warnings",
+}
+
+
+def shared_view(view, curriculum):
+    return {
+        **{key: view[key] for key in SHARED_FIELDS},
+        "curriculum": {"id": curriculum.id, "program": curriculum.program},
+        "courses": [
+            {
+                **{key: course.get(key) for key in SHARED_COURSE_FIELDS},
+                "attempts": [],
+                "failures": 0,
+                "failure_level": None,
+                "grade": None,
+                "simulated_grade": None,
+            }
+            for course in view["courses"]
+        ],
     }

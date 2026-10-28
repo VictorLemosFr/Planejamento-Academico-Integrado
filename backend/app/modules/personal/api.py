@@ -31,9 +31,11 @@ from app.modules.personal.security import (
 )
 from app.modules.personal.service import (
     evaluate,
+    failure_impact_view,
     history_view,
     import_history,
     plan_view,
+    shared_view,
     validate_records,
 )
 from app.modules.personal.transcript import (
@@ -307,6 +309,20 @@ def progression(identity: Identity, session: Database):
     )
 
 
+@router.get("/me/progression/failure-impact/{course_id}")
+def failure_impact(course_id: str, identity: Identity, session: Database):
+    student = student_for(session, identity[0])
+    try:
+        return failure_impact_view(
+            courses_for(session, student),
+            history_view(session, student),
+            requirements_for(session, student),
+            course_id,
+        )
+    except ValueError as error:
+        raise HTTPException(404, str(error)) from error
+
+
 @router.put("/admin/students/{registration}/history")
 def upload_history(
     registration: str, payload: HistoryPayload, identity: Identity, session: Database
@@ -438,3 +454,39 @@ def delete_plan(plan_id: str, identity: Identity, session: Database, version: in
     session.delete(plan)
     session.commit()
     return {"status": "deleted"}
+
+
+@router.post("/plans/{plan_id}/share")
+def share_plan(plan_id: str, identity: Identity, session: Database):
+    student = student_for(session, identity[0])
+    plan = own_plan(session, student, plan_id)
+    if not plan.share_token:
+        plan.share_token = token_urlsafe(24)
+    session.commit()
+    return {"token": plan.share_token}
+
+
+@router.delete("/plans/{plan_id}/share")
+def unshare_plan(plan_id: str, identity: Identity, session: Database):
+    student = student_for(session, identity[0])
+    plan = own_plan(session, student, plan_id)
+    plan.share_token = None
+    session.commit()
+    return {"status": "revoked"}
+
+
+@router.get("/public/shared/{token}", tags=["Grade pública"])
+def shared_plan(token: str, session: Database):
+    plan = (
+        session.scalar(select(Plan).where(Plan.share_token == token))
+        if 16 <= len(token) <= 64
+        else None
+    )
+    student = session.get(Student, plan.student_id) if plan else None
+    owner = session.get(User, student.user_id) if student else None
+    if plan is None or owner is None or not owner.active:
+        raise HTTPException(404, "Link inválido ou revogado.")
+    view = plan_view(
+        session, student, plan, courses_for(session, student), requirements_for(session, student)
+    )
+    return shared_view(view, student_curriculum(session, student))
