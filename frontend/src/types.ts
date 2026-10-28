@@ -47,10 +47,15 @@ export interface Simulation extends SimulationRequest {
   warnings: string[];
 }
 
+export type Program = "CC" | "SI" | "IA" | "EC";
+export interface PublicGrid extends Progression {
+  curriculum: Requirements;
+}
+
 export interface Identity {
   user: { id: string; email: string; role: "student" | "coordination" };
   student: {
-    program: "CC" | "SI" | "IA" | "EC";
+    program: Program;
     curriculum: {
       available: boolean;
       id: string | null;
@@ -86,7 +91,73 @@ export interface HistoryUpdate {
 }
 export type CourseLayout = Record<string, { period: number; order: number }>;
 
+export interface Requirements {
+  id: string;
+  program: Program;
+  program_name: string;
+  valid_from: string;
+  source_url: string;
+  official_mandatory_hours: number | null;
+  profile_elective_hours: number | null;
+  free_elective_hours: number | null;
+  complementary_hours: number | null;
+  extension_hours: number | null;
+  total_hours: number | null;
+  standard_semesters: number | null;
+}
+export interface PublicCurriculum extends Requirements {
+  course_count: number;
+  mandatory_count: number;
+  prerequisites_verified: boolean;
+}
+export interface Integralization {
+  mandatory: {
+    required: number;
+    completed: number;
+    in_progress: number;
+    official_required: number | null;
+  };
+  profile_electives: {
+    required: number | null;
+    completed: number;
+    in_progress: number;
+  };
+  untracked: { label: string; hours: number }[];
+  total_hours: number | null;
+  notes: string[];
+}
+export interface Forecast {
+  remaining_mandatory_ids: string[];
+  remaining_mandatory_hours: number;
+  remaining_profile_elective_hours: number;
+  critical_path_ids: string[];
+  critical_path_semesters: number;
+  pace_hours_per_semester: number | null;
+  load_semesters: number | null;
+  estimated_semesters: number;
+  current_term: string | null;
+  first_remaining_term: string | null;
+  earliest_completion_term: string | null;
+  estimated_completion_term: string | null;
+  prerequisites_verified: boolean;
+  assumptions: string[];
+}
+export interface TranscriptProposal {
+  records: (HistoryRecord & { code: string; name: string })[];
+  unmatched: TranscriptIssue[];
+  ignored: TranscriptIssue[];
+  start_term: string | null;
+}
+export interface TranscriptIssue {
+  code: string;
+  academic_term: string | null;
+  status_text: string | null;
+  reason: string;
+}
+
 export interface Progression extends Simulation {
+  integralization?: Integralization | null;
+  forecast?: Forecast | null;
   course_layout: CourseLayout;
   official_completed_ids: string[];
   hypothetical_ids: string[];

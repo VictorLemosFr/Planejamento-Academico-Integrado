@@ -1,5 +1,18 @@
-import { useState } from "react";
-import type { Course, History, HistoryRecord, HistoryUpdate } from "../types";
+import { useRef, useState } from "react";
+import type {
+  Course,
+  History,
+  HistoryRecord,
+  HistoryUpdate,
+  TranscriptProposal,
+} from "../types";
+
+const statusLabels: Record<HistoryRecord["status"], string> = {
+  completed: "Aprovada",
+  in_progress: "Cursando",
+  failed: "Reprovada",
+};
+const key = (r: HistoryRecord) => `${r.course_id}|${r.academic_term}`;
 
 const input =
   "glass-input mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900";
@@ -11,11 +24,13 @@ export function HistoryEditor({
   courses,
   onSave,
   onCancel,
+  onReadTranscript,
 }: {
   history: History;
   courses: Course[];
   onSave: (payload: HistoryUpdate) => Promise<void>;
   onCancel: () => void;
+  onReadTranscript?: (file: File) => Promise<TranscriptProposal>;
 }) {
   const [startTerm, setStartTerm] = useState(history.start_term ?? "");
   const [currentPeriod, setCurrentPeriod] = useState(
@@ -24,6 +39,50 @@ export function HistoryEditor({
   const [records, setRecords] = useState<HistoryRecord[]>(history.records);
   const [busy, setBusy] = useState(false);
   const [failure, setFailure] = useState("");
+  const [proposal, setProposal] = useState<TranscriptProposal | null>(null);
+  const [notice, setNotice] = useState("");
+  const fileInput = useRef<HTMLInputElement>(null);
+
+  async function readFile(file: File | undefined) {
+    if (!file || !onReadTranscript) return;
+    setBusy(true);
+    setFailure("");
+    setNotice("");
+    try {
+      setProposal(await onReadTranscript(file));
+    } catch (error) {
+      setFailure((error as Error).message);
+    } finally {
+      setBusy(false);
+      if (fileInput.current) fileInput.current.value = "";
+    }
+  }
+
+  function applyProposal(mode: "replace" | "merge") {
+    if (!proposal) return;
+    const found: HistoryRecord[] = proposal.records.map((r) => ({
+      course_id: r.course_id,
+      academic_term: r.academic_term,
+      status: r.status,
+    }));
+    // Ao mesclar, o PDF prevalece sobre a mesma cadeira no mesmo semestre.
+    const merged =
+      mode === "replace"
+        ? found
+        : [
+            ...records.filter(
+              (r) => !found.some((item) => key(item) === key(r)),
+            ),
+            ...found,
+          ];
+    setRecords(merged);
+    if (proposal.start_term && (!startTerm || proposal.start_term < startTerm))
+      setStartTerm(proposal.start_term);
+    setProposal(null);
+    setNotice(
+      `${found.length} registros do PDF aplicados. Revise e clique em Salvar histórico.`,
+    );
+  }
 
   function update(index: number, value: HistoryRecord) {
     setRecords((current) =>
@@ -60,6 +119,118 @@ export function HistoryEditor({
         <p role="alert" className="mt-3 text-sm text-red-700">
           {failure}
         </p>
+      )}
+      {notice && (
+        <p role="status" className="mt-3 text-sm text-blue-800">
+          {notice}
+        </p>
+      )}
+      {onReadTranscript && (
+        <div className="transcript-import">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-semibold">
+                Importar do PDF do SIGAA
+              </h3>
+              <p className="mt-1 text-xs text-slate-600">
+                Use o histórico emitido pelo SIGAA. O arquivo é lido e
+                descartado; nada é salvo até você revisar e clicar em Salvar
+                histórico.
+              </p>
+            </div>
+            <label className={`${button} cursor-pointer`}>
+              {busy ? "Lendo PDF…" : "Escolher PDF"}
+              <input
+                ref={fileInput}
+                type="file"
+                accept="application/pdf,.pdf"
+                className="sr-only"
+                disabled={busy}
+                aria-label="PDF do histórico escolar"
+                onChange={(event) => void readFile(event.target.files?.[0])}
+              />
+            </label>
+          </div>
+          {proposal && (
+            <div className="mt-3" aria-label="Prévia da importação">
+              <p className="text-sm">
+                {proposal.records.length} registro
+                {proposal.records.length !== 1 ? "s" : ""} encontrado
+                {proposal.records.length !== 1 ? "s" : ""} na sua matriz.
+              </p>
+              {proposal.records.length > 0 && (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Código</th>
+                      <th>Disciplina</th>
+                      <th>Semestre</th>
+                      <th>Situação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {proposal.records.map((r) => (
+                      <tr key={key(r)}>
+                        <td className="font-mono">{r.code}</td>
+                        <td>{r.name}</td>
+                        <td>{r.academic_term}</td>
+                        <td>{statusLabels[r.status]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {proposal.unmatched.length + proposal.ignored.length > 0 && (
+                <details className="mt-3 text-xs text-slate-600">
+                  <summary className="cursor-pointer font-semibold">
+                    {proposal.unmatched.length + proposal.ignored.length} linha
+                    {proposal.unmatched.length + proposal.ignored.length !== 1
+                      ? "s"
+                      : ""}{" "}
+                    para conferir manualmente
+                  </summary>
+                  <ul className="mt-2 space-y-1">
+                    {[...proposal.unmatched, ...proposal.ignored].map(
+                      (item, i) => (
+                        <li key={i}>
+                          <span className="font-mono">{item.code}</span>
+                          {item.academic_term && ` · ${item.academic_term}`}
+                          {item.status_text && ` · ${item.status_text}`} —{" "}
+                          {item.reason}
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                </details>
+              )}
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className={button}
+                  disabled={!proposal.records.length}
+                  onClick={() => applyProposal("replace")}
+                >
+                  Substituir lista pelo PDF
+                </button>
+                <button
+                  type="button"
+                  className={button}
+                  disabled={!proposal.records.length}
+                  onClick={() => applyProposal("merge")}
+                >
+                  Mesclar com a lista atual
+                </button>
+                <button
+                  type="button"
+                  className={button}
+                  onClick={() => setProposal(null)}
+                >
+                  Descartar leitura
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       )}
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <label className="text-sm">

@@ -33,7 +33,19 @@ test("academic overview reflects official progression and stays usable on mobile
   await expect(
     page.getByRole("region", { name: "Resumo da trajetória" }),
   ).toContainText(
-    `${Math.round((progression.counts.completed / progression.courses.length) * 100)}%`,
+    `${Math.round(
+      ((Math.min(
+        progression.integralization.mandatory.completed,
+        progression.integralization.mandatory.required,
+      ) +
+        Math.min(
+          progression.integralization.profile_electives.completed,
+          progression.integralization.profile_electives.required,
+        )) /
+        (progression.integralization.mandatory.required +
+          progression.integralization.profile_electives.required)) *
+        100,
+    )}%`,
   );
   expect(
     await page.evaluate(

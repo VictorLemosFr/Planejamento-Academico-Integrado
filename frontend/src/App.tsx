@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { NavLink, useLocation } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 import * as api from "./api";
 import type { ActionKind, Identity, Plan, Status } from "./types";
 import DemoApp from "./DemoApp";
 import { CurriculumMap } from "./components/CurriculumMap";
 import { CourseDetails } from "./components/CourseDetails";
 import { HistoryEditor } from "./components/HistoryEditor";
+import { PublicExplorer } from "./components/PublicExplorer";
+import { ProgressSummary, trackedPercent } from "./components/ProgressSummary";
 import { moveCourse } from "./courseLayout";
 
 const input =
@@ -72,6 +74,8 @@ export default function App() {
         Carregando sessão…
       </p>
     );
+  if (location.pathname.startsWith("/grades"))
+    return <PublicExplorer signedIn={!!identity} />;
   if (!identity)
     return (
       <Login
@@ -415,6 +419,12 @@ function Login({
             ? "Após entrar, informe as cadeiras que você já cursou."
             : "A redefinição de senha é feita pela coordenação."}
         </p>
+        <Link
+          to="/grades"
+          className="mt-3 block text-center text-sm font-medium text-blue-700 underline"
+        >
+          Explorar as grades sem entrar
+        </Link>
       </form>
     </main>
   );
@@ -600,13 +610,12 @@ function Student({
           >
             <NavLink to="/">Mapa curricular</NavLink>
             <NavLink to="/planejamento">Alternativas do semestre</NavLink>
+            <NavLink to="/grades">Explorar grades</NavLink>
           </nav>
         )}
       </header>
       <div className="institution-note border-b border-slate-200 px-5 py-2 text-xs text-slate-500 sm:px-8">
-        {identity.student?.curriculum.id === "SI-demo"
-          ? "Grade demonstrativa de SI"
-          : `Matriz ${identity.student?.curriculum.id ?? ""} transcrita do CIn`}
+        {`Matriz ${identity.student?.curriculum.id ?? ""} transcrita do CIn`}
         {identity.student?.curriculum.source_url?.startsWith("https://") && (
           <>
             {" "}
@@ -652,20 +661,16 @@ function Student({
               className="progress-orbit"
               style={
                 {
-                  "--progress": `${data?.courses.length ? (data.counts.completed / data.courses.length) * 100 : 0}%`,
+                  "--progress": `${trackedPercent(data?.integralization)}%`,
                 } as React.CSSProperties
               }
             >
               <div>
                 <strong>
-                  {data?.courses.length
-                    ? Math.round(
-                        (data.counts.completed / data.courses.length) * 100,
-                      )
-                    : 0}
+                  {trackedPercent(data?.integralization)}
                   <small>%</small>
                 </strong>
-                <span>da grade concluída</span>
+                <span>da carga acompanhada</span>
               </div>
             </div>
           </section>
@@ -721,6 +726,7 @@ function Student({
                     history={history.data}
                     courses={progression.data.courses}
                     onCancel={() => setEditingHistory(false)}
+                    onReadTranscript={api.readTranscript}
                     onSave={async (payload) => {
                       await api.saveHistory(payload);
                       open(null);
@@ -969,6 +975,14 @@ function Student({
                 </div>
               ))}
             </div>
+            {data && (
+              <ProgressSummary
+                integralization={data.integralization}
+                forecast={data.forecast}
+                courses={data.courses}
+                onSelect={setSelectedId}
+              />
+            )}
             <div className="filter-bar mb-5 flex flex-wrap gap-3">
               <label className="text-xs">
                 Buscar disciplina
