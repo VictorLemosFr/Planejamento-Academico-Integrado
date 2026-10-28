@@ -106,8 +106,19 @@ def summarize(courses, completed, ongoing, requirements, history):
     estimate = max(len(chain), load_semesters or 0)
     now = current_term(history.get("start_term"), history["current_period"])
     verified = all(course.get("prerequisite_status") == "verified" for course in mandatory)
+    # Com cadeiras em andamento o semestre atual está ocupado e a contagem começa no
+    # próximo; sem elas, o semestre atual é o primeiro dos restantes.
+    counts_current_term = not (ongoing - completed)
+    first_term = now if counts_current_term or not now else term_after(now, 1)
+
+    def finishing(semesters):
+        if first_term is None:
+            return None
+        return term_after(first_term, semesters - 1) if semesters else now
+
     assumptions = [
         "Disciplinas em andamento são consideradas aprovadas ao fim do semestre atual.",
+        "Sem disciplinas em andamento, o semestre atual conta como o primeiro dos restantes.",
         "Não considera oferta de turmas, choque de horários nem reprovações futuras.",
         "Eletivas livres, atividades complementares e extensão não são acompanhadas.",
     ]
@@ -127,8 +138,9 @@ def summarize(courses, completed, ongoing, requirements, history):
         "load_semesters": load_semesters,
         "estimated_semesters": estimate,
         "current_term": now,
-        "earliest_completion_term": term_after(now, len(chain)) if now and chain else now,
-        "estimated_completion_term": term_after(now, estimate) if now else None,
+        "first_remaining_term": first_term,
+        "earliest_completion_term": finishing(len(chain)),
+        "estimated_completion_term": finishing(estimate),
         "prerequisites_verified": verified,
         "assumptions": assumptions,
     }

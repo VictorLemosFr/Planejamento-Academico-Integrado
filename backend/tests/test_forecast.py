@@ -84,13 +84,17 @@ def test_forecast_uses_the_larger_of_chain_and_pace():
     assert forecast["pace_hours_per_semester"] == 90
     assert forecast["load_semesters"] == 4
     assert forecast["estimated_semesters"] == 4
-    assert forecast["estimated_completion_term"] == "2027.1"
+    # Sem cadeiras em andamento, 2025.1 é o primeiro dos 4 semestres: 2025.1 a 2026.2.
+    assert forecast["first_remaining_term"] == "2025.1"
+    assert forecast["estimated_completion_term"] == "2026.2"
 
     _, after = summarize(courses, {"a", "e"}, {"b"}, requirements, history(3))
     assert after["critical_path_ids"] == ["c"]
     assert after["remaining_profile_elective_hours"] == 60
     assert after["load_semesters"] == 2
+    assert after["first_remaining_term"] == "2026.2"
     assert after["earliest_completion_term"] == "2026.2"
+    assert after["estimated_completion_term"] == "2027.1"
 
 
 def test_unverified_prerequisites_are_flagged():
