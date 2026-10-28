@@ -28,6 +28,7 @@ import type { Command } from "./components/CommandPalette";
 import { FailureImpactPanel } from "./components/FailureImpactPanel";
 import { SharePanel } from "./components/SharePanel";
 import { PrintReport } from "./components/PrintReport";
+import { ImportDialog } from "./components/ImportDialog";
 import { statusMeta } from "./components/CourseCard";
 import { Overview } from "./pages/Overview";
 import { NextSemester } from "./pages/NextSemester";
@@ -113,6 +114,7 @@ export function Student({
   const [historyDraft, setHistoryDraft] = useState<HistoryUpdate | null>(null);
   const [preview, setPreview] = useState<Progression | null>(null);
   const [scrollTo, setScrollTo] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
@@ -172,6 +174,13 @@ export function Student({
   }, [dirty]);
   // Atalhos por URL: ?editar=1 abre o editor; ?plano=<id> abre uma alternativa.
   useEffect(() => {
+    if (params.get("importar")) {
+      setImporting(true);
+      params.delete("importar");
+      setParams(params, { replace: true });
+    }
+  }, [params, setParams]);
+  useEffect(() => {
     if (params.get("editar") && history.data) {
       setEditingHistory(true);
       params.delete("editar");
@@ -204,6 +213,26 @@ export function Student({
 
   const discard = () =>
     !dirty || window.confirm("Há alterações pendentes. Deseja descartá-las?");
+  const openImport = () => {
+    if (discard()) setImporting(true);
+  };
+  async function importHistory(update: HistoryUpdate, summary: string) {
+    await api.saveHistory(update);
+    setHistoryDraft(null);
+    setPreview(null);
+    setEditingHistory(false);
+    open(null);
+    await Promise.all([
+      history.refetch(),
+      progression.refetch(),
+      plans.refetch(),
+    ]);
+    setImporting(false);
+    setError("");
+    setNotice(
+      `${summary} Confira as notas no mapa; o que faltar, ajuste no card.`,
+    );
+  }
   async function run(action: () => Promise<void>) {
     setBusy(true);
     setError("");
@@ -540,9 +569,16 @@ export function Student({
     }));
     const actions: Command[] = [
       {
+        id: "action-import",
+        group: "Ações",
+        label: "Importar histórico do SIGAA (PDF)",
+        icon: <FilePlus2 size={16} />,
+        run: openImport,
+      },
+      {
         id: "action-edit",
         group: "Ações",
-        label: "Editar histórico ou importar PDF",
+        label: "Editar histórico em lista",
         icon: <FilePlus2 size={16} />,
         run: () => navigate("/historico?editar=1"),
       },
@@ -622,10 +658,25 @@ export function Student({
     email: identity.user.email,
     busy,
     onLogout: logout,
-    onImport: isStudent ? () => navigate("/historico?editar=1") : undefined,
+    onImport: isStudent ? openImport : undefined,
     commands: isStudent ? commands : [],
     footer,
   };
+
+  const importDialog = (
+    <ImportDialog
+      open={importing}
+      onClose={() => setImporting(false)}
+      courses={progression.data?.courses ?? []}
+      current={{
+        start_term: startTerm,
+        current_period: currentPeriod,
+        records,
+      }}
+      readTranscript={api.readTranscript}
+      onImport={importHistory}
+    />
+  );
 
   if (!isStudent)
     return (
@@ -652,6 +703,7 @@ export function Student({
   if (page === "overview" || page === "next" || page === "compare")
     return (
       <AppShell {...shellProps}>
+        {importDialog}
         {banners}
         {history.isLoading && <p role="status">Carregando histórico…</p>}
         {page === "overview" && real && (
@@ -663,6 +715,7 @@ export function Student({
               currentPeriod={currentPeriod}
               onSelectCourse={focusCourse}
               onExport={() => window.print()}
+              onImport={openImport}
             />
             <PrintReport
               title={`Histórico acadêmico · ${program}`}
@@ -720,6 +773,7 @@ export function Student({
         ) : undefined
       }
     >
+      {importDialog}
       <div className={`workspace mode-${mode}`}>
         {data && (
           <KpiStrip
@@ -814,14 +868,19 @@ export function Student({
               )}
             </div>
             {mode === "history" && history.data && !editingHistory && (
-              <button
-                className={button}
-                onClick={() => {
-                  if (discard()) setEditingHistory(true);
-                }}
-              >
-                Editar histórico
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <button className={primary} onClick={openImport}>
+                  Importar PDF do SIGAA
+                </button>
+                <button
+                  className={button}
+                  onClick={() => {
+                    if (discard()) setEditingHistory(true);
+                  }}
+                >
+                  Editar histórico
+                </button>
+              </div>
             )}
           </div>
           {(history.data?.warnings.length ?? 0) + (data?.warnings.length ?? 0) >
