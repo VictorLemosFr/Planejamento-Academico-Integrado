@@ -47,9 +47,9 @@ for (const [program, term, course] of [
     await page.getByLabel("Período atual").fill("1");
     await page.getByLabel("Curso").selectOption(program);
     await page.getByRole("button", { name: "Cadastrar" }).click();
-    await expect(
-      page.getByText(/pré-requisitos desta matriz ainda não foram confirmados/),
-    ).toBeVisible();
+    await expect(page.locator(".institution-note")).toContainText(
+      "pré-requisitos conferidos no PPC",
+    );
     await page.getByRole("button", { name: "Editar histórico" }).click();
     await page.getByRole("button", { name: "Adicionar cadeira" }).click();
     await page

@@ -48,7 +48,7 @@ A aplicação React/Tailwind consulta o FastAPI e persiste dados no PostgreSQL. 
 
 Planos são rascunhos até salvar. Nome, semestre, escolhas e hipóteses são persistidos por estudante, com controle de versão e revisão do histórico. Cada salvamento do histórico informado substitui a versão vigente atomicamente, conserva versões anteriores e revalida os planos sem apagar escolhas. Planos incompatíveis ficam acessíveis para ajuste ou exclusão. A importação pela coordenação permanece apenas para contas criadas administrativamente.
 
-As grades ainda dependem de conferência institucional. Os pré-requisitos estão nos PPCs, de acesso restrito; os de CC, IA e EC não foram cadastrados e não são inventados, e os de SI vieram do protótipo sem fonte confirmada. O sistema avisa que não pode comprovar elegibilidade.
+As grades ainda dependem de conferência institucional. Pré-requisitos e co-requisitos foram conferidos nos PPCs das quatro matrizes. Duas disciplinas eletivas continuam sem confirmação e são sinalizadas. O sistema não substitui a validação da matrícula no SIGAA.
 
 A integralização acompanha horas de obrigatórias e eletivas de perfil contra os requisitos publicados de cada curso. A previsão de conclusão é o maior entre a cadeia de pré-requisitos pendente e a carga restante no ritmo médio da matriz; não considera oferta, choque de horários nem reprovações futuras. A grade pública permite explorar e simular as quatro matrizes sem conta. O histórico pode ser preenchido a partir do PDF do SIGAA, sempre com revisão antes de salvar.
 

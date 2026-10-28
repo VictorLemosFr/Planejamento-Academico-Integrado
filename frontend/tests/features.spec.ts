@@ -57,11 +57,32 @@ test("public explorer simulates approvals without an account", async ({
     .click();
   await expect(page).toHaveURL(/matriz=CC-2024/);
   await expect(page.locator(".institution-note")).toContainText(
-    "pré-requisitos ainda não confirmados",
+    "pré-requisitos conferidos no PPC",
   );
   const electives = page.getByRole("region", { name: "Disciplinas eletivas" });
   await electives.getByRole("button", { name: /^Bloqueadas/ }).click();
-  await expect(electives).toContainText("Nenhuma eletiva bloqueada");
+  const locked = await electives
+    .locator(".course-card")
+    .evaluateAll((cards) => cards.map((c) => c.getAttribute("data-status")));
+  expect(locked.length).toBeGreaterThan(0);
+  expect(new Set(locked)).toEqual(new Set(["locked"]));
+
+  await tabs
+    .getByRole("button", { name: /EC · Engenharia da Computação/ })
+    .click();
+  await page
+    .getByRole("button", {
+      name: "LABORATÓRIO DE SISTEMAS DIGITAIS",
+      exact: true,
+    })
+    .click();
+  const details = page.getByRole("complementary", {
+    name: "Detalhes da disciplina",
+  });
+  await expect(details).toContainText("Co-requisitos");
+  await expect(
+    details.getByRole("button", { name: /SISTEMAS DIGITAIS/ }),
+  ).toBeVisible();
 
   await page.setViewportSize({ width: 390, height: 844 });
   expect(

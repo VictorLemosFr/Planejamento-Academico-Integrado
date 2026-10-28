@@ -158,6 +158,17 @@ export function CourseDetails({
                   </p>
                 )}
             </section>
+            {(course.corequisite_ids ?? []).length > 0 && (
+              <section className="mt-5">
+                <h3 className="text-xs font-semibold text-slate-600">
+                  Co-requisitos
+                </h3>
+                <p className="mt-1 text-[11px] text-slate-500">
+                  Cursar no mesmo semestre ou antes.
+                </p>
+                {references(course.corequisite_ids ?? [])}
+              </section>
+            )}
             <section className="mt-5">
               <h3 className="text-xs font-semibold text-slate-600">
                 Libera diretamente

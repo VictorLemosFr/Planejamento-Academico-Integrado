@@ -163,8 +163,9 @@ export function PublicExplorer({ signedIn }: { signedIn: boolean }) {
               página pública do CIn
             </a>{" "}
             · pendente de validação institucional
-            {!current.prerequisites_verified &&
-              " · pré-requisitos ainda não confirmados"}
+            {current.unverified_count > 0
+              ? ` · pré-requisitos conferidos no PPC, exceto ${current.unverified_count} disciplina${current.unverified_count > 1 ? "s" : ""}`
+              : " · pré-requisitos conferidos no PPC"}
             .
           </p>
         )}
