@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.modules.curriculum.catalog import PROGRAM_NAMES, REQUIREMENT_FIELDS
-from app.modules.curriculum.models import Course, Prerequisite
+from app.modules.curriculum.models import Corequisite, Course, Prerequisite
 
 
 def list_courses(session: Session, curriculum_id: str = "SI-2024"):
@@ -21,6 +21,13 @@ def list_courses(session: Session, curriculum_id: str = "SI-2024"):
         .order_by(Prerequisite.prerequisite_id)
     ):
         prerequisites.setdefault(row.course_id, []).append(row.prerequisite_id)
+    corequisites = {}
+    for row in session.scalars(
+        select(Corequisite)
+        .where(Corequisite.course_id.in_(ids))
+        .order_by(Corequisite.corequisite_id)
+    ):
+        corequisites.setdefault(row.course_id, []).append(row.corequisite_id)
     return [
         {
             "id": course.id,
@@ -31,6 +38,7 @@ def list_courses(session: Session, curriculum_id: str = "SI-2024"):
             "hours": course.hours,
             "type": course.type,
             "prerequisite_ids": prerequisites.get(course.id, []),
+            "corequisite_ids": corequisites.get(course.id, []),
             "prerequisite_status": course.prerequisite_status,
         }
         for course in courses

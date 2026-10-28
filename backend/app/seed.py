@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 from app.core.database import engine
 from app.modules.constraints.service import CurriculumGraph
 from app.modules.curriculum.catalog import CATALOGS, REQUIREMENT_FIELDS
-from app.modules.curriculum.models import Course, Curriculum, Prerequisite
+from app.modules.curriculum.models import Corequisite, Course, Curriculum, Prerequisite
 
 
 def load_catalog(catalog):
@@ -46,7 +46,9 @@ def seed(session: Session):
                 session.add(
                     Course(
                         **{
-                            key: value for key, value in course.items() if key != "prerequisite_ids"
+                            key: value
+                            for key, value in course.items()
+                            if key not in {"prerequisite_ids", "corequisite_ids"}
                         },
                         curriculum_id=catalog["id"],
                     )
@@ -60,6 +62,10 @@ def seed(session: Session):
                     session.add(
                         Prerequisite(course_id=course["id"], prerequisite_id=prerequisite_id)
                     )
+            for corequisite_id in course.get("corequisite_ids", []):
+                key = (course["id"], corequisite_id)
+                if session.get(Corequisite, key) is None:
+                    session.add(Corequisite(course_id=course["id"], corequisite_id=corequisite_id))
     session.commit()
 
 

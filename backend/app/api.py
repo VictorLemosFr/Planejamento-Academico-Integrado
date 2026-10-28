@@ -68,6 +68,9 @@ def public_curricula(session: Database):
                 "mandatory_count": sum(course["type"] == "mandatory" for course in courses),
                 "prerequisites_verified": bool(courses)
                 and all(course["prerequisite_status"] == "verified" for course in courses),
+                "unverified_count": sum(
+                    course["prerequisite_status"] == "unverified" for course in courses
+                ),
             }
         )
     return result

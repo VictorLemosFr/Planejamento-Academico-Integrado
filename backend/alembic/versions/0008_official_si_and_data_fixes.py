@@ -49,12 +49,8 @@ SI_CODES = {
     "rn": "CIN0037", "bdnc": "CIN0155", "aam": "CIN0043", "visdados": "CIN0152",
     "iap": "CIN0040", "iar": "CIN0041", "tdei": "CIN0161", "eajc": "CIN0121",
 }  # fmt: skip
-TDEI_OLD = "Tecnologia, Diversidade, Equidade e Inclusão"
-TDEI = "Tecnologia, Diversidade e Inclusão"
 # (id, coluna, valor errado conhecido, valor correto)
 FIXES = (
-    ("tdei", "name", TDEI_OLD, TDEI),
-    ("tdei", "short_name", TDEI_OLD, TDEI),
     ("cc:cin0039", "name", "COMPUTAÇÃO QU NTICA", "COMPUTAÇÃO QUÂNTICA"),
     ("cc:cin0039", "short_name", "COMPUTAÇÃO QU NTICA", "COMPUTAÇÃO QUÂNTICA"),
     ("ia:cin0134", "name", "ARQUITETURA DE COMPUTADORES E SUSTEMAS OPERACIONAIS",

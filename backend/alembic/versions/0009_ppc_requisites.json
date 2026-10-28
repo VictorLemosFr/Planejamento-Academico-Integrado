@@ -1,0 +1,2984 @@
+{
+ "source": "Programas dos componentes curriculares nos PPCs vigentes, conferidos em 2026-10-28.",
+ "courses": {
+  "mdc": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 167
+  },
+  "ip": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 168
+  },
+  "sdig": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 165
+  },
+  "cad": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 166
+  },
+  "calc1": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 171
+  },
+  "edoo": {
+   "prerequisite_ids": [
+    "ip"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 172
+  },
+  "acso": {
+   "prerequisite_ids": [
+    "sdig"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 170
+  },
+  "ds": {
+   "prerequisite_ids": [
+    "ip"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 174
+  },
+  "avl": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 177
+  },
+  "algo": {
+   "prerequisite_ids": [
+    "edoo"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 181
+  },
+  "bd": {
+   "prerequisite_ids": [
+    "edoo"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 176
+  },
+  "iesi": {
+   "prerequisite_ids": [
+    "ds"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 179
+  },
+  "estat": {
+   "prerequisite_ids": [
+    "calc1"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 183
+  },
+  "logica": {
+   "prerequisite_ids": [
+    "mdc"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 185
+  },
+  "isdrc": {
+   "prerequisite_ids": [
+    "acso"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 184
+  },
+  "amcd": {
+   "prerequisite_ids": [
+    "avl",
+    "ip"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 186
+  },
+  "empinf": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 192
+  },
+  "asesi": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 188
+  },
+  "admc": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 190
+  },
+  "arqemp": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 196
+  },
+  "gpn": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 194
+  },
+  "estagio": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 197
+  },
+  "ctc": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 200
+  },
+  "apsi": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 198
+  },
+  "tcc": {
+   "prerequisite_ids": [
+    "ctc"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 202
+  },
+  "sad": {
+   "prerequisite_ids": [
+    "estat",
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 224
+  },
+  "gdic": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 225
+  },
+  "sis": {
+   "prerequisite_ids": [
+    "ds",
+    "isdrc"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 226
+  },
+  "ihc": {
+   "prerequisite_ids": [
+    "cad"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 228
+  },
+  "tsi": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 229
+  },
+  "ggti": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 230
+  },
+  "gppti": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 232
+  },
+  "inovsi": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 233
+  },
+  "nuvem": {
+   "prerequisite_ids": [
+    "isdrc"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 237
+  },
+  "ccg": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 239
+  },
+  "ingles": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 221
+  },
+  "libras": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 222
+  },
+  "tslog": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 244
+  },
+  "gprod": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 242
+  },
+  "gpe": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 241
+  },
+  "findig": {
+   "prerequisite_ids": [
+    "asesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 234
+  },
+  "aear": {
+   "prerequisite_ids": [
+    "er"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 203
+  },
+  "er": {
+   "prerequisite_ids": [
+    "ip"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 209
+  },
+  "fts": {
+   "prerequisite_ids": [
+    "ds"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 204
+  },
+  "mgp": {
+   "prerequisite_ids": [
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 220
+  },
+  "pgqs": {
+   "prerequisite_ids": [
+    "ds",
+    "iesi"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 206
+  },
+  "pnt": {
+   "prerequisite_ids": [
+    "ds"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 216
+  },
+  "cc": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 208
+  },
+  "rn": {
+   "prerequisite_ids": [
+    "amcd"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 215
+  },
+  "bdnc": {
+   "prerequisite_ids": [
+    "bd"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 212
+  },
+  "aam": {
+   "prerequisite_ids": [
+    "amcd"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 211
+  },
+  "visdados": {
+   "prerequisite_ids": [
+    "estat",
+    "ip"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 218
+  },
+  "iap": {
+   "prerequisite_ids": [
+    "amcd"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 219
+  },
+  "iar": {
+   "prerequisite_ids": [
+    "avl",
+    "estat",
+    "ip"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 214
+  },
+  "tdei": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 236
+  },
+  "eajc": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 238
+  },
+  "cc:cin0132": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 165
+  },
+  "cc:cin0130": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 163
+  },
+  "cc:cin0133": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 166
+  },
+  "cc:cin0131": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 164
+  },
+  "cc:ma026": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 169
+  },
+  "cc:cin0135": {
+   "prerequisite_ids": [
+    "cc:cin0133"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 170
+  },
+  "cc:cin0134": {
+   "prerequisite_ids": [
+    "cc:cin0130"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 168
+  },
+  "cc:cin0136": {
+   "prerequisite_ids": [
+    "cc:cin0133"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 172
+  },
+  "cc:cin0138": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 175
+  },
+  "cc:cin0140": {
+   "prerequisite_ids": [
+    "cc:cin0135"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 179
+  },
+  "cc:cin0137": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 174
+  },
+  "cc:cin0139": {
+   "prerequisite_ids": [
+    "cc:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 177
+  },
+  "cc:cin0142": {
+   "prerequisite_ids": [
+    "cc:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 181
+  },
+  "cc:cin0141": {
+   "prerequisite_ids": [
+    "cc:cin0132"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 183
+  },
+  "cc:cin0143": {
+   "prerequisite_ids": [
+    "cc:cin0134"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 182
+  },
+  "cc:cin0144": {
+   "prerequisite_ids": [
+    "cc:cin0133",
+    "cc:cin0138"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 184
+  },
+  "cc:cin0148": {
+   "prerequisite_ids": [
+    "cc:cin0141"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 189
+  },
+  "cc:cin0145": {
+   "prerequisite_ids": [
+    "cc:cin0134"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 187
+  },
+  "cc:cin0146": {
+   "prerequisite_ids": [
+    "cc:cin0133"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 188
+  },
+  "cc:cin0147": {
+   "prerequisite_ids": [
+    "cc:cin0142"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 190
+  },
+  "cc:cin0149": {
+   "prerequisite_ids": [
+    "cc:cin0131"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 186
+  },
+  "cc:cin0150": {
+   "prerequisite_ids": [
+    "cc:cin0140",
+    "cc:cin0148"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 192
+  },
+  "cc:cin0151": {
+   "prerequisite_ids": [
+    "cc:cin0147"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 193
+  },
+  "cc:cin0038": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 194
+  },
+  "cc:cin0153": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 200
+  },
+  "cc:cin0043": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 201
+  },
+  "cc:cin0155": {
+   "prerequisite_ids": [
+    "cc:cin0137"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 206
+  },
+  "cc:cin0156": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 210
+  },
+  "cc:cin0044": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 212
+  },
+  "cc:cin0039": {
+   "prerequisite_ids": [
+    "cc:cin0138"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 216
+  },
+  "cc:cin0045": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 233
+  },
+  "cc:cin0041": {
+   "prerequisite_ids": [
+    "cc:cin0133",
+    "cc:cin0138",
+    "cc:cin0142"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 235
+  },
+  "cc:cin0040": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 236
+  },
+  "cc:cin0037": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 263
+  },
+  "cc:ma027": {
+   "prerequisite_ids": [
+    "cc:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 208
+  },
+  "cc:cin0178": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 257
+  },
+  "cc:cin0180": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 246
+  },
+  "cc:cin0179": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 248
+  },
+  "cc:cin0181": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 232
+  },
+  "cc:cin0152": {
+   "prerequisite_ids": [
+    "cc:cin0133",
+    "cc:cin0142"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 282
+  },
+  "cc:cin0162": {
+   "prerequisite_ids": [
+    "cc:if1008"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 199
+  },
+  "cc:cin0163": {
+   "prerequisite_ids": [
+    "cc:cin0135",
+    "cc:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 202
+  },
+  "cc:if1008": {
+   "prerequisite_ids": [
+    "cc:cin0133"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 222
+  },
+  "cc:cin0168": {
+   "prerequisite_ids": [
+    "cc:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 224
+  },
+  "cc:cin0182": {
+   "prerequisite_ids": [
+    "cc:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 227
+  },
+  "cc:cin0165": {
+   "prerequisite_ids": [
+    "cc:cin0139"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 240
+  },
+  "cc:cin0166": {
+   "prerequisite_ids": [
+    "cc:cin0136",
+    "cc:cin0139"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 242
+  },
+  "cc:cin0167": {
+   "prerequisite_ids": [
+    "cc:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 252
+  },
+  "cc:cin0169": {
+   "prerequisite_ids": [
+    "cc:cin0135",
+    "cc:cin0143",
+    "cc:cin0145"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 254
+  },
+  "cc:cin0171": {
+   "prerequisite_ids": [
+    "cc:cin0168"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 279
+  },
+  "cc:cin0170": {
+   "prerequisite_ids": [
+    "cc:cin0136",
+    "cc:cin0141"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 290
+  },
+  "cc:cin0172": {
+   "prerequisite_ids": [
+    "cc:cin0150"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 280
+  },
+  "cc:cin0173": {
+   "prerequisite_ids": [
+    "cc:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 269
+  },
+  "cc:cin0129": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 218
+  },
+  "cc:cin0174": {
+   "prerequisite_ids": [
+    "cc:cin0138"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 195
+  },
+  "cc:cin0050": {
+   "prerequisite_ids": [
+    "cc:cin0053"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 213
+  },
+  "cc:cin0052": {
+   "prerequisite_ids": [
+    "cc:cin0140"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 214
+  },
+  "cc:cin0175": {
+   "prerequisite_ids": [
+    "cc:cin0130",
+    "cc:cin0138"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 221
+  },
+  "cc:cin0051": {
+   "prerequisite_ids": [
+    "cc:cin0053"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 226
+  },
+  "cc:cin0054": {
+   "prerequisite_ids": [
+    "cc:cin0136",
+    "cc:cin0145"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 239
+  },
+  "cc:cin0056": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 247
+  },
+  "cc:cin0059": {
+   "prerequisite_ids": [
+    "cc:cin0144"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 250
+  },
+  "cc:cin0053": {
+   "prerequisite_ids": [
+    "cc:cin0138",
+    "cc:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 251
+  },
+  "cc:cin0060": {
+   "prerequisite_ids": [
+    "cc:cin0056"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 281
+  },
+  "cc:cin0055": {
+   "prerequisite_ids": [
+    "cc:cin0053"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 276
+  },
+  "cc:cin0154": {
+   "prerequisite_ids": [
+    "cc:cin0143"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 259
+  },
+  "cc:cin0157": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 261
+  },
+  "cc:cin0067": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 262
+  },
+  "cc:cin0071": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 229
+  },
+  "cc:cin0072": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 205
+  },
+  "cc:cin0073": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 215
+  },
+  "cc:cin0075": {
+   "prerequisite_ids": [
+    "cc:cin0143"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 273
+  },
+  "cc:cin0076": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [
+    "cc:cin0075"
+   ],
+   "verified": true,
+   "ppc_page": 267
+  },
+  "cc:cin0077": {
+   "prerequisite_ids": [
+    "cc:cin0134"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 244
+  },
+  "cc:cin0080": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 234
+  },
+  "cc:cin0079": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 217
+  },
+  "cc:cin0083": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 277
+  },
+  "cc:cin0081": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 270
+  },
+  "cc:cin0158": {
+   "prerequisite_ids": [
+    "cc:cin0136",
+    "cc:cin0143"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 288
+  },
+  "cc:cin0112": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 265
+  },
+  "cc:cin0113": {
+   "prerequisite_ids": [
+    "cc:cin0141"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 204
+  },
+  "cc:cin0114": {
+   "prerequisite_ids": [
+    "cc:cin0141"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 275
+  },
+  "cc:cin0115": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 268
+  },
+  "cc:cin0117": {
+   "prerequisite_ids": [
+    "cc:cin0141"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 272
+  },
+  "cc:cin0116": {
+   "prerequisite_ids": [
+    "cc:cin0141"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 278
+  },
+  "cc:cin0159": {
+   "prerequisite_ids": [
+    "cc:cin0134"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 274
+  },
+  "cc:cin0068": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 264
+  },
+  "cc:cin0070": {
+   "prerequisite_ids": [
+    "cc:cin0154"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 258
+  },
+  "cc:cin0100": {
+   "prerequisite_ids": [
+    "cc:cin0130"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 237
+  },
+  "cc:cin0177": {
+   "prerequisite_ids": [
+    "cc:cin0143"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 211
+  },
+  "cc:cin0176": {
+   "prerequisite_ids": [
+    "cc:cin0136",
+    "cc:cin0139",
+    "cc:cin0144",
+    "cc:cin0147"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 255
+  },
+  "cc:cin0121": {
+   "prerequisite_ids": [
+    "cc:cin0149"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 283
+  },
+  "cc:cin0161": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 287
+  },
+  "cc:le716": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 284
+  },
+  "cc:le037": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 286
+  },
+  "cc:cin0103": {
+   "prerequisite_ids": [
+    "cc:cin0138"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 241
+  },
+  "cc:cin0160": {
+   "prerequisite_ids": [
+    "cc:cin0140"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 245
+  },
+  "cc:cin0119": {
+   "prerequisite_ids": [
+    "cc:cin0140"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 197
+  },
+  "cc:cin0120": {
+   "prerequisite_ids": [
+    "cc:cin0140",
+    "cc:cin0142"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 198
+  },
+  "cc:cin0125": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 230
+  },
+  "cc:cin0123": {
+   "prerequisite_ids": [
+    "cc:cin0137"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 219
+  },
+  "ec:ma026": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 192
+  },
+  "ec:ma036": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 194
+  },
+  "ec:cin0001": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 188
+  },
+  "ec:cin0002": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [
+    "ec:cin0001"
+   ],
+   "verified": true,
+   "ppc_page": 190
+  },
+  "ec:cin0003": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 196
+  },
+  "ec:ma027": {
+   "prerequisite_ids": [
+    "ec:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 199
+  },
+  "ec:cin0004": {
+   "prerequisite_ids": [
+    "ec:ma036"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 201
+  },
+  "ec:cin0005": {
+   "prerequisite_ids": [
+    "ec:cin0001"
+   ],
+   "corequisite_ids": [
+    "ec:cin0006"
+   ],
+   "verified": true,
+   "ppc_page": 203
+  },
+  "ec:cin0006": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [
+    "ec:cin0005"
+   ],
+   "verified": true,
+   "ppc_page": 205
+  },
+  "ec:cin0007": {
+   "prerequisite_ids": [
+    "ec:cin0003"
+   ],
+   "corequisite_ids": [
+    "ec:cin0008"
+   ],
+   "verified": true,
+   "ppc_page": 207
+  },
+  "ec:cin0008": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [
+    "ec:cin0007"
+   ],
+   "verified": true,
+   "ppc_page": 209
+  },
+  "ec:ma128": {
+   "prerequisite_ids": [
+    "ec:ma027",
+    "ec:ma036"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 214
+  },
+  "ec:fi006": {
+   "prerequisite_ids": [
+    "ec:ma027"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 216
+  },
+  "ec:cin0010": {
+   "prerequisite_ids": [
+    "ec:cin0004"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 218
+  },
+  "ec:cin0009": {
+   "prerequisite_ids": [
+    "ec:cin0005"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 212
+  },
+  "ec:cin0011": {
+   "prerequisite_ids": [
+    "ec:cin0007"
+   ],
+   "corequisite_ids": [
+    "ec:cin0012"
+   ],
+   "verified": true,
+   "ppc_page": 220
+  },
+  "ec:cin0012": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [
+    "ec:cin0011"
+   ],
+   "verified": true,
+   "ppc_page": 222
+  },
+  "ec:ma129": {
+   "prerequisite_ids": [
+    "ec:ma128"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 225
+  },
+  "ec:fi108": {
+   "prerequisite_ids": [
+    "ec:fi006",
+    "ec:ma128"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 227
+  },
+  "ec:cin0013": {
+   "prerequisite_ids": [
+    "ec:cin0003"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 229
+  },
+  "ec:cin0014": {
+   "prerequisite_ids": [
+    "ec:cin0010"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 231
+  },
+  "ec:cin0015": {
+   "prerequisite_ids": [
+    "ec:cin0011"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 233
+  },
+  "ec:cin0016": {
+   "prerequisite_ids": [
+    "ec:ma027"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 235
+  },
+  "ec:cin0017": {
+   "prerequisite_ids": [
+    "ec:ma129"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 239
+  },
+  "ec:el390": {
+   "prerequisite_ids": [
+    "ec:fi108"
+   ],
+   "corequisite_ids": [
+    "ec:cin0017"
+   ],
+   "verified": true,
+   "ppc_page": 241
+  },
+  "ec:el398": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [
+    "ec:el390"
+   ],
+   "verified": true,
+   "ppc_page": 243
+  },
+  "ec:cin0033": {
+   "prerequisite_ids": [
+    "ec:cin0014"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 245
+  },
+  "ec:cin0018": {
+   "prerequisite_ids": [
+    "ec:cin0015"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 247
+  },
+  "ec:cin0019": {
+   "prerequisite_ids": [
+    "ec:cin0009"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 249
+  },
+  "ec:cin0020": {
+   "prerequisite_ids": [
+    "ec:cin0004",
+    "ec:cin0017"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 252
+  },
+  "ec:cin0021": {
+   "prerequisite_ids": [
+    "ec:cin0017",
+    "ec:fi108"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 254
+  },
+  "ec:cin0022": {
+   "prerequisite_ids": [
+    "ec:el390"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 256
+  },
+  "ec:cin0023": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [
+    "ec:cin0022"
+   ],
+   "verified": true,
+   "ppc_page": 258
+  },
+  "ec:cin0024": {
+   "prerequisite_ids": [
+    "ec:cin0009",
+    "ec:cin0016"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 260
+  },
+  "ec:cin0025": {
+   "prerequisite_ids": [
+    "ec:cin0014"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 262
+  },
+  "ec:cin0026": {
+   "prerequisite_ids": [
+    "ec:cin0016",
+    "ec:cin0020"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 265
+  },
+  "ec:cin0027": {
+   "prerequisite_ids": [
+    "ec:cin0020",
+    "ec:el390"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 267
+  },
+  "ec:cin0028": {
+   "prerequisite_ids": [
+    "ec:cin0020"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 269
+  },
+  "ec:cin0029": {
+   "prerequisite_ids": [
+    "ec:cin0022"
+   ],
+   "corequisite_ids": [
+    "ec:cin0030"
+   ],
+   "verified": true,
+   "ppc_page": 271
+  },
+  "ec:cin0030": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [
+    "ec:cin0029"
+   ],
+   "verified": true,
+   "ppc_page": 273
+  },
+  "ec:cin0031": {
+   "prerequisite_ids": [
+    "ec:cin0009"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 275
+  },
+  "ec:cin0032": {
+   "prerequisite_ids": [
+    "ec:cin0022"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 278
+  },
+  "ec:cin0034": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 281
+  },
+  "ec:cin0035": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 283
+  },
+  "ec:cin0036": {
+   "prerequisite_ids": [
+    "ec:cin0034"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 285
+  },
+  "ec:cin099": {
+   "prerequisite_ids": [
+    "ec:cin0016"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 385
+  },
+  "ec:cin0084": {
+   "prerequisite_ids": [
+    "ec:cin0026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 360
+  },
+  "ec:cin0091": {
+   "prerequisite_ids": [
+    "ec:cin0026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 372
+  },
+  "ec:cin0085": {
+   "prerequisite_ids": [
+    "ec:cin0022",
+    "ec:cin0026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 361
+  },
+  "ec:cin0086": {
+   "prerequisite_ids": [
+    "ec:cin0021"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 363
+  },
+  "ec:cin0087": {
+   "prerequisite_ids": [
+    "ec:cin0021"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 365
+  },
+  "ec:cin0088": {
+   "prerequisite_ids": [
+    "ec:cin0021"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 367
+  },
+  "ec:cin0089": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 368
+  },
+  "ec:cin0092": {
+   "prerequisite_ids": [
+    "ec:cin0026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 374
+  },
+  "ec:cin0090": {
+   "prerequisite_ids": [
+    "ec:cin0021",
+    "ec:cin0022",
+    "ec:cin0026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 370
+  },
+  "ec:cin0094": {
+   "prerequisite_ids": [
+    "ec:cin0026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 377
+  },
+  "ec:cin0093": {
+   "prerequisite_ids": [
+    "ec:cin0016"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 375
+  },
+  "ec:cin0095": {
+   "prerequisite_ids": [
+    "ec:cin0026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 378
+  },
+  "ec:cin0057": {
+   "prerequisite_ids": [
+    "ec:cin0028"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 323
+  },
+  "ec:cin0058": {
+   "prerequisite_ids": [
+    "ec:cin0028"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 324
+  },
+  "ec:cin0056": {
+   "prerequisite_ids": [
+    "ec:cin0028"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 321
+  },
+  "ec:cin0059": {
+   "prerequisite_ids": [
+    "ec:cin0028"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 325
+  },
+  "ec:cin0060": {
+   "prerequisite_ids": [
+    "ec:cin0056"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 326
+  },
+  "ec:cin0061": {
+   "prerequisite_ids": [
+    "ec:cin0056"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 327
+  },
+  "ec:cin0062": {
+   "prerequisite_ids": [
+    "ec:cin0028"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 329
+  },
+  "ec:cin0063": {
+   "prerequisite_ids": [
+    "ec:cin0028"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 330
+  },
+  "ec:cin0064": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 331
+  },
+  "ec:cin0065": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 333
+  },
+  "ec:cin0066": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 334
+  },
+  "ec:cin0069": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 338
+  },
+  "ec:cin0067": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 335
+  },
+  "ec:cin0071": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 341
+  },
+  "ec:cin0072": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 343
+  },
+  "ec:cin0070": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 339
+  },
+  "ec:cin0068": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 337
+  },
+  "ec:cin0074": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 346
+  },
+  "ec:cin0075": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 348
+  },
+  "ec:cin0076": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [
+    "ec:cin0075"
+   ],
+   "verified": true,
+   "ppc_page": 349
+  },
+  "ec:cin0080": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 356
+  },
+  "ec:cin0079": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 353
+  },
+  "ec:cin0078": {
+   "prerequisite_ids": [
+    "ec:cin0015"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 352
+  },
+  "ec:cin0101": {
+   "prerequisite_ids": [
+    "ec:cin0016",
+    "ec:cin0017"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 389
+  },
+  "ec:cin0082": {
+   "prerequisite_ids": [
+    "ec:cin0016",
+    "ec:cin0017"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 354
+  },
+  "ec:cin0073": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 345
+  },
+  "ec:cin0077": {
+   "prerequisite_ids": [
+    "ec:cin0015"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 351
+  },
+  "ec:cin0083": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 359
+  },
+  "ec:cin0081": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 357
+  },
+  "ec:cin0105": {
+   "prerequisite_ids": [
+    "ec:cin0029"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 396
+  },
+  "ec:cin0106": {
+   "prerequisite_ids": [
+    "ec:cin0029"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 398
+  },
+  "ec:cin0107": {
+   "prerequisite_ids": [
+    "ec:cin0029"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 399
+  },
+  "ec:cin0108": {
+   "prerequisite_ids": [
+    "ec:cin0029"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 401
+  },
+  "ec:cin0109": {
+   "prerequisite_ids": [
+    "ec:cin0029"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 403
+  },
+  "ec:cin0110": {
+   "prerequisite_ids": [
+    "ec:cin0029"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 404
+  },
+  "ec:cin0098": {
+   "prerequisite_ids": [
+    "ec:cin0027"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 383
+  },
+  "ec:cin0097": {
+   "prerequisite_ids": [
+    "ec:cin0027"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 381
+  },
+  "ec:cin0100": {
+   "prerequisite_ids": [
+    "ec:cin0027"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 387
+  },
+  "ec:cin0096": {
+   "prerequisite_ids": [
+    "ec:cin0027"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 379
+  },
+  "ec:cin0103": {
+   "prerequisite_ids": [
+    "ec:cin0004",
+    "ec:cin0017"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 393
+  },
+  "ec:cin0102": {
+   "prerequisite_ids": [
+    "ec:cin0016",
+    "ec:cin0017"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 391
+  },
+  "ec:cin0104": {
+   "prerequisite_ids": [
+    "ec:cin0027"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 395
+  },
+  "ec:cin0037": {
+   "prerequisite_ids": [
+    "ec:cin0024"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 288
+  },
+  "ec:cin0038": {
+   "prerequisite_ids": [
+    "ec:cin0024"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 290
+  },
+  "ec:cin0039": {
+   "prerequisite_ids": [
+    "ec:cin0004"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 292
+  },
+  "ec:cin0040": {
+   "prerequisite_ids": [
+    "ec:cin0024"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 294
+  },
+  "ec:cin0041": {
+   "prerequisite_ids": [
+    "ec:cin0005",
+    "ec:cin0014",
+    "ec:cin0016"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 296
+  },
+  "ec:cin0042": {
+   "prerequisite_ids": [
+    "ec:cin0024",
+    "ec:cin0039"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 298
+  },
+  "ec:cin0044": {
+   "prerequisite_ids": [
+    "ec:cin0024"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 302
+  },
+  "ec:cin0045": {
+   "prerequisite_ids": [
+    "ec:cin0024"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 304
+  },
+  "ec:cin0046": {
+   "prerequisite_ids": [
+    "ec:cin0024"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 306
+  },
+  "ec:cin0047": {
+   "prerequisite_ids": [
+    "ec:cin0024"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 307
+  },
+  "ec:cin0053": {
+   "prerequisite_ids": [
+    "ec:cin0004",
+    "ec:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 316
+  },
+  "ec:cin0048": {
+   "prerequisite_ids": [
+    "ec:cin0022",
+    "ec:cin0028"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 308
+  },
+  "ec:cin0049": {
+   "prerequisite_ids": [
+    "ec:cin0025"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 310
+  },
+  "ec:cin0050": {
+   "prerequisite_ids": [
+    "ec:cin0053"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 312
+  },
+  "ec:cin0051": {
+   "prerequisite_ids": [
+    "ec:cin0004",
+    "ec:cin0053"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 313
+  },
+  "ec:cin0052": {
+   "prerequisite_ids": [
+    "ec:cin0009"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 314
+  },
+  "ec:cin0054": {
+   "prerequisite_ids": [
+    "ec:cin0009"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 318
+  },
+  "ec:cin0055": {
+   "prerequisite_ids": [
+    "ec:cin0028"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 320
+  },
+  "ec:cin0112": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 407
+  },
+  "ec:cin0111": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 405
+  },
+  "ec:cin0113": {
+   "prerequisite_ids": [
+    "ec:cin0014"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 409
+  },
+  "ec:cin0114": {
+   "prerequisite_ids": [
+    "ec:cin0014"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 410
+  },
+  "ec:cin0115": {
+   "prerequisite_ids": [
+    "ec:cin0018"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 411
+  },
+  "ec:cin0117": {
+   "prerequisite_ids": [
+    "ec:cin0014"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 414
+  },
+  "ec:cin0116": {
+   "prerequisite_ids": [
+    "ec:cin0014"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 412
+  },
+  "ec:cin0118": {
+   "prerequisite_ids": [
+    "ec:cin0009"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 415
+  },
+  "ec:cin0119": {
+   "prerequisite_ids": [
+    "ec:cin0009"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 417
+  },
+  "ec:cin0120": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": false,
+   "ppc_page": null
+  },
+  "ec:cin0121": {
+   "prerequisite_ids": [
+    "ec:cin0013"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 421
+  },
+  "ec:in816": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 449
+  },
+  "ec:le716": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 451
+  },
+  "ec:le037": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 453
+  },
+  "ec:fi007": {
+   "prerequisite_ids": [
+    "ec:fi006"
+   ],
+   "corequisite_ids": [
+    "ec:ma027"
+   ],
+   "verified": true,
+   "ppc_page": 423
+  },
+  "ec:fi109": {
+   "prerequisite_ids": [
+    "ec:fi108"
+   ],
+   "corequisite_ids": [
+    "ec:ma129"
+   ],
+   "verified": true,
+   "ppc_page": 425
+  },
+  "ec:fi021": {
+   "prerequisite_ids": [
+    "ec:fi006"
+   ],
+   "corequisite_ids": [
+    "ec:fi007"
+   ],
+   "verified": true,
+   "ppc_page": 426
+  },
+  "ec:fi122": {
+   "prerequisite_ids": [
+    "ec:fi021",
+    "ec:fi108"
+   ],
+   "corequisite_ids": [
+    "ec:fi109"
+   ],
+   "verified": true,
+   "ppc_page": 428
+  },
+  "ec:cin0122": {
+   "prerequisite_ids": [
+    "ec:cin0019"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 430
+  },
+  "ec:cin0123": {
+   "prerequisite_ids": [
+    "ec:cin0019"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 432
+  },
+  "ec:cin0124": {
+   "prerequisite_ids": [
+    "ec:cin0009"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 434
+  },
+  "ec:cin0125": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 436
+  },
+  "ec:cin0126": {
+   "prerequisite_ids": [
+    "ec:cin0031"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 438
+  },
+  "ec:cin0127": {
+   "prerequisite_ids": [
+    "ec:cin0025"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 441
+  },
+  "ec:cin0128": {
+   "prerequisite_ids": [
+    "ec:cin0022"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 443
+  },
+  "ec:if983": {
+   "prerequisite_ids": [
+    "ec:cin0016",
+    "ec:cin0019"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 445
+  },
+  "ec:cin0129": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 447
+  },
+  "ec:if1008": {
+   "prerequisite_ids": [
+    "ec:cin0019",
+    "ec:cin0025"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 439
+  },
+  "ec:cin0043": {
+   "prerequisite_ids": [
+    "ec:cin0024"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 300
+  },
+  "ia:ma026": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 142
+  },
+  "ia:cin0133": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 143
+  },
+  "ia:cin0123": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 145
+  },
+  "ia:61efa7170f": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 146
+  },
+  "ia:ma027": {
+   "prerequisite_ids": [
+    "ia:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 147
+  },
+  "ia:cin0138": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 148
+  },
+  "ia:cin0135": {
+   "prerequisite_ids": [
+    "ia:cin0133"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 150
+  },
+  "ia:cin0136": {
+   "prerequisite_ids": [
+    "ia:cin0133"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 152
+  },
+  "ia:80f7a7c130": {
+   "prerequisite_ids": [
+    "ia:61efa7170f",
+    "ia:cin0133"
+   ],
+   "corequisite_ids": [
+    "ia:cin0138"
+   ],
+   "verified": true,
+   "ppc_page": 153
+  },
+  "ia:cin0137": {
+   "prerequisite_ids": [
+    "ia:cin0135"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 154
+  },
+  "ia:cin0140": {
+   "prerequisite_ids": [
+    "ia:cin0135"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 155
+  },
+  "ia:cin0142": {
+   "prerequisite_ids": [
+    "ia:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 157
+  },
+  "ia:af01ca96b0": {
+   "prerequisite_ids": [
+    "ia:61efa7170f",
+    "ia:cin0133",
+    "ia:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 158
+  },
+  "ia:c951a458b6": {
+   "prerequisite_ids": [
+    "ia:61efa7170f"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 160
+  },
+  "ia:cin0141": {
+   "prerequisite_ids": [
+    "ia:cin0123"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 162
+  },
+  "ia:2c0f56a342": {
+   "prerequisite_ids": [
+    "ia:61efa7170f"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 163
+  },
+  "ia:338a468998": {
+   "prerequisite_ids": [
+    "ia:cin0133",
+    "ia:cin0138",
+    "ia:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 165
+  },
+  "ia:3655fdefcf": {
+   "prerequisite_ids": [
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 167
+  },
+  "ia:cin0037": {
+   "prerequisite_ids": [
+    "ia:61efa7170f",
+    "ia:cin0133",
+    "ia:ma026"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 169
+  },
+  "ia:cin0148": {
+   "prerequisite_ids": [
+    "ia:cin0141"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 170
+  },
+  "ia:a1b0df803d": {
+   "prerequisite_ids": [
+    "ia:cin0133",
+    "ia:cin0138",
+    "ia:cin0142"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 171
+  },
+  "ia:be0ff02770": {
+   "prerequisite_ids": [
+    "ia:cin0037"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 172
+  },
+  "ia:83f63b29d7": {
+   "prerequisite_ids": [
+    "ia:af01ca96b0",
+    "ia:cin0142"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 173
+  },
+  "ia:eef6479c95": {
+   "prerequisite_ids": [
+    "ia:cin0037",
+    "ia:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 175
+  },
+  "ia:6dac016880": {
+   "prerequisite_ids": [
+    "ia:be0ff02770"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 176
+  },
+  "ia:cin0147": {
+   "prerequisite_ids": [
+    "ia:cin0142"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 177
+  },
+  "ia:cin0151": {
+   "prerequisite_ids": [
+    "ia:cin0147"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 178
+  },
+  "ia:a34d541f8e": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 182
+  },
+  "ia:9ad096c214": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 210
+  },
+  "ia:d88e2a97df": {
+   "prerequisite_ids": [
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 213
+  },
+  "ia:66f8442ab3": {
+   "prerequisite_ids": [
+    "ia:6dac016880"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 216
+  },
+  "ia:54e4a31f31": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 219
+  },
+  "ia:663cdfb054": {
+   "prerequisite_ids": [
+    "ia:6dac016880"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 223
+  },
+  "ia:cin0038": {
+   "prerequisite_ids": [
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 179
+  },
+  "ia:cin0039": {
+   "prerequisite_ids": [
+    "ia:cin0138"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 195
+  },
+  "ia:cin0042": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf",
+    "ia:af01ca96b0",
+    "ia:cin0039"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 185
+  },
+  "ia:cin0043": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf",
+    "ia:80f7a7c130",
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 184
+  },
+  "ia:cin0044": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf",
+    "ia:80f7a7c130",
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 194
+  },
+  "ia:cin0045": {
+   "prerequisite_ids": [
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 212
+  },
+  "ia:cin0056": {
+   "prerequisite_ids": [
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 227
+  },
+  "ia:cin0060": {
+   "prerequisite_ids": [
+    "ia:cin0056"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 239
+  },
+  "ia:cin0103": {
+   "prerequisite_ids": [
+    "ia:cin0138"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 225
+  },
+  "ia:cin0121": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": false,
+   "ppc_page": 201
+  },
+  "ia:cin0123:804779": {
+   "prerequisite_ids": [
+    "ia:cin0137"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 197
+  },
+  "ia:cin0125": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 206
+  },
+  "ia:cin0129": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 196
+  },
+  "ia:cin0130": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 235
+  },
+  "ia:cin0134": {
+   "prerequisite_ids": [
+    "ia:cin0130"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 187
+  },
+  "ia:cin0146": {
+   "prerequisite_ids": [
+    "ia:cin0133"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 232
+  },
+  "ia:cin0150": {
+   "prerequisite_ids": [
+    "ia:cin0140",
+    "ia:cin0148"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 192
+  },
+  "ia:cin0152": {
+   "prerequisite_ids": [
+    "ia:cin0133",
+    "ia:cin0142"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 240
+  },
+  "ia:cin0153": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf",
+    "ia:80f7a7c130",
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 181
+  },
+  "ia:cin0155": {
+   "prerequisite_ids": [
+    "ia:cin0137"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 190
+  },
+  "ia:cin0156": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf",
+    "ia:80f7a7c130",
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 193
+  },
+  "ia:cin0161": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 236
+  },
+  "ia:cin0162": {
+   "prerequisite_ids": [
+    "ia:cin0200"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 180
+  },
+  "ia:cin0163": {
+   "prerequisite_ids": [
+    "ia:cin0135",
+    "ia:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 188
+  },
+  "ia:cin0167": {
+   "prerequisite_ids": [
+    "ia:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 230
+  },
+  "ia:cin0168": {
+   "prerequisite_ids": [
+    "ia:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 202
+  },
+  "ia:cin0170": {
+   "prerequisite_ids": [
+    "ia:cin0136",
+    "ia:cin0141"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 221
+  },
+  "ia:cin0171": {
+   "prerequisite_ids": [
+    "ia:cin0168"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 237
+  },
+  "ia:cin0172": {
+   "prerequisite_ids": [
+    "ia:cin0150"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 238
+  },
+  "ia:cin0173": {
+   "prerequisite_ids": [
+    "ia:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 234
+  },
+  "ia:cin0178": {
+   "prerequisite_ids": [
+    "ia:3655fdefcf"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 233
+  },
+  "ia:cin0179": {
+   "prerequisite_ids": [
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 228
+  },
+  "ia:cin0181": {
+   "prerequisite_ids": [
+    "ia:af01ca96b0"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 208
+  },
+  "ia:cin0182": {
+   "prerequisite_ids": [
+    "ia:cin0136"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 204
+  },
+  "ia:cin0200": {
+   "prerequisite_ids": [
+    "ia:cin0133"
+   ],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 199
+  },
+  "ia:le716": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 214
+  },
+  "ia:le037": {
+   "prerequisite_ids": [],
+   "corequisite_ids": [],
+   "verified": true,
+   "ppc_page": 218
+  }
+ }
+}

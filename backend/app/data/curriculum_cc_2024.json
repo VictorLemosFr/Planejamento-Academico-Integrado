@@ -8,7 +8,8 @@
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0130",
@@ -19,18 +20,20 @@
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0133",
     "source_code": "CIN0133",
     "name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "short_name": "INTRODUÇÃO À PROGRAMAÇÃO",
-    "hours": 60,
+    "hours": 120,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0131",
@@ -41,7 +44,8 @@
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:ma026",
@@ -52,7 +56,8 @@
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0135",
@@ -62,8 +67,11 @@
     "hours": 60,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0133"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0134",
@@ -73,8 +81,11 @@
     "hours": 60,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0130"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0136",
@@ -84,8 +95,11 @@
     "hours": 120,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0133"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0138",
@@ -96,7 +110,8 @@
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0140",
@@ -106,8 +121,11 @@
     "hours": 60,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0135"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0137",
@@ -118,18 +136,22 @@
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0139",
     "source_code": "CIN0139",
     "name": "INTEGRAÇÃO E EVOLUÇÃO DE SISTEMAS DE INFORMAÇÃO",
     "short_name": "INTEGRAÇÃO E EVOLUÇÃO DE SISTEMAS DE INFORMAÇÃO",
-    "hours": 60,
+    "hours": 120,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0142",
@@ -139,8 +161,11 @@
     "hours": 60,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0141",
@@ -150,8 +175,11 @@
     "hours": 60,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0132"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0143",
@@ -161,8 +189,11 @@
     "hours": 60,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0134"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0144",
@@ -172,8 +203,12 @@
     "hours": 120,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0133",
+      "cc:cin0138"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0148",
@@ -183,8 +218,11 @@
     "hours": 60,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0141"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0145",
@@ -194,8 +232,11 @@
     "hours": 30,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0134"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0146",
@@ -205,8 +246,11 @@
     "hours": 30,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0133"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0147",
@@ -216,8 +260,11 @@
     "hours": 60,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0142"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0149",
@@ -227,8 +274,11 @@
     "hours": 30,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0131"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0150",
@@ -238,8 +288,12 @@
     "hours": 60,
     "period": 6,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0140",
+      "cc:cin0148"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0151",
@@ -249,8 +303,11 @@
     "hours": 60,
     "period": 9,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0147"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0038",
@@ -260,8 +317,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0153",
@@ -271,8 +331,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0043",
@@ -282,8 +345,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0155",
@@ -293,8 +359,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0137"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0156",
@@ -304,8 +373,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0044",
@@ -315,8 +387,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0039",
@@ -326,8 +401,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0138"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0045",
@@ -337,8 +415,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0041",
@@ -348,8 +429,13 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0133",
+      "cc:cin0138",
+      "cc:cin0142"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0040",
@@ -359,8 +445,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0037",
@@ -370,8 +459,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:ma027",
@@ -381,8 +473,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0178",
@@ -392,8 +487,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0180",
@@ -403,8 +501,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0179",
@@ -414,8 +515,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0181",
@@ -425,8 +529,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0152",
@@ -436,8 +543,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0133",
+      "cc:cin0142"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0162",
@@ -447,8 +558,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:if1008"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0163",
@@ -458,8 +572,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0135",
+      "cc:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:if1008",
@@ -469,8 +587,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0133"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0168",
@@ -480,8 +601,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0182",
@@ -491,8 +615,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0165",
@@ -502,8 +629,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0139"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0166",
@@ -513,8 +643,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136",
+      "cc:cin0139"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0167",
@@ -524,8 +658,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0169",
@@ -535,8 +672,13 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0135",
+      "cc:cin0143",
+      "cc:cin0145"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0171",
@@ -546,8 +688,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0168"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0170",
@@ -557,8 +702,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136",
+      "cc:cin0141"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0172",
@@ -568,8 +717,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0150"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0173",
@@ -579,8 +731,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0129",
@@ -591,7 +746,8 @@
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0174",
@@ -601,8 +757,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0138"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0050",
@@ -612,8 +771,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0053"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0052",
@@ -623,8 +785,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0140"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0175",
@@ -634,8 +799,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0130",
+      "cc:cin0138"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0051",
@@ -645,8 +814,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0053"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0054",
@@ -656,8 +828,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136",
+      "cc:cin0145"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0056",
@@ -667,8 +843,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0059",
@@ -678,8 +857,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0144"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0053",
@@ -689,8 +871,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0138",
+      "cc:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0060",
@@ -700,8 +886,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0056"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0055",
@@ -711,8 +900,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0053"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0154",
@@ -722,8 +914,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0143"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0157",
@@ -733,8 +928,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0067",
@@ -744,8 +942,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0071",
@@ -755,8 +956,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0072",
@@ -766,8 +970,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0073",
@@ -777,8 +984,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0075",
@@ -788,8 +998,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0143"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0076",
@@ -799,8 +1012,13 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [
+      "cc:cin0075"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0077",
@@ -810,8 +1028,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0134"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0080",
@@ -821,8 +1042,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0079",
@@ -832,8 +1056,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0083",
@@ -843,8 +1070,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0081",
@@ -854,8 +1084,11 @@
     "hours": 30,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0158",
@@ -865,8 +1098,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136",
+      "cc:cin0143"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0112",
@@ -876,8 +1113,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0113",
@@ -887,8 +1127,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0141"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0114",
@@ -898,8 +1141,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0141"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0115",
@@ -909,8 +1155,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0117",
@@ -920,8 +1169,11 @@
     "hours": 30,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0141"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0116",
@@ -931,8 +1183,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0141"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0159",
@@ -942,8 +1197,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0134"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0068",
@@ -953,8 +1211,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0070",
@@ -964,8 +1225,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0154"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0100",
@@ -975,8 +1239,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0130"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0177",
@@ -986,8 +1253,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0143"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0176",
@@ -997,8 +1267,14 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0136",
+      "cc:cin0139",
+      "cc:cin0144",
+      "cc:cin0147"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0121",
@@ -1008,8 +1284,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0149"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0161",
@@ -1020,7 +1299,8 @@
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:le716",
@@ -1031,7 +1311,8 @@
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:le037",
@@ -1042,7 +1323,8 @@
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0103",
@@ -1052,8 +1334,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0138"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0160",
@@ -1063,8 +1348,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0140"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0119",
@@ -1074,8 +1362,11 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0140"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0120",
@@ -1085,8 +1376,12 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0140",
+      "cc:cin0142"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0125",
@@ -1097,7 +1392,8 @@
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "cc:cin0123",
@@ -1107,7 +1403,10 @@
     "hours": 60,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "cc:cin0137"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   }
 ]
