@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { fileURLToPath } from "node:url";
 import { drag, goHistory } from "./drag";
 
 async function register(page: Page, name: string, period = "3") {
@@ -39,12 +40,21 @@ test("overview answers how am I, how much is left and what to do next", async ({
   page,
 }) => {
   await register(page, "overview-student");
-  // Banner acionável: obrigatórias de períodos cursados sem situação.
-  await expect(page.getByRole("note").first()).toContainText(
-    "sem situação informada",
-  );
+  // Sem histórico, a Visão geral só pede o primeiro passo.
+  await expect(
+    page.getByRole("heading", { name: "Preencha seu histórico acadêmico" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "Integralização" }),
+  ).toHaveCount(0);
   await approveFirstPeriod(page);
   await nav(page, "Visão geral");
+  // Com o 2º período ainda vazio, o aviso diz o que fazer.
+  await expect(
+    page
+      .getByRole("note")
+      .filter({ hasText: "Complete seu histórico acadêmico" }),
+  ).toBeVisible();
   const progress = page.getByRole("region", { name: "Integralização" });
   await expect(progress).toContainText("%");
   await expect(progress).toContainText("Concluído");
@@ -276,4 +286,34 @@ test("a current-period course the student skipped is shown as not taken", async 
   await expect(
     page.getByRole("note").filter({ hasText: "ficou para depois" }),
   ).toContainText("Algoritmos");
+});
+
+const fixture = fileURLToPath(
+  new URL("./fixtures/historico-ficticio.pdf", import.meta.url),
+);
+
+test("the SIGAA PDF fills the history in one step from the overview", async ({
+  page,
+}) => {
+  await register(page, "import-onboarding", "2");
+  await page.getByRole("button", { name: /Importar o PDF do SIGAA/ }).click();
+  const dialog = page.getByRole("dialog", {
+    name: "Importar histórico do SIGAA",
+  });
+  await dialog.getByLabel("PDF do histórico (SIGAA)").setInputFiles(fixture);
+  const summary = dialog.getByLabel("Resumo da importação");
+  await expect(summary).toContainText("Aprovadas");
+  await expect(summary).toContainText("Introdução à Programação");
+  await expect(summary).toContainText("Cursando agora");
+  await expect(summary).toContainText("Obrigatórias ainda não cursadas");
+  await expect(dialog).toContainText("fora da sua matriz");
+  await dialog.getByRole("button", { name: "Importar e salvar" }).click();
+  await expect(dialog).toHaveCount(0);
+  await expect(notice(page)).toContainText("Histórico importado do PDF");
+  await expect(
+    page.getByRole("region", { name: "Integralização" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Preencha seu histórico acadêmico" }),
+  ).toHaveCount(0);
 });

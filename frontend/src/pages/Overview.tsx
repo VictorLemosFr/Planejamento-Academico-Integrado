@@ -3,9 +3,11 @@ import {
   ArrowRight,
   CalendarPlus,
   Download,
+  FileUp,
   Info,
   Map as MapIcon,
   PencilLine,
+  ShieldCheck,
   TriangleAlert,
 } from "lucide-react";
 import { formatGrade, termOf } from "../academicTerms";
@@ -71,6 +73,7 @@ export function Overview({
   currentPeriod,
   onSelectCourse,
   onExport,
+  onImport,
 }: {
   data: Progression;
   records: HistoryRecord[];
@@ -78,6 +81,7 @@ export function Overview({
   currentPeriod: number;
   onSelectCourse: (id: string) => void;
   onExport: () => void;
+  onImport: () => void;
 }) {
   const { integralization, forecast, cr } = data;
   const percent = trackedPercent(integralization);
@@ -143,6 +147,50 @@ export function Overview({
     in_progress: "Cursando",
   };
 
+  if (!records.length)
+    return (
+      <div className="overview">
+        <section
+          className="panel onboarding"
+          aria-labelledby="onboarding-title"
+        >
+          <p className="stat-label">Primeiro passo</p>
+          <h2 id="onboarding-title">Preencha seu histórico acadêmico</h2>
+          <p className="muted">
+            Seu CR, a integralização e a previsão de formatura saem do que você
+            já cursou. Enquanto o histórico estiver vazio, esses números não
+            dizem nada sobre você.
+          </p>
+          <div className="onboarding-options">
+            <button
+              type="button"
+              className="onboarding-option primary"
+              onClick={onImport}
+            >
+              <FileUp size={22} aria-hidden="true" />
+              <strong>Importar o PDF do SIGAA</strong>
+              <span>
+                Recomendado. Aprovações, reprovações, notas e o que você está
+                cursando são preenchidos em segundos.
+              </span>
+            </button>
+            <Link to="/historico" className="onboarding-option">
+              <PencilLine size={22} aria-hidden="true" />
+              <strong>Preencher no mapa</strong>
+              <span>
+                Marque cada período como aprovado ou cursando e ajuste as
+                exceções card a card.
+              </span>
+            </Link>
+          </div>
+          <p className="privacy-note">
+            <ShieldCheck size={15} aria-hidden="true" /> O PDF é lido na hora e
+            descartado. A matrícula oficial continua no SIGAA.
+          </p>
+        </section>
+      </div>
+    );
+
   return (
     <div className="overview">
       {!startTerm && (
@@ -161,12 +209,15 @@ export function Overview({
         <div className="banner" role="note">
           <Info size={16} aria-hidden="true" />
           <span>
+            <strong>Complete seu histórico acadêmico:</strong> faltam{" "}
             {missing.length} obrigatória{missing.length > 1 ? "s" : ""} de
-            períodos já cursados {missing.length > 1 ? "estão" : "está"} sem
-            situação informada.
+            períodos que você já cursou.
           </span>
+          <button type="button" onClick={onImport}>
+            Importar PDF <ArrowRight size={14} aria-hidden="true" />
+          </button>
           <Link to="/historico">
-            Informar agora <ArrowRight size={14} aria-hidden="true" />
+            Preencher no mapa <ArrowRight size={14} aria-hidden="true" />
           </Link>
         </div>
       )}
