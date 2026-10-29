@@ -9,6 +9,8 @@ import { ThemeToggle } from "./components/ThemeToggle";
 import { Logo } from "./components/Logo";
 import { Student, programNames } from "./Student";
 import { SharedPlanView } from "./pages/SharedPlanView";
+import { TriangleAlert } from "lucide-react";
+import { publicDemo, publicDemoNotice } from "./deploy";
 
 const input =
   "glass-input mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900";
@@ -187,8 +189,7 @@ function Login({
         <div className="login-headline">
           <p className="eyebrow">SUA TRAJETÓRIA, SUAS POSSIBILIDADES</p>
           <h2>
-            Um novo olhar
-            <br />
+            Um novo olhar <br />
             para o seu <em>futuro.</em>
           </h2>
           <p>
@@ -284,6 +285,15 @@ function Login({
             ? "Crie sua conta e escolha seu curso para começar."
             : "Acesse seu histórico e suas alternativas para o semestre."}
         </p>
+        {publicDemo && (
+          <p
+            className="banner warn notice mt-4"
+            data-testid="public-demo-notice"
+          >
+            <TriangleAlert size={16} aria-hidden="true" />
+            <span>{publicDemoNotice}</span>
+          </p>
+        )}
         {(failure || error) && (
           <p role="alert" className="mt-4 text-sm text-red-700">
             {failure || error}

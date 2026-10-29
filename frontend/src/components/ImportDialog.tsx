@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { FileUp, ShieldCheck, X } from "lucide-react";
+import { FileUp, ShieldCheck, TriangleAlert, X } from "lucide-react";
+import { publicDemo, publicDemoNotice } from "../deploy";
 import { courseShortName } from "../display";
 import { formatGrade } from "../academicTerms";
 import type {
@@ -201,6 +202,12 @@ export function ImportDialog({
               e descartado: só ficam as disciplinas, semestres, situações e
               notas.
             </p>
+            {publicDemo && (
+              <p className="banner warn notice mt-3">
+                <TriangleAlert size={16} aria-hidden="true" />
+                <span>{publicDemoNotice}</span>
+              </p>
+            )}
           </>
         ) : (
           <>
