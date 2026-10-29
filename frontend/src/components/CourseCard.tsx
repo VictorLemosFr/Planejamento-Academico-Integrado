@@ -99,7 +99,7 @@ export function CourseCard({
    * Histórico: obrigatória sem registro. "late" = de período já cursado (atrasada);
    * "skipped" = do período atual, mas o estudante não está cursando.
    */
-  gap?: "late" | "skipped" | "unscheduled" | null;
+  gap?: "late" | "skipped" | "unscheduled" | "retake" | null;
 }) {
   const meta = statusMeta[course.status];
   const failures = course.failures ?? 0;
@@ -138,6 +138,11 @@ export function CourseCard({
         )}
         {!needsInfo && gap === "late" && (
           <span className="chip chip-warn">Não cursada</span>
+        )}
+        {!needsInfo && gap === "retake" && (
+          <span className="chip chip-warn">
+            Reprovada · refazer em algum semestre
+          </span>
         )}
         {!needsInfo && gap === "unscheduled" && (
           <span className="chip chip-warn">Sem semestre no plano</span>

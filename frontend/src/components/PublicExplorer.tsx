@@ -243,7 +243,7 @@ export function PublicExplorer({ identity }: { identity: Identity | null }) {
               Limpar simulação ({grid.hypothetical_ids.length})
             </button>
           </div>
-          <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_300px]">
+          <div className="workspace-grid">
             <CurriculumMap
               key={curriculumId}
               courses={visible}

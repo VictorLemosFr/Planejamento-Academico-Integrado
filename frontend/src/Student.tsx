@@ -219,6 +219,23 @@ export function Student({
 
   const discard = () =>
     !dirty || window.confirm("Há alterações pendentes. Deseja descartá-las?");
+  /** Salva o histórico; um plano aberto é recarregado sobre o histórico novo. */
+  function saveHistoryDraft() {
+    if (!historyDraft) return;
+    void run(async () => {
+      await api.saveHistory(historyDraft);
+      setHistoryDraft(null);
+      setPreview(null);
+      const reopen = draft && !planDirty ? draft.id : null;
+      open(reopen ? await api.getPlan(reopen) : null);
+      await Promise.all([
+        history.refetch(),
+        progression.refetch(),
+        plans.refetch(),
+      ]);
+      setNotice("Histórico salvo.");
+    });
+  }
   const openImport = () => {
     if (discard()) setImporting(true);
   };
@@ -567,8 +584,18 @@ export function Student({
       : planLayout(draft, data?.courses);
   const plannable = (course: { status: string }) =>
     !["completed", "in_progress", "simulated"].includes(course.status);
+  // Cursadas ou em andamento no histórico (inclusive alterações ainda não salvas)
+  // nunca ficam "sem semestre": já têm o semestre delas.
+  const taken = new Set(
+    records.filter((r) => r.status !== "failed").map((r) => r.course_id),
+  );
+  const failedOnly = new Set(
+    records
+      .filter((r) => r.status === "failed" && !taken.has(r.course_id))
+      .map((r) => r.course_id),
+  );
   const completion = draft
-    ? planCompletion({ ...draft, course_layout: mapLayout })
+    ? planCompletion({ ...draft, course_layout: mapLayout }, taken)
     : null;
   const query = search.toLocaleLowerCase("pt-BR");
   const visible =
@@ -961,20 +988,7 @@ export function Student({
                     <button
                       className={primary}
                       disabled={busy}
-                      onClick={() =>
-                        void run(async () => {
-                          await api.saveHistory(historyDraft!);
-                          setHistoryDraft(null);
-                          setPreview(null);
-                          open(null);
-                          await Promise.all([
-                            history.refetch(),
-                            progression.refetch(),
-                            plans.refetch(),
-                          ]);
-                          setNotice("Histórico salvo.");
-                        })
-                      }
+                      onClick={saveHistoryDraft}
                     >
                       Salvar histórico
                     </button>
@@ -1175,9 +1189,26 @@ export function Student({
           <div className="workspace-grid">
             <div className="min-w-0">
               {mode === "simulation" && (
-                <p className="draft-banner" role="note">
-                  <strong>Rascunho</strong> · nada aqui altera seu histórico
-                </p>
+                <>
+                  {historyDirty && (
+                    <div className="banner warn" role="note">
+                      <span>
+                        Seu histórico tem alterações ainda não salvas. A
+                        Simulação usa o último histórico salvo.
+                      </span>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={saveHistoryDraft}
+                      >
+                        Salvar histórico
+                      </button>
+                    </div>
+                  )}
+                  <p className="draft-banner" role="note">
+                    <strong>Rascunho</strong> · nada aqui altera seu histórico
+                  </p>
+                </>
               )}
               <CurriculumMap
                 key={mode === "history" ? "history" : (draft?.id ?? "official")}
@@ -1223,9 +1254,12 @@ export function Student({
                     : (course) =>
                         course.type === "mandatory" &&
                         plannable(course) &&
+                        !taken.has(course.id) &&
                         course.status !== "planned" &&
                         (coursePeriod(course, mapLayout) ?? 0) <= currentPeriod
-                          ? "unscheduled"
+                          ? failedOnly.has(course.id)
+                            ? "retake"
+                            : "unscheduled"
                           : null
                 }
                 periodLabel={

@@ -101,29 +101,16 @@ export function CourseDetails({
           type="button"
           aria-label="Fechar detalhes"
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-slate-950/25 lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-950/25 min-[900px]:hidden"
         />
       )}
+      {/* Pop-up: só existe com uma disciplina selecionada; o mapa usa a largura toda. */}
       <aside
         id="detalhes"
         aria-label="Detalhes da disciplina"
-        className={`details-panel ${course ? "fixed inset-x-0 bottom-0 z-50 max-h-[82dvh] rounded-t-2xl" : "hidden"} overflow-y-auto border p-5 shadow-lg lg:sticky lg:top-24 lg:z-auto lg:block lg:max-h-[calc(100dvh-7rem)] lg:self-start lg:rounded-xl lg:shadow-sm`}
+        className={`details-panel details-popup ${course ? "" : "hidden"}`}
       >
-        {!course ? (
-          <div className="py-8">
-            <span className="text-3xl text-slate-400" aria-hidden="true">
-              ↗
-            </span>
-            <h2 className="mt-4 text-base font-semibold">
-              Explore uma disciplina
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              Selecione um card para ver o que ele exige, o que libera e, no
-              histórico, registrar sua situação. As setas no mapa mostram as
-              dependências.
-            </p>
-          </div>
-        ) : (
+        {!course ? null : (
           <>
             <button
               type="button"

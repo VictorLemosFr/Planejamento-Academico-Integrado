@@ -213,16 +213,21 @@ export function projectSemesters(
  * Quando um plano forma: o último semestre com disciplina planejada, desde que
  * todas as obrigatórias pendentes e as horas de eletivas de perfil tenham semestre.
  */
-export function planCompletion(plan: {
-  courses: Course[];
-  planned_ids: string[];
-  course_layout: Record<string, { period: number }>;
-  forecast?: { remaining_profile_elective_hours: number } | null;
-}) {
+export function planCompletion(
+  plan: {
+    courses: Course[];
+    planned_ids: string[];
+    course_layout: Record<string, { period: number }>;
+    forecast?: { remaining_profile_elective_hours: number } | null;
+  },
+  /** Cursadas ou em andamento no histórico, mesmo que ainda não salvas. */
+  taken: Set<string> = new Set(),
+) {
   const planned = new Set(plan.planned_ids);
   const pending = plan.courses.filter(
     (c) =>
       c.type === "mandatory" &&
+      !taken.has(c.id) &&
       !["completed", "simulated", "in_progress"].includes(c.status),
   );
   const unscheduled = pending.filter((c) => !planned.has(c.id));

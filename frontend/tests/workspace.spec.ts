@@ -377,3 +377,61 @@ test("courses left behind show they still need a semester in the plan", async ({
     page.getByRole("region", { name: "2º período", exact: true }),
   ).toHaveClass(/is-locked-period/);
 });
+
+test("taken courses never look unscheduled and failed ones ask for a retake", async ({
+  page,
+}) => {
+  await register(page, "taken-vs-plan");
+  await goHistory(page);
+  await page
+    .getByRole("button", { name: "Marcar 1º período como aprovado" })
+    .click();
+  await page
+    .getByRole("button", { name: "Marcar 2º período como aprovado" })
+    .click();
+  // Cálculo 1 reprovada (sem nova matrícula).
+  await card(page, "Cálculo Diferencial e Integral 1").click();
+  const editor = page.getByRole("region", { name: "Situação no histórico" });
+  await editor.getByRole("button", { name: "Marcar como não cursada" }).click();
+  await editor.getByRole("button", { name: "+ Reprovada" }).click();
+  // Sem salvar, a Simulação avisa e não marca o que foi cursado como sem semestre.
+  await nav(page, "Simulação");
+  await expect(
+    page.getByRole("note").filter({ hasText: "alterações ainda não salvas" }),
+  ).toBeVisible();
+  await expect(card(page, "Sistemas Digitais")).not.toContainText(
+    "Sem semestre",
+  );
+  await page
+    .getByRole("note")
+    .filter({ hasText: "alterações ainda não salvas" })
+    .getByRole("button", { name: "Salvar histórico" })
+    .click();
+  await expect(notice(page)).toContainText("Histórico salvo");
+  await expect(card(page, "Sistemas Digitais")).toHaveAttribute(
+    "data-status",
+    "completed",
+  );
+  await expect(card(page, "Cálculo Diferencial e Integral 1")).toContainText(
+    "Reprovada · refazer",
+  );
+});
+
+test("course details open as a pop-up and the map uses the full width", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await register(page, "details-popup");
+  await goHistory(page);
+  const details = page.getByRole("complementary", {
+    name: "Detalhes da disciplina",
+  });
+  await expect(details).toBeHidden();
+  const board = (await page.locator(".curriculum-board").boundingBox())!;
+  expect(board.width).toBeGreaterThan(1050);
+  await card(page, "Algoritmos").click();
+  await expect(details).toBeVisible();
+  await expect(details).toContainText("Algoritmos");
+  await page.keyboard.press("Escape");
+  await expect(details).toBeHidden();
+});
