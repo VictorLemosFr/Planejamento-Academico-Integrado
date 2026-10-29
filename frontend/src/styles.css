@@ -2303,11 +2303,7 @@ kbd {
   align-items: start;
   gap: 20px;
 }
-@media (min-width: 1024px) {
-  .workspace-grid {
-    grid-template-columns: minmax(0, 1fr) 320px;
-  }
-}
+/* O mapa usa a largura toda; os detalhes abrem como pop-up (.details-popup). */
 
 /* Painéis, números e tabelas. */
 .panel {
@@ -3328,4 +3324,50 @@ kbd {
 }
 .banner > :is(a, button) ~ :is(a, button) {
   margin-left: 6px;
+}
+
+/* Detalhes da disciplina como pop-up: painel flutuante à direita no
+   computador e folha que sobe do rodapé no celular. */
+.details-popup {
+  position: fixed;
+  z-index: 60;
+  overflow-y: auto;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 20px;
+  box-shadow: 0 24px 60px -20px #10182880;
+  animation: popup-in 0.18s ease both;
+}
+@media (min-width: 900px) {
+  .details-popup {
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: min(380px, calc(100vw - 32px));
+    border-radius: 14px;
+  }
+}
+@media (max-width: 899px) {
+  .details-popup {
+    inset: auto 0 0 0;
+    max-height: 82dvh;
+    border-radius: 18px 18px 0 0;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+}
+@keyframes popup-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (min-width: 900px) {
+  /* Aberto, o pop-up abre espaço à direita: nada da página fica escondido sob ele. */
+  .shell:has(.details-popup:not(.hidden)) .shell-main {
+    padding-right: calc(min(380px, calc(100vw - 32px)) + 24px);
+  }
 }

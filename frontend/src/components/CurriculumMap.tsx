@@ -211,7 +211,9 @@ export function CurriculumMap({
   periodNote?: (period: number) => string | null;
   /** Semestre letivo da coluna, por exemplo "2026.2 · atual". */
   periodLabel?: (period: number) => ReactNode;
-  gapOf?: (course: Course) => "late" | "skipped" | "unscheduled" | null;
+  gapOf?: (
+    course: Course,
+  ) => "late" | "skipped" | "unscheduled" | "retake" | null;
 }) {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [electiveFilter, setElectiveFilter] = useState<ElectiveFilter>("all");
