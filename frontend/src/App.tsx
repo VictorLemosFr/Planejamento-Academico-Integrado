@@ -6,6 +6,7 @@ import type { Identity } from "./types";
 import DemoApp from "./DemoApp";
 import { PublicExplorer } from "./components/PublicExplorer";
 import { ThemeToggle } from "./components/ThemeToggle";
+import { Logo } from "./components/Logo";
 import { Student, programNames } from "./Student";
 import { SharedPlanView } from "./pages/SharedPlanView";
 
@@ -117,10 +118,9 @@ function PendingProgram({
     <div className="app-shell min-h-dvh">
       <header className="app-header flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
         <div>
-          <p className="text-xs text-slate-500">{programNames[program]}</p>
-          <h1 className="app-title mt-1 text-xl font-semibold">
-            Planejamento Acadêmico Integrado
-          </h1>
+          <Logo size={36} />
+          <p className="mt-2 text-xs text-slate-500">{programNames[program]}</p>
+          <h1 className="sr-only">Planejamento Acadêmico Integrado</h1>
         </div>
         <div className="flex items-center gap-4">
           <span className="text-sm text-slate-600">{identity.user.email}</span>
@@ -182,14 +182,7 @@ function Login({
     <main className="login-layout">
       <section className="login-story" aria-label="Sua trajetória acadêmica">
         <div className="brand-lockup">
-          <span className="brand-mark" aria-hidden="true">
-            p<span>ai</span>
-          </span>
-          <span>
-            Seu próximo passo,
-            <br />
-            com mais clareza.
-          </span>
+          <Logo size={52} />
         </div>
         <div className="login-headline">
           <p className="eyebrow">SUA TRAJETÓRIA, SUAS POSSIBILIDADES</p>
