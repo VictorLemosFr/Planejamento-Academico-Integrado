@@ -3371,3 +3371,57 @@ kbd {
     padding-right: calc(min(380px, calc(100vw - 32px)) + 24px);
   }
 }
+
+/* Marca: P com marco verde + "pai" + nome completo. */
+:root {
+  --logo-bg: #1b2433;
+  --logo-ink: #ffffff;
+}
+:root[data-theme="dark"] {
+  --logo-bg: #e6eaf0;
+  --logo-ink: #0f1218;
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.logo-mark {
+  flex-shrink: 0;
+}
+.logo-bg {
+  fill: var(--logo-bg);
+}
+.logo-p {
+  stroke: var(--logo-ink);
+}
+.logo-dot {
+  fill: #22a69b;
+}
+.logo-text {
+  display: grid;
+  min-width: 0;
+  line-height: 1.15;
+}
+.logo-text strong {
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+}
+.logo-text small {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--muted);
+  white-space: normal;
+}
+.sidebar-brand {
+  padding: 6px 6px 14px;
+}
+.brand-lockup .logo-text strong {
+  font-size: 30px;
+}
+.brand-lockup .logo-text small {
+  font-size: 13px;
+}

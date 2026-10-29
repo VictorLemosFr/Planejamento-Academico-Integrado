@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { CommandPalette, type Command } from "./CommandPalette";
 import { ThemeToggle } from "./ThemeToggle";
+import { Logo } from "./Logo";
 
 const KEY = "pai-sidebar-collapsed";
 
@@ -47,7 +48,6 @@ const isMac =
 export function AppShell({
   title,
   subtitle,
-  program,
   email,
   signedIn = true,
   busy = false,
@@ -95,14 +95,12 @@ export function AppShell({
   return (
     <div className="shell" data-collapsed={collapsed || undefined}>
       <aside className="sidebar">
-        <Link to="/" className="sidebar-brand">
-          <span className="brand-mark-small" aria-hidden="true">
-            p<span>ai</span>
-          </span>
-          <span className="nav-label">
-            <strong>Planejamento Acadêmico</strong>
-            <small>{program ?? "CIn/UFPE"}</small>
-          </span>
+        <Link
+          to="/"
+          className="sidebar-brand"
+          aria-label="pai · Planejamento Acadêmico Integrado, página inicial"
+        >
+          <Logo size={34} compact={collapsed} />
         </Link>
         <nav aria-label="Navegação principal" className="sidebar-nav">
           {nav.map(({ to, label, icon: Icon, end }) => (
