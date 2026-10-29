@@ -3,7 +3,15 @@
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from sqlalchemy import JSON, CheckConstraint, DateTime, ForeignKey, String, UniqueConstraint
+from sqlalchemy import (
+    JSON,
+    CheckConstraint,
+    DateTime,
+    ForeignKey,
+    Numeric,
+    String,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -70,12 +78,14 @@ class AcademicRecord(Base):
     __table_args__ = (
         UniqueConstraint("import_id", "course_id", "academic_term"),
         CheckConstraint("status IN ('completed', 'in_progress', 'failed')", name="record_status"),
+        CheckConstraint("grade IS NULL OR (grade >= 0 AND grade <= 10)", name="record_grade"),
     )
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=identifier)
     import_id: Mapped[str] = mapped_column(ForeignKey("history_imports.id"))
     course_id: Mapped[str] = mapped_column(ForeignKey("courses.id"))
     academic_term: Mapped[str] = mapped_column(String(6))
     status: Mapped[str] = mapped_column(String(20))
+    grade: Mapped[float | None] = mapped_column(Numeric(4, 2), nullable=True)
 
 
 class Plan(Base):
@@ -88,6 +98,9 @@ class Plan(Base):
     planned_ids: Mapped[list] = mapped_column(JSON, default=list)
     hypothetical_ids: Mapped[list] = mapped_column(JSON, default=list)
     course_layout: Mapped[dict] = mapped_column(JSON, default=dict)
+    simulated_grades: Mapped[dict] = mapped_column(JSON, default=dict)
+    # Link somente leitura; None quando o plano não está compartilhado.
+    share_token: Mapped[str | None] = mapped_column(String(64), unique=True, default=None)
     version: Mapped[int] = mapped_column(default=1)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now)

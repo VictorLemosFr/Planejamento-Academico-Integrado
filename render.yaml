@@ -1,0 +1,21 @@
+# Blueprint da Render: no painel, New → Blueprint → escolha este repositório.
+# Plano gratuito: o serviço dorme após 15 min sem acesso (acorda em ~1 min) e o
+# PostgreSQL gratuito expira 30 dias após a criação. Use só dados fictícios.
+services:
+  - type: web
+    name: pai
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pai-db
+          property: connectionString
+
+databases:
+  - name: pai-db
+    plan: free
+    databaseName: pai
+    user: pai

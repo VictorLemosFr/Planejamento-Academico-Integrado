@@ -2,12 +2,14 @@ from datetime import UTC, datetime, timedelta
 from secrets import token_urlsafe
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi.concurrency import run_in_threadpool
 from sqlalchemy import delete, select
 from sqlalchemy.exc import IntegrityError
 
 from app.core.config import get_settings
+from app.modules.constraints.service import CurriculumGraph
 from app.modules.curriculum.models import Curriculum
-from app.modules.curriculum.repository import list_courses
+from app.modules.curriculum.repository import list_courses, requirements_view
 from app.modules.personal.models import LoginSession, Plan, Student, User, now
 from app.modules.personal.schemas import (
     EvaluateDraft,
@@ -27,7 +29,21 @@ from app.modules.personal.security import (
     require_origin,
     token_hash,
 )
-from app.modules.personal.service import evaluate, history_view, import_history, plan_view
+from app.modules.personal.service import (
+    evaluate,
+    failure_impact_view,
+    history_view,
+    import_history,
+    plan_view,
+    shared_view,
+    validate_records,
+)
+from app.modules.personal.transcript import (
+    MAX_BYTES,
+    TranscriptError,
+    extract_text,
+    parse_transcript,
+)
 
 router = APIRouter(prefix="/api", tags=["Identidade, histórico e planos"])
 
@@ -48,15 +64,14 @@ def user_view(session, user, login):
 
 def student_curriculum(session, student, start_term=None):
     term = start_term or student.start_term
-    if term is None and student.program != "SI":
-        return None
+    program = select(Curriculum).where(Curriculum.program == student.program)
+    if term is None:
+        if student.program != "SI":
+            return None
+        # Contas legadas de SI, provisionadas sem ingresso, mantêm a matriz de SI.
+        return session.scalar(program.order_by(Curriculum.valid_from))
     return session.scalar(
-        select(Curriculum)
-        .where(
-            Curriculum.program == student.program,
-            Curriculum.valid_from <= (term or "0000.1"),
-        )
-        .order_by(Curriculum.valid_from.desc())
+        program.where(Curriculum.valid_from <= term).order_by(Curriculum.valid_from.desc())
     )
 
 
@@ -96,6 +111,10 @@ def courses_for(session, student):
     if curriculum is None:
         raise HTTPException(409, "Não há matriz curricular para este curso e semestre de ingresso.")
     return list_courses(session, curriculum.id)
+
+
+def requirements_for(session, student):
+    return requirements_view(student_curriculum(session, student))
 
 
 def own_plan(session, student, plan_id):
@@ -228,10 +247,80 @@ def save_own_history(payload: SelfHistoryPayload, identity: Identity, session: D
     )
 
 
+@router.post("/me/history/preview")
+def preview_history(payload: SelfHistoryPayload, identity: Identity, session: Database):
+    """Avalia um histórico em edição sem gravá-lo, para o mapa refletir cada mudança."""
+    student = student_for(session, identity[0], require_curriculum=False)
+    curriculum = student_curriculum(session, student, payload.start_term)
+    if curriculum is None:
+        raise HTTPException(409, "Não há matriz curricular para este semestre de ingresso.")
+    courses = list_courses(session, curriculum.id)
+    records = payload.model_dump(exclude_none=True)["records"]
+    validate_records(records, CurriculumGraph(courses))
+    session.rollback()
+    history = {
+        "revision": student.history_revision,
+        "awaiting_import": not records,
+        "current_period": payload.current_period,
+        "start_term": payload.start_term,
+        "records": records,
+    }
+    return evaluate(courses, history, requirements=requirements_view(curriculum))
+
+
+@router.post("/me/history/pdf")
+async def read_transcript(request: Request, identity: Identity, session: Database):
+    """Lê o PDF do histórico e devolve uma proposta; nada é gravado nesta chamada."""
+    if request.headers.get("content-type", "").split(";")[0].strip() != "application/pdf":
+        raise HTTPException(415, "Envie o histórico em PDF.")
+    declared = request.headers.get("content-length")
+    if declared and declared.isdigit() and int(declared) > MAX_BYTES:
+        raise HTTPException(413, "O PDF excede 5 MB.")
+    data = bytearray()
+    async for chunk in request.stream():
+        data.extend(chunk)
+        if len(data) > MAX_BYTES:
+            raise HTTPException(413, "O PDF excede 5 MB.")
+    try:
+        # A extração é custosa em CPU; roda fora do laço de eventos.
+        text = await run_in_threadpool(extract_text, bytes(data))
+    except TranscriptError as error:
+        raise HTTPException(422, str(error)) from error
+    finally:
+        data.clear()
+    student = student_for(session, identity[0])
+    result = parse_transcript(text, courses_for(session, student))
+    session.rollback()
+    if not result["records"] and not result["unmatched"]:
+        raise HTTPException(
+            422,
+            "Nenhuma disciplina encontrada. Confira se o arquivo é o histórico emitido pelo SIGAA.",
+        )
+    return result
+
+
 @router.get("/me/progression")
 def progression(identity: Identity, session: Database):
     student = student_for(session, identity[0])
-    return evaluate(courses_for(session, student), history_view(session, student))
+    return evaluate(
+        courses_for(session, student),
+        history_view(session, student),
+        requirements=requirements_for(session, student),
+    )
+
+
+@router.get("/me/progression/failure-impact/{course_id}")
+def failure_impact(course_id: str, identity: Identity, session: Database):
+    student = student_for(session, identity[0])
+    try:
+        return failure_impact_view(
+            courses_for(session, student),
+            history_view(session, student),
+            requirements_for(session, student),
+            course_id,
+        )
+    except ValueError as error:
+        raise HTTPException(404, str(error)) from error
 
 
 @router.put("/admin/students/{registration}/history")
@@ -254,8 +343,9 @@ def upload_history(
 def plans(identity: Identity, session: Database):
     student = student_for(session, identity[0])
     courses = courses_for(session, student)
+    requirements = requirements_for(session, student)
     return [
-        plan_view(session, student, plan, courses)
+        plan_view(session, student, plan, courses, requirements)
         for plan in session.scalars(
             select(Plan).where(Plan.student_id == student.id).order_by(Plan.created_at)
         )
@@ -268,7 +358,9 @@ def create_plan(payload: NewPlan, identity: Identity, session: Database):
     plan = Plan(student_id=student.id, **payload.model_dump())
     session.add(plan)
     session.flush()
-    result = plan_view(session, student, plan, courses_for(session, student))
+    result = plan_view(
+        session, student, plan, courses_for(session, student), requirements_for(session, student)
+    )
     session.commit()
     return result
 
@@ -277,7 +369,11 @@ def create_plan(payload: NewPlan, identity: Identity, session: Database):
 def get_plan(plan_id: str, identity: Identity, session: Database):
     student = student_for(session, identity[0])
     return plan_view(
-        session, student, own_plan(session, student, plan_id), courses_for(session, student)
+        session,
+        student,
+        own_plan(session, student, plan_id),
+        courses_for(session, student),
+        requirements_for(session, student),
     )
 
 
@@ -297,6 +393,12 @@ def simulation(plan_id: str, payload: EvaluateDraft, identity: Identity, session
                 {cid: position.model_dump() for cid, position in payload.course_layout.items()}
                 if payload.course_layout is not None
                 else plan.course_layout
+            ),
+            requirements=requirements_for(session, student),
+            simulated_grades=(
+                payload.simulated_grades
+                if payload.simulated_grades is not None
+                else plan.simulated_grades
             ),
         )
     except ValueError as error:
@@ -320,6 +422,11 @@ def save_plan(plan_id: str, payload: SavePlan, identity: Identity, session: Data
                 if payload.course_layout is not None
                 else plan.course_layout
             ),
+            simulated_grades=(
+                payload.simulated_grades
+                if payload.simulated_grades is not None
+                else plan.simulated_grades
+            ),
         )
     except ValueError as error:
         raise HTTPException(422, str(error)) from error
@@ -331,9 +438,10 @@ def save_plan(plan_id: str, payload: SavePlan, identity: Identity, session: Data
         evaluated["planned_ids"],
     )
     plan.course_layout = evaluated["course_layout"]
+    plan.simulated_grades = evaluated["simulated_grades"]
     plan.version += 1
     plan.updated_at = now()
-    result = plan_view(session, student, plan, courses)
+    result = plan_view(session, student, plan, courses, requirements_for(session, student))
     session.commit()
     return result
 
@@ -346,3 +454,39 @@ def delete_plan(plan_id: str, identity: Identity, session: Database, version: in
     session.delete(plan)
     session.commit()
     return {"status": "deleted"}
+
+
+@router.post("/plans/{plan_id}/share")
+def share_plan(plan_id: str, identity: Identity, session: Database):
+    student = student_for(session, identity[0])
+    plan = own_plan(session, student, plan_id)
+    if not plan.share_token:
+        plan.share_token = token_urlsafe(24)
+    session.commit()
+    return {"token": plan.share_token}
+
+
+@router.delete("/plans/{plan_id}/share")
+def unshare_plan(plan_id: str, identity: Identity, session: Database):
+    student = student_for(session, identity[0])
+    plan = own_plan(session, student, plan_id)
+    plan.share_token = None
+    session.commit()
+    return {"status": "revoked"}
+
+
+@router.get("/public/shared/{token}", tags=["Grade pública"])
+def shared_plan(token: str, session: Database):
+    plan = (
+        session.scalar(select(Plan).where(Plan.share_token == token))
+        if 16 <= len(token) <= 64
+        else None
+    )
+    student = session.get(Student, plan.student_id) if plan else None
+    owner = session.get(User, student.user_id) if student else None
+    if plan is None or owner is None or not owner.active:
+        raise HTTPException(404, "Link inválido ou revogado.")
+    view = plan_view(
+        session, student, plan, courses_for(session, student), requirements_for(session, student)
+    )
+    return shared_view(view, student_curriculum(session, student))

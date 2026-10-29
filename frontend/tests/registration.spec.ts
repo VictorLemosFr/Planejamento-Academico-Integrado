@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { goHistory } from "./drag";
 
 test("student registers and enters the SI planner", async ({ page }) => {
   await page.goto("/");
@@ -12,13 +13,16 @@ test("student registers and enters the SI planner", async ({ page }) => {
   await page.getByLabel("Curso").selectOption("SI");
   await page.getByRole("button", { name: "Cadastrar" }).click();
   await expect(page.getByRole("button", { name: "Sair" })).toBeVisible();
+  await goHistory(page);
   await page.getByRole("button", { name: "Editar histórico" }).click();
   await page.getByRole("button", { name: "Adicionar cadeira" }).click();
   await page.getByRole("combobox", { name: "Disciplina" }).selectOption("ip");
   await page.getByLabel("Semestre da tentativa").fill("2024.1");
   await page.getByLabel("Situação").selectOption("completed");
   await page.getByRole("button", { name: "Salvar histórico" }).click();
-  await expect(page.getByRole("status")).toContainText("Histórico salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Histórico salvo");
   await expect(
     page.getByRole("button", { name: "Introdução à Programação" }),
   ).toContainText("Concluída");
@@ -28,6 +32,14 @@ test("student registers and enters the SI planner", async ({ page }) => {
   await page.reload();
   await expect(page.getByRole("button", { name: "Sair" })).toBeVisible();
 });
+
+async function goSimulation(page: import("@playwright/test").Page) {
+  await page
+    .getByRole("navigation", { name: "Navegação principal" })
+    .getByRole("link", { name: "Simulação" })
+    .click();
+  await expect(page.getByLabel("Alternativa salva")).toBeVisible();
+}
 
 for (const [program, term, course] of [
   ["CC", "2024.1", "cc:cin0133"],
@@ -47,9 +59,10 @@ for (const [program, term, course] of [
     await page.getByLabel("Período atual").fill("1");
     await page.getByLabel("Curso").selectOption(program);
     await page.getByRole("button", { name: "Cadastrar" }).click();
-    await expect(
-      page.getByText(/pré-requisitos desta matriz ainda não foram confirmados/),
-    ).toBeVisible();
+    await expect(page.locator(".institution-note")).toContainText(
+      "pré-requisitos conferidos no PPC",
+    );
+    await goHistory(page);
     await page.getByRole("button", { name: "Editar histórico" }).click();
     await page.getByRole("button", { name: "Adicionar cadeira" }).click();
     await page
@@ -57,17 +70,19 @@ for (const [program, term, course] of [
       .selectOption(course);
     await page.getByLabel("Semestre da tentativa").fill(term);
     await page.getByRole("button", { name: "Salvar histórico" }).click();
-    await expect(page.getByRole("status")).toContainText("Histórico salvo");
+    await expect(
+      page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+    ).toContainText("Histórico salvo");
+    await goSimulation(page);
     await page.getByLabel("Nome da alternativa").fill(`Plano ${program}`);
-    await page.getByLabel("Semestre-alvo").fill("2026.2");
     await page.getByRole("button", { name: "Criar alternativa" }).click();
     await page.reload();
     await expect(
-      page.getByRole("button", { name: "Editar histórico" }),
+      page.getByRole("heading", { name: "Simulação", exact: true }),
     ).toBeVisible();
     await page
       .getByLabel("Alternativa salva")
-      .selectOption({ label: `Plano ${program} · 2026.2` });
+      .selectOption({ label: `Plano ${program}` });
   });
 }
 

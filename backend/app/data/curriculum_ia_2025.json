@@ -5,10 +5,12 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 1",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 1",
     "hours": 60,
+    "credits": 4,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0133",
@@ -16,10 +18,12 @@
     "name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "short_name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "hours": 120,
+    "credits": 5,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0123",
@@ -27,10 +31,12 @@
     "name": "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO",
     "short_name": "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:61efa7170f",
@@ -38,10 +44,12 @@
     "name": "INTRODUÇÃO À INTELIGÊNCIA ARTIFICIAL",
     "short_name": "INTRODUÇÃO À INTELIGÊNCIA ARTIFICIAL",
     "hours": 60,
+    "credits": 3,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:ma027",
@@ -49,10 +57,14 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 2",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 2",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0138",
@@ -60,10 +72,12 @@
     "name": "ÁLGEBRA VETORIAL E LINEAR PARA COMPUTAÇÃO",
     "short_name": "ÁLGEBRA VETORIAL E LINEAR PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0135",
@@ -71,10 +85,14 @@
     "name": "ESTRUTURAS DE DADOS ORIENTADAS A OBJETOS",
     "short_name": "ESTRUTURAS DE DADOS ORIENTADAS A OBJETOS",
     "hours": 60,
+    "credits": 3,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0133"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0136",
@@ -82,10 +100,14 @@
     "name": "DESENVOLVIMENTO DE SOFTWARE",
     "short_name": "DESENVOLVIMENTO DE SOFTWARE",
     "hours": 120,
+    "credits": 6,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0133"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:80f7a7c130",
@@ -93,10 +115,17 @@
     "name": "CIÊNCIA DE DADOS",
     "short_name": "CIÊNCIA DE DADOS",
     "hours": 30,
+    "credits": 2,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:61efa7170f",
+      "ia:cin0133"
+    ],
+    "corequisite_ids": [
+      "ia:cin0138"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0137",
@@ -104,10 +133,14 @@
     "name": "BANCO DE DADOS",
     "short_name": "BANCO DE DADOS",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0135"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0140",
@@ -115,10 +148,14 @@
     "name": "ALGORITMOS",
     "short_name": "ALGORITMOS",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0135"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0142",
@@ -126,10 +163,14 @@
     "name": "ESTATÍSTICA E PROBABILIDADE PARA COMPUTAÇÃO",
     "short_name": "ESTATÍSTICA E PROBABILIDADE PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:af01ca96b0",
@@ -137,10 +178,16 @@
     "name": "APRENDIZADO DE MÁQUINA 1",
     "short_name": "APRENDIZADO DE MÁQUINA 1",
     "hours": 60,
+    "credits": 3,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:61efa7170f",
+      "ia:cin0133",
+      "ia:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:c951a458b6",
@@ -148,10 +195,14 @@
     "name": "INTELIGÊNCIA ARTIFICIAL SIMBÓLICA",
     "short_name": "INTELIGÊNCIA ARTIFICIAL SIMBÓLICA",
     "hours": 60,
+    "credits": 3,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:61efa7170f"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0141",
@@ -159,10 +210,14 @@
     "name": "LÓGICA PARA COMPUTAÇÃO",
     "short_name": "LÓGICA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0123"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:2c0f56a342",
@@ -170,10 +225,14 @@
     "name": "ÉTICA EM INTELIGÊNCIA ARTIFICIAL",
     "short_name": "ÉTICA EM INTELIGÊNCIA ARTIFICIAL",
     "hours": 30,
+    "credits": 2,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:61efa7170f"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:338a468998",
@@ -181,10 +240,16 @@
     "name": "APRENDIZADO NÃO SUPERVISIONADO",
     "short_name": "APRENDIZADO NÃO SUPERVISIONADO",
     "hours": 60,
+    "credits": 3,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0133",
+      "ia:cin0138",
+      "ia:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:3655fdefcf",
@@ -192,10 +257,14 @@
     "name": "APRENDIZADO DE MÁQUINA 2",
     "short_name": "APRENDIZADO DE MÁQUINA 2",
     "hours": 60,
+    "credits": 3,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0037",
@@ -203,10 +272,16 @@
     "name": "REDES NEURAIS",
     "short_name": "REDES NEURAIS",
     "hours": 60,
+    "credits": 3,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:61efa7170f",
+      "ia:cin0133",
+      "ia:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0148",
@@ -214,10 +289,14 @@
     "name": "TEORIA DA COMPUTAÇÃO",
     "short_name": "TEORIA DA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0141"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:a1b0df803d",
@@ -225,10 +304,16 @@
     "name": "APRENDIZADO POR REFORÇO",
     "short_name": "APRENDIZADO POR REFORÇO",
     "hours": 60,
+    "credits": 3,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0133",
+      "ia:cin0138",
+      "ia:cin0142"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:be0ff02770",
@@ -236,10 +321,14 @@
     "name": "APRENDIZADO PROFUNDO",
     "short_name": "APRENDIZADO PROFUNDO",
     "hours": 60,
+    "credits": 3,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0037"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:83f63b29d7",
@@ -247,10 +336,15 @@
     "name": "AVALIAÇÃO DE MODELOS DE INTELIGÊNCIA ARTIFICIAL",
     "short_name": "AVALIAÇÃO DE MODELOS DE INTELIGÊNCIA ARTIFICIAL",
     "hours": 60,
+    "credits": 3,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:af01ca96b0",
+      "ia:cin0142"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:eef6479c95",
@@ -258,10 +352,15 @@
     "name": "ENGENHARIA DE SOFTWARE PARA INTELIGÊNCIA ARTIFICIAL",
     "short_name": "ENGENHARIA DE SOFTWARE PARA INTELIGÊNCIA ARTIFICIAL",
     "hours": 60,
+    "credits": 3,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0037",
+      "ia:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:6dac016880",
@@ -269,10 +368,14 @@
     "name": "INTELIGÊNCIA ARTIFICIAL GENERATIVA E MODELOS DE LINGUAGEM",
     "short_name": "INTELIGÊNCIA ARTIFICIAL GENERATIVA E MODELOS DE LINGUAGEM",
     "hours": 60,
+    "credits": 3,
     "period": 6,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:be0ff02770"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0147",
@@ -280,10 +383,14 @@
     "name": "METODOLOGIA CIENTÍFICA",
     "short_name": "METODOLOGIA CIENTÍFICA",
     "hours": 60,
+    "credits": 3,
     "period": 8,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0142"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0151",
@@ -291,10 +398,14 @@
     "name": "TRABALHO DE CONCLUSÃO DE CURSO",
     "short_name": "TRABALHO DE CONCLUSÃO DE CURSO",
     "hours": 60,
+    "credits": 2,
     "period": 9,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0147"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:a34d541f8e",
@@ -302,10 +413,14 @@
     "name": "ANÁLISE E PREVISÃO DE SÉRIES TEMPORAIS",
     "short_name": "ANÁLISE E PREVISÃO DE SÉRIES TEMPORAIS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:9ad096c214",
@@ -313,10 +428,14 @@
     "name": "INOVAÇÕES EM SAÚDE COM INTELIGÊNCIA ARTIFICIAL",
     "short_name": "INOVAÇÕES EM SAÚDE COM INTELIGÊNCIA ARTIFICIAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:d88e2a97df",
@@ -324,10 +443,14 @@
     "name": "INTELIGÊNCIA ARTIFICIAL EXPLICÁVEL",
     "short_name": "INTELIGÊNCIA ARTIFICIAL EXPLICÁVEL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:66f8442ab3",
@@ -335,10 +458,14 @@
     "name": "LARGE LANGUAGE MODEL OPERATIONS",
     "short_name": "LARGE LANGUAGE MODEL OPERATIONS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:6dac016880"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:54e4a31f31",
@@ -346,10 +473,14 @@
     "name": "MACHINE LEARNING OPERATIONS",
     "short_name": "MACHINE LEARNING OPERATIONS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:663cdfb054",
@@ -357,10 +488,14 @@
     "name": "MODELOS DE FUNDAÇÃO E MODELOS DE VISÃO E LINGUAGEM",
     "short_name": "MODELOS DE FUNDAÇÃO E MODELOS DE VISÃO E LINGUAGEM",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:6dac016880"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0038",
@@ -368,10 +503,14 @@
     "name": "AGENTES AUTÔNOMOS",
     "short_name": "AGENTES AUTÔNOMOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0039",
@@ -379,10 +518,14 @@
     "name": "COMPUTAÇÃO QUÂNTICA",
     "short_name": "COMPUTAÇÃO QUÂNTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0138"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0042",
@@ -390,10 +533,16 @@
     "name": "APRENDIZAGEM DE MÁQUINA QUÂNTICA",
     "short_name": "APRENDIZAGEM DE MÁQUINA QUÂNTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf",
+      "ia:af01ca96b0",
+      "ia:cin0039"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0043",
@@ -401,21 +550,33 @@
     "name": "APLICAÇÕES DE APRENDIZAGEM DE MÁQUINA",
     "short_name": "APLICAÇÕES DE APRENDIZAGEM DE MÁQUINA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf",
+      "ia:80f7a7c130",
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
-    "id": "ia:﻿cin0044",
-    "source_code": "﻿CIN0044",
+    "id": "ia:cin0044",
+    "source_code": "CIN0044",
     "name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "short_name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf",
+      "ia:80f7a7c130",
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0045",
@@ -423,10 +584,14 @@
     "name": "INTELIGÊNCIA ARTIFICIAL COLETIVA",
     "short_name": "INTELIGÊNCIA ARTIFICIAL COLETIVA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0056",
@@ -434,10 +599,14 @@
     "name": "PROCESSAMENTO DE IMAGEM",
     "short_name": "PROCESSAMENTO DE IMAGEM",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0060",
@@ -445,10 +614,14 @@
     "name": "VISÃO COMPUTACIONAL",
     "short_name": "VISÃO COMPUTACIONAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0056"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0103",
@@ -456,10 +629,14 @@
     "name": "OTIMIZAÇÃO",
     "short_name": "OTIMIZAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0138"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0121",
@@ -467,9 +644,11 @@
     "name": "ÉTICAS E ASPECTOS JURÍDICOS DA COMPUTAÇÃO",
     "short_name": "ÉTICAS E ASPECTOS JURÍDICOS DA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
+    "corequisite_ids": [],
     "prerequisite_status": "unverified"
   },
   {
@@ -478,10 +657,14 @@
     "name": "DATA WAREHOUSING",
     "short_name": "DATA WAREHOUSING",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0137"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0125",
@@ -489,10 +672,12 @@
     "name": "GESTÃO DE NEGÓCIOS",
     "short_name": "GESTÃO DE NEGÓCIOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0129",
@@ -500,10 +685,12 @@
     "name": "CRIATIVIDADE COMPUTACIONAL",
     "short_name": "CRIATIVIDADE COMPUTACIONAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0130",
@@ -511,32 +698,42 @@
     "name": "SISTEMAS DIGITAIS",
     "short_name": "SISTEMAS DIGITAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0134",
     "source_code": "CIN0134",
-    "name": "ARQUITETURA DE COMPUTADORES E SUSTEMAS OPERACIONAIS",
-    "short_name": "ARQUITETURA DE COMPUTADORES E SUSTEMAS OPERACIONAIS",
+    "name": "ARQUITETURA DE COMPUTADORES E SISTEMAS OPERACIONAIS",
+    "short_name": "ARQUITETURA DE COMPUTADORES E SISTEMAS OPERACIONAIS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0130"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0146",
     "source_code": "CIN0146",
     "name": "PROGRAMAÇÃO FUNCIONAL",
     "short_name": "PROGRAMAÇÃO FUNCIONAL",
-    "hours": 60,
+    "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0133"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0150",
@@ -544,10 +741,15 @@
     "name": "COMPILADORES",
     "short_name": "COMPILADORES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0140",
+      "ia:cin0148"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0152",
@@ -555,10 +757,15 @@
     "name": "VISUALIZAÇÃO DE DADOS",
     "short_name": "VISUALIZAÇÃO DE DADOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0133",
+      "ia:cin0142"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0153",
@@ -566,10 +773,16 @@
     "name": "ANÁLISE E MINERAÇÃO DE REDES COMPLEXAS",
     "short_name": "ANÁLISE E MINERAÇÃO DE REDES COMPLEXAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf",
+      "ia:80f7a7c130",
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0155",
@@ -577,10 +790,14 @@
     "name": "BANCOS DE DADOS NÃO CONVENCIONAIS",
     "short_name": "BANCOS DE DADOS NÃO CONVENCIONAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0137"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0156",
@@ -588,10 +805,16 @@
     "name": "COMPUTAÇÃO BIOINSPIRADA",
     "short_name": "COMPUTAÇÃO BIOINSPIRADA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf",
+      "ia:80f7a7c130",
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0161",
@@ -599,10 +822,12 @@
     "name": "TECNOLOGIA, DIVERSIDADE, EQUIDADE E INCLUSÃO",
     "short_name": "TECNOLOGIA, DIVERSIDADE, EQUIDADE E INCLUSÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0162",
@@ -610,10 +835,14 @@
     "name": "ANÁLISE E ESPECIFICAÇÃO AVANÇADA DE REQUISITOS DE SISTEMAS",
     "short_name": "ANÁLISE E ESPECIFICAÇÃO AVANÇADA DE REQUISITOS DE SISTEMAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0200"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0163",
@@ -621,10 +850,15 @@
     "name": "ARQUITETURA DE SISTEMAS",
     "short_name": "ARQUITETURA DE SISTEMAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0135",
+      "ia:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0167",
@@ -632,10 +866,14 @@
     "name": "PROGRAMAÇÃO COM NOVAS TECNOLOGIAS",
     "short_name": "PROGRAMAÇÃO COM NOVAS TECNOLOGIAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0168",
@@ -643,10 +881,14 @@
     "name": "FUNDAMENTOS DE TESTE DE SOFTWARE",
     "short_name": "FUNDAMENTOS DE TESTE DE SOFTWARE",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0170",
@@ -654,10 +896,15 @@
     "name": "MÉTODOS FORMAIS",
     "short_name": "MÉTODOS FORMAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0136",
+      "ia:cin0141"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0171",
@@ -665,10 +912,14 @@
     "name": "TESTES DE SOFTWARE AVANÇADO",
     "short_name": "TESTES DE SOFTWARE AVANÇADO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0168"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0172",
@@ -676,10 +927,14 @@
     "name": "TRANSFORMAÇÃO DE CÓDIGO E MODELOS",
     "short_name": "TRANSFORMAÇÃO DE CÓDIGO E MODELOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0150"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0173",
@@ -687,10 +942,14 @@
     "name": "SEMINÁRIOS EM ENGENHARIA DE SOFTWARE",
     "short_name": "SEMINÁRIOS EM ENGENHARIA DE SOFTWARE",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0178",
@@ -698,10 +957,14 @@
     "name": "RECUPERAÇÃO DA INFORMAÇÃO",
     "short_name": "RECUPERAÇÃO DA INFORMAÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:3655fdefcf"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0179",
@@ -709,10 +972,14 @@
     "name": "PROCESSAMENTO DE LINGUAGEM NATURAL",
     "short_name": "PROCESSAMENTO DE LINGUAGEM NATURAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0181",
@@ -720,10 +987,14 @@
     "name": "GOVERNANÇA DE DADOS",
     "short_name": "GOVERNANÇA DE DADOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:af01ca96b0"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0182",
@@ -731,10 +1002,14 @@
     "name": "GERÊNCIA DE CONFIGURAÇÃO DE SOFTWARE, SERVIÇOS E SISTEMAS",
     "short_name": "GERÊNCIA DE CONFIGURAÇÃO DE SOFTWARE, SERVIÇOS E SISTEMAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0136"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:cin0200",
@@ -742,10 +1017,14 @@
     "name": "ENGENHARIA DE REQUISITOS",
     "short_name": "ENGENHARIA DE REQUISITOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ia:cin0133"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:le716",
@@ -753,20 +1032,24 @@
     "name": "INTRODUÇÃO A LIBRAS",
     "short_name": "INTRODUÇÃO A LIBRAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ia:le037",
     "source_code": "LE037",
-    "name": "LINGUA INGLESA INSTRUMENTAL 1",
-    "short_name": "LINGUA INGLESA INSTRUMENTAL 1",
+    "name": "LÍNGUA INGLESA INSTRUMENTAL 1",
+    "short_name": "LÍNGUA INGLESA INSTRUMENTAL 1",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   }
 ]

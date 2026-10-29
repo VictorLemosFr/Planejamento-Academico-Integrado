@@ -50,10 +50,22 @@ class Register(StrictModel):
         return value
 
 
+Grade = Annotated[float, Field(ge=0, le=10)]
+
+
 class Record(StrictModel):
     course_id: CourseId
     academic_term: Term
     status: Literal["completed", "in_progress", "failed"]
+    grade: Grade | None = None
+
+    @model_validator(mode="after")
+    def no_grade_while_in_progress(self):
+        if self.status == "in_progress" and self.grade is not None:
+            raise ValueError("Disciplina em andamento ainda não tem nota final.")
+        if self.grade is not None:
+            self.grade = round(self.grade, 2)
+        return self
 
 
 class HistoryPayload(StrictModel):
@@ -96,6 +108,7 @@ class CoursePosition(StrictModel):
 
 class Draft(StrictModel):
     course_layout: dict[CourseId, CoursePosition] | None = Field(default=None, max_length=500)
+    simulated_grades: dict[CourseId, Grade] | None = Field(default=None, max_length=500)
     hypothetical_ids: list[CourseId] = Field(default_factory=list, max_length=500)
     planned_ids: list[CourseId] = Field(default_factory=list, max_length=500)
 

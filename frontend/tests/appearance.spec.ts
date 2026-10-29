@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { goHistory } from "./drag";
 
 test("academic overview reflects official progression and stays usable on mobile with reduced motion", async ({
   page,
@@ -24,6 +25,7 @@ test("academic overview reflects official progression and stays usable on mobile
   await page.getByLabel("E-mail").fill("student-a@example.test");
   await page.getByLabel("Senha", { exact: true }).fill("fictional-secret");
   await page.getByRole("button", { name: "Entrar", exact: true }).click();
+  await goHistory(page);
   await expect(
     page.getByRole("heading", { name: "Histórico informado", exact: true }),
   ).toBeVisible();
@@ -33,7 +35,19 @@ test("academic overview reflects official progression and stays usable on mobile
   await expect(
     page.getByRole("region", { name: "Resumo da trajetória" }),
   ).toContainText(
-    `${Math.round((progression.counts.completed / progression.courses.length) * 100)}%`,
+    `${Math.round(
+      ((Math.min(
+        progression.integralization.mandatory.completed,
+        progression.integralization.mandatory.required,
+      ) +
+        Math.min(
+          progression.integralization.profile_electives.completed,
+          progression.integralization.profile_electives.required,
+        )) /
+        (progression.integralization.mandatory.required +
+          progression.integralization.profile_electives.required)) *
+        100,
+    )}%`,
   );
   expect(
     await page.evaluate(

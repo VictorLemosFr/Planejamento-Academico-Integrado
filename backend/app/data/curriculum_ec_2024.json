@@ -5,10 +5,12 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 1",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 1",
     "hours": 60,
+    "credits": 4,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:ma036",
@@ -16,10 +18,12 @@
     "name": "GEOMETRIA ANALÍTICA 1",
     "short_name": "GEOMETRIA ANALÍTICA 1",
     "hours": 60,
+    "credits": 4,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0001",
@@ -27,10 +31,12 @@
     "name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "short_name": "INTRODUÇÃO À PROGRAMAÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0002",
@@ -38,10 +44,14 @@
     "name": "LABORATÓRIO DE PROGRAMAÇÃO 1",
     "short_name": "LABORATÓRIO DE PROGRAMAÇÃO 1",
     "hours": 30,
+    "credits": 1,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [
+      "ec:cin0001"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0003",
@@ -49,10 +59,12 @@
     "name": "INTRODUÇÃO A COMPUTAÇÃO",
     "short_name": "INTRODUÇÃO A COMPUTAÇÃO",
     "hours": 30,
+    "credits": 1,
     "period": 1,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:ma027",
@@ -60,10 +72,14 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 2",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 2",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0004",
@@ -71,10 +87,14 @@
     "name": "FUNDAMENTOS DE ÁLGEBRA LINEAR",
     "short_name": "FUNDAMENTOS DE ÁLGEBRA LINEAR",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:ma036"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0005",
@@ -82,10 +102,16 @@
     "name": "FUNDAMENTOS DE PROGRAMAÇÃO IMPERATIVA",
     "short_name": "FUNDAMENTOS DE PROGRAMAÇÃO IMPERATIVA",
     "hours": 60,
+    "credits": 3,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0001"
+    ],
+    "corequisite_ids": [
+      "ec:cin0006"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0006",
@@ -93,10 +119,14 @@
     "name": "LABORATÓRIO DE PROGRAMAÇÃO 2",
     "short_name": "LABORATÓRIO DE PROGRAMAÇÃO 2",
     "hours": 30,
+    "credits": 1,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [
+      "ec:cin0005"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0007",
@@ -104,10 +134,16 @@
     "name": "SISTEMAS DIGITAIS",
     "short_name": "SISTEMAS DIGITAIS",
     "hours": 60,
+    "credits": 4,
     "period": 2,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0003"
+    ],
+    "corequisite_ids": [
+      "ec:cin0008"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0008",
@@ -115,10 +151,14 @@
     "name": "LABORATÓRIO DE SISTEMAS DIGITAIS",
     "short_name": "LABORATÓRIO DE SISTEMAS DIGITAIS",
     "hours": 30,
+    "credits": 1,
     "period": 2,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [
+      "ec:cin0007"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:ma128",
@@ -126,10 +166,15 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 3",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 3",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:ma027",
+      "ec:ma036"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:fi006",
@@ -137,10 +182,14 @@
     "name": "FÍSICA GERAL 1",
     "short_name": "FÍSICA GERAL 1",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:ma027"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0010",
@@ -148,10 +197,14 @@
     "name": "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO",
     "short_name": "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0004"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0009",
@@ -159,10 +212,14 @@
     "name": "ALGORITMOS E ESTRUTURA DE DADOS",
     "short_name": "ALGORITMOS E ESTRUTURA DE DADOS",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0005"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0011",
@@ -170,10 +227,16 @@
     "name": "ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES",
     "short_name": "ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES",
     "hours": 60,
+    "credits": 4,
     "period": 3,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0007"
+    ],
+    "corequisite_ids": [
+      "ec:cin0012"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0012",
@@ -181,10 +244,14 @@
     "name": "LABORATÓRIO DE ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES",
     "short_name": "LABORATÓRIO DE ORGANIZAÇÃO E ARQUITETURA DE COMPUTADORES",
     "hours": 30,
+    "credits": 1,
     "period": 3,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [
+      "ec:cin0011"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:ma129",
@@ -192,10 +259,14 @@
     "name": "CÁLCULO DIFERENCIAL E INTEGRAL 4",
     "short_name": "CÁLCULO DIFERENCIAL E INTEGRAL 4",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:ma128"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:fi108",
@@ -203,10 +274,15 @@
     "name": "FÍSICA GERAL 3",
     "short_name": "FÍSICA GERAL 3",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:fi006",
+      "ec:ma128"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0013",
@@ -214,10 +290,14 @@
     "name": "INFORMÁTICA E SOCIEDADE",
     "short_name": "INFORMÁTICA E SOCIEDADE",
     "hours": 30,
+    "credits": 2,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0003"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0014",
@@ -225,10 +305,14 @@
     "name": "LÓGICA PARA COMPUTAÇÃO",
     "short_name": "LÓGICA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0010"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0015",
@@ -236,10 +320,14 @@
     "name": "SISTEMAS OPERACIONAIS",
     "short_name": "SISTEMAS OPERACIONAIS",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0011"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0016",
@@ -247,10 +335,14 @@
     "name": "ESTATÍSTICA E PROBABILIDADE PARA COMPUTAÇÃO",
     "short_name": "ESTATÍSTICA E PROBABILIDADE PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 4,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:ma027"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0017",
@@ -258,10 +350,14 @@
     "name": "COMPLEMENTAÇÃO DE MATEMÁTICA PARA COMPUTAÇÃO",
     "short_name": "COMPLEMENTAÇÃO DE MATEMÁTICA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:ma129"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:el390",
@@ -269,10 +365,16 @@
     "name": "CIRCUITOS ELÉTRICOS 1",
     "short_name": "CIRCUITOS ELÉTRICOS 1",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:fi108"
+    ],
+    "corequisite_ids": [
+      "ec:cin0017"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:el398",
@@ -280,10 +382,14 @@
     "name": "LABORATÓRIO DE CIRCUITOS ELÉTRICOS 1",
     "short_name": "LABORATÓRIO DE CIRCUITOS ELÉTRICOS 1",
     "hours": 30,
+    "credits": 1,
     "period": 5,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [
+      "ec:el390"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0033",
@@ -291,10 +397,14 @@
     "name": "TEORIA DA COMPUTAÇÃO",
     "short_name": "TEORIA DA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0014"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0018",
@@ -302,10 +412,14 @@
     "name": "FUNDAMENTOS DE REDES DE COMPUTADORES",
     "short_name": "FUNDAMENTOS DE REDES DE COMPUTADORES",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0015"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0019",
@@ -313,10 +427,14 @@
     "name": "BANCO DE DADOS",
     "short_name": "BANCO DE DADOS",
     "hours": 60,
+    "credits": 4,
     "period": 5,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0009"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0020",
@@ -324,10 +442,15 @@
     "name": "SINAIS E SISTEMAS PARA COMPUTAÇÃO",
     "short_name": "SINAIS E SISTEMAS PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0004",
+      "ec:cin0017"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0021",
@@ -335,10 +458,15 @@
     "name": "ELETROMAGNETISMO",
     "short_name": "ELETROMAGNETISMO",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0017",
+      "ec:fi108"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0022",
@@ -346,10 +474,14 @@
     "name": "ELETRÔNICA PARA COMPUTAÇÃO",
     "short_name": "ELETRÔNICA PARA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:el390"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0023",
@@ -357,10 +489,14 @@
     "name": "LABORATÓRIO DE ELETRÔNICA",
     "short_name": "LABORATÓRIO DE ELETRÔNICA",
     "hours": 30,
+    "credits": 1,
     "period": 6,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [
+      "ec:cin0022"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0024",
@@ -368,10 +504,15 @@
     "name": "INTRODUÇÃO AO APRENDIZADO DE MÁQUINA",
     "short_name": "INTRODUÇÃO AO APRENDIZADO DE MÁQUINA",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0009",
+      "ec:cin0016"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0025",
@@ -379,10 +520,14 @@
     "name": "ENGENHARIA DE SOFTWARE E SISTEMAS",
     "short_name": "ENGENHARIA DE SOFTWARE E SISTEMAS",
     "hours": 60,
+    "credits": 4,
     "period": 6,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0014"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0026",
@@ -390,10 +535,15 @@
     "name": "PRINCÍPIOS DE COMUNICAÇÕES",
     "short_name": "PRINCÍPIOS DE COMUNICAÇÕES",
     "hours": 60,
+    "credits": 4,
     "period": 7,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0016",
+      "ec:cin0020"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0027",
@@ -401,10 +551,15 @@
     "name": "FUNDAMENTOS DE SISTEMAS DE CONTROLE",
     "short_name": "FUNDAMENTOS DE SISTEMAS DE CONTROLE",
     "hours": 60,
+    "credits": 4,
     "period": 7,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0020",
+      "ec:el390"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0028",
@@ -412,10 +567,14 @@
     "name": "PROCESSAMENTO DE SINAIS",
     "short_name": "PROCESSAMENTO DE SINAIS",
     "hours": 60,
+    "credits": 4,
     "period": 7,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0020"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0029",
@@ -423,10 +582,16 @@
     "name": "SISTEMAS EMBARCADOS",
     "short_name": "SISTEMAS EMBARCADOS",
     "hours": 60,
+    "credits": 4,
     "period": 7,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0022"
+    ],
+    "corequisite_ids": [
+      "ec:cin0030"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0030",
@@ -434,10 +599,14 @@
     "name": "LABORATÓRIO DE SISTEMAS EMBARCADOS",
     "short_name": "LABORATÓRIO DE SISTEMAS EMBARCADOS",
     "hours": 30,
+    "credits": 1,
     "period": 7,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [
+      "ec:cin0029"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0031",
@@ -445,10 +614,14 @@
     "name": "TEORIA E IMPLEMENTAÇÃO DE LINGUAGENS DE PROGRAMAÇÃO",
     "short_name": "TEORIA E IMPLEMENTAÇÃO DE LINGUAGENS DE PROGRAMAÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": 7,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0009"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0032",
@@ -456,10 +629,14 @@
     "name": "PROJETO CO-DESENVOLVIMENTO HARDWARE / SOFTWARE",
     "short_name": "PROJETO CO-DESENVOLVIMENTO HARDWARE / SOFTWARE",
     "hours": 60,
+    "credits": 2,
     "period": 8,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0022"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0034",
@@ -467,10 +644,12 @@
     "name": "TRABALHO DE CONCLUSÃO DE CURSO 1",
     "short_name": "TRABALHO DE CONCLUSÃO DE CURSO 1",
     "hours": 60,
+    "credits": 3,
     "period": 9,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0035",
@@ -478,10 +657,12 @@
     "name": "ESTÁGIO OBRIGATÓRIO",
     "short_name": "ESTÁGIO OBRIGATÓRIO",
     "hours": 180,
+    "credits": 6,
     "period": 9,
     "type": "mandatory",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0036",
@@ -489,10 +670,14 @@
     "name": "TRABALHO DE CONCLUSÃO DE CURSO 2",
     "short_name": "TRABALHO DE CONCLUSÃO DE CURSO 2",
     "hours": 60,
+    "credits": 2,
     "period": 10,
     "type": "mandatory",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0034"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin099",
@@ -500,10 +685,14 @@
     "name": "PROCESSOS ESTOCÁSTICOS",
     "short_name": "PROCESSOS ESTOCÁSTICOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0016"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0084",
@@ -511,10 +700,14 @@
     "name": "TEORIA DA INFORMAÇÃO",
     "short_name": "TEORIA DA INFORMAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0091",
@@ -522,10 +715,14 @@
     "name": "COMUNICAÇÕES SEM FIO",
     "short_name": "COMUNICAÇÕES SEM FIO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0085",
@@ -533,10 +730,15 @@
     "name": "LABORATÓRIO DE COMUNICAÇÕES",
     "short_name": "LABORATÓRIO DE COMUNICAÇÕES",
     "hours": 60,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0022",
+      "ec:cin0026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0086",
@@ -544,10 +746,14 @@
     "name": "MICROONDAS",
     "short_name": "MICROONDAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0021"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0087",
@@ -555,10 +761,14 @@
     "name": "PROPAGAÇÃO ELETROMAGNÉTICA",
     "short_name": "PROPAGAÇÃO ELETROMAGNÉTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0021"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0088",
@@ -566,10 +776,14 @@
     "name": "ANTENAS",
     "short_name": "ANTENAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0021"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0089",
@@ -577,10 +791,14 @@
     "name": "ENLACES DE COMUNICAÇÃO",
     "short_name": "ENLACES DE COMUNICAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0092",
@@ -588,10 +806,14 @@
     "name": "CRIPTOGRAFIA",
     "short_name": "CRIPTOGRAFIA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0090",
@@ -599,10 +821,16 @@
     "name": "COMUNICAÇÕES ÓPTICAS",
     "short_name": "COMUNICAÇÕES ÓPTICAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0021",
+      "ec:cin0022",
+      "ec:cin0026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0094",
@@ -610,10 +838,14 @@
     "name": "SEMINÁRIOS EM COMUNICAÇÕES",
     "short_name": "SEMINÁRIOS EM COMUNICAÇÕES",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0093",
@@ -621,10 +853,14 @@
     "name": "TEORIA DE FILAS",
     "short_name": "TEORIA DE FILAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0016"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0095",
@@ -632,10 +868,14 @@
     "name": "TENDÊNCIAS EM COMUNICAÇÕES",
     "short_name": "TENDÊNCIAS EM COMUNICAÇÕES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0057",
@@ -643,10 +883,14 @@
     "name": "PROCESSAMENTO DE SINAIS 2",
     "short_name": "PROCESSAMENTO DE SINAIS 2",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0028"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0058",
@@ -654,10 +898,14 @@
     "name": "PROCESSAMENTO DE VÍDEO",
     "short_name": "PROCESSAMENTO DE VÍDEO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0028"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0056",
@@ -665,10 +913,14 @@
     "name": "PROCESSAMENTO DE IMAGEM",
     "short_name": "PROCESSAMENTO DE IMAGEM",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0028"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0059",
@@ -676,10 +928,14 @@
     "name": "PROCESSAMENTO DE VOZ",
     "short_name": "PROCESSAMENTO DE VOZ",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0028"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0060",
@@ -687,10 +943,14 @@
     "name": "VISÃO COMPUTACIONAL",
     "short_name": "VISÃO COMPUTACIONAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0056"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0061",
@@ -698,10 +958,14 @@
     "name": "FOTOGRAFIA COMPUTACIONAL",
     "short_name": "FOTOGRAFIA COMPUTACIONAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0056"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0062",
@@ -709,10 +973,14 @@
     "name": "SEMINÁRIOS EM PROCESSAMENTO DE SINAIS",
     "short_name": "SEMINÁRIOS EM PROCESSAMENTO DE SINAIS",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0028"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0063",
@@ -720,10 +988,14 @@
     "name": "TENDÊNCIAS EM PROCESSAMENTO DE SINAIS",
     "short_name": "TENDÊNCIAS EM PROCESSAMENTO DE SINAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0028"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0064",
@@ -731,10 +1003,14 @@
     "name": "REDES DE COMPUTADORES",
     "short_name": "REDES DE COMPUTADORES",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0065",
@@ -742,10 +1018,14 @@
     "name": "REDES SEM FIO 1",
     "short_name": "REDES SEM FIO 1",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0066",
@@ -753,10 +1033,14 @@
     "name": "REDES SEM FIO 2",
     "short_name": "REDES SEM FIO 2",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0069",
@@ -764,10 +1048,14 @@
     "name": "REDES DE ACESSO",
     "short_name": "REDES DE ACESSO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0067",
@@ -775,10 +1063,14 @@
     "name": "REDES DEFINIDAS POR SOFTWARE",
     "short_name": "REDES DEFINIDAS POR SOFTWARE",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0071",
@@ -786,10 +1078,14 @@
     "name": "GERENCIAMENTO E MONITORAMENTO DE REDES",
     "short_name": "GERENCIAMENTO E MONITORAMENTO DE REDES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0072",
@@ -797,10 +1093,14 @@
     "name": "AVALIAÇÃO DE DESEMPENHO DE REDES",
     "short_name": "AVALIAÇÃO DE DESEMPENHO DE REDES",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0070",
@@ -808,10 +1108,14 @@
     "name": "REDES AUTOMOTIVAS",
     "short_name": "REDES AUTOMOTIVAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0068",
@@ -819,10 +1123,14 @@
     "name": "REDES VEICULARES",
     "short_name": "REDES VEICULARES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0074",
@@ -830,10 +1138,14 @@
     "name": "TECNOLOGIAS DE COMUNICAÇÃO",
     "short_name": "TECNOLOGIAS DE COMUNICAÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0075",
@@ -841,10 +1153,14 @@
     "name": "SISTEMAS DISTRIBUÍDOS",
     "short_name": "SISTEMAS DISTRIBUÍDOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0076",
@@ -852,10 +1168,16 @@
     "name": "SEGURANÇA DE REDES E SISTEMAS DISTRIBUÍDOS",
     "short_name": "SEGURANÇA DE REDES E SISTEMAS DISTRIBUÍDOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [
+      "ec:cin0075"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0080",
@@ -863,10 +1185,14 @@
     "name": "INTERNET DAS COISAS",
     "short_name": "INTERNET DAS COISAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0079",
@@ -874,10 +1200,14 @@
     "name": "COMPUTAÇÃO UBÍQUA",
     "short_name": "COMPUTAÇÃO UBÍQUA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0078",
@@ -885,10 +1215,14 @@
     "name": "PROGRAMAÇÃO CONCORRENTE E DISTRIBUÍDA",
     "short_name": "PROGRAMAÇÃO CONCORRENTE E DISTRIBUÍDA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0015"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0101",
@@ -896,10 +1230,15 @@
     "name": "DEPENDABILIDADE",
     "short_name": "DEPENDABILIDADE",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0016",
+      "ec:cin0017"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0082",
@@ -907,10 +1246,15 @@
     "name": "SIMULAÇÃO ESTOCÁSTICA",
     "short_name": "SIMULAÇÃO ESTOCÁSTICA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0016",
+      "ec:cin0017"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0073",
@@ -918,10 +1262,14 @@
     "name": "COMPUTAÇÃO ORIENTADA A SERVIÇOS",
     "short_name": "COMPUTAÇÃO ORIENTADA A SERVIÇOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0077",
@@ -929,10 +1277,14 @@
     "name": "PLATAFORMAS DE DISTRIBUIÇÃO",
     "short_name": "PLATAFORMAS DE DISTRIBUIÇÃO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0015"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0083",
@@ -940,10 +1292,14 @@
     "name": "TENDÊNCIAS EM REDES DE COMPUTADORES",
     "short_name": "TENDÊNCIAS EM REDES DE COMPUTADORES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0081",
@@ -951,10 +1307,14 @@
     "name": "SEMINÁRIOS EM REDES DE COMPUTADORES",
     "short_name": "SEMINÁRIOS EM REDES DE COMPUTADORES",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0105",
@@ -962,10 +1322,14 @@
     "name": "SISTEMAS CRÍTICOS E DE TEMPO REAL",
     "short_name": "SISTEMAS CRÍTICOS E DE TEMPO REAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0029"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0106",
@@ -973,10 +1337,14 @@
     "name": "TECNOLOGIAS E PROTOTIPAÇÃO DE SISTEMAS EMBARCADOS",
     "short_name": "TECNOLOGIAS E PROTOTIPAÇÃO DE SISTEMAS EMBARCADOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0029"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0107",
@@ -984,10 +1352,14 @@
     "name": "PROJETO DE SISTEMAS EMBARCADOS",
     "short_name": "PROJETO DE SISTEMAS EMBARCADOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0029"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0108",
@@ -995,10 +1367,14 @@
     "name": "PROJETO DE CIRCUITOS LOW-POWER",
     "short_name": "PROJETO DE CIRCUITOS LOW-POWER",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0029"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0109",
@@ -1006,10 +1382,14 @@
     "name": "TENDÊNCIAS EM SISTEMAS EMBARCADOS",
     "short_name": "TENDÊNCIAS EM SISTEMAS EMBARCADOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0029"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0110",
@@ -1017,10 +1397,14 @@
     "name": "SEMINÁRIOS EM SISTEMAS EMBARCADOS",
     "short_name": "SEMINÁRIOS EM SISTEMAS EMBARCADOS",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0029"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0098",
@@ -1028,10 +1412,14 @@
     "name": "CONTROLE INTELIGENTE",
     "short_name": "CONTROLE INTELIGENTE",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0027"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0097",
@@ -1039,10 +1427,14 @@
     "name": "CONTROLE ADAPTATIVO",
     "short_name": "CONTROLE ADAPTATIVO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0027"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0100",
@@ -1050,10 +1442,14 @@
     "name": "INTRODUÇÃO À ROBÓTICA",
     "short_name": "INTRODUÇÃO À ROBÓTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0027"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0096",
@@ -1061,10 +1457,14 @@
     "name": "SISTEMAS DE CONTROLE NÃO-LINEAR",
     "short_name": "SISTEMAS DE CONTROLE NÃO-LINEAR",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0027"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0103",
@@ -1072,10 +1472,15 @@
     "name": "OTIMIZAÇÃO",
     "short_name": "OTIMIZAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0004",
+      "ec:cin0017"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0102",
@@ -1083,10 +1488,15 @@
     "name": "AVALIAÇÃO E DESEMPENHO DE SISTEMAS",
     "short_name": "AVALIAÇÃO E DESEMPENHO DE SISTEMAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0016",
+      "ec:cin0017"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0104",
@@ -1094,10 +1504,14 @@
     "name": "TENDÊNCIAS EM ENGENHARIAS DE CONTROLE",
     "short_name": "TENDÊNCIAS EM ENGENHARIAS DE CONTROLE",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0027"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0037",
@@ -1105,10 +1519,14 @@
     "name": "REDES NEURAIS",
     "short_name": "REDES NEURAIS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0038",
@@ -1116,10 +1534,14 @@
     "name": "AGENTES AUTÔNOMOS",
     "short_name": "AGENTES AUTÔNOMOS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0039",
@@ -1127,10 +1549,14 @@
     "name": "COMPUTAÇÃO QUÂNTICA",
     "short_name": "COMPUTAÇÃO QUÂNTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0004"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0040",
@@ -1138,10 +1564,14 @@
     "name": "INTRODUÇÃO À APRENDIZAGEM PROFUNDA",
     "short_name": "INTRODUÇÃO À APRENDIZAGEM PROFUNDA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0041",
@@ -1149,10 +1579,16 @@
     "name": "INTRODUÇÃO À APRENDIZAGEM POR REFORÇO",
     "short_name": "INTRODUÇÃO À APRENDIZAGEM POR REFORÇO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0005",
+      "ec:cin0014",
+      "ec:cin0016"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0042",
@@ -1160,10 +1596,15 @@
     "name": "APRENDIZAGEM DE MÁQUINA QUÂNTICA",
     "short_name": "APRENDIZAGEM DE MÁQUINA QUÂNTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024",
+      "ec:cin0039"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0044",
@@ -1171,10 +1612,14 @@
     "name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "short_name": "COMPUTAÇÃO EVOLUCIONÁRIA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0045",
@@ -1182,10 +1627,14 @@
     "name": "INTELIGÊNCIA ARTIFICIAL COLETIVA",
     "short_name": "INTELIGÊNCIA ARTIFICIAL COLETIVA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0046",
@@ -1193,10 +1642,14 @@
     "name": "SEMINÁRIOS EM INTELIGÊNCIA COMPUTACIONAL",
     "short_name": "SEMINÁRIOS EM INTELIGÊNCIA COMPUTACIONAL",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0047",
@@ -1204,10 +1657,14 @@
     "name": "TENDÊNCIAS EM INTELIGÊNCIA COMPUTACIONAL",
     "short_name": "TENDÊNCIAS EM INTELIGÊNCIA COMPUTACIONAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0053",
@@ -1215,10 +1672,15 @@
     "name": "PROCESSAMENTO GRÁFICO",
     "short_name": "PROCESSAMENTO GRÁFICO",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0004",
+      "ec:ma026"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0048",
@@ -1226,10 +1688,15 @@
     "name": "DISPOSITIVOS MULTIMÍDIA",
     "short_name": "DISPOSITIVOS MULTIMÍDIA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0022",
+      "ec:cin0028"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0049",
@@ -1237,10 +1704,14 @@
     "name": "INTERAÇÃO HUMANO COMPUTADOR",
     "short_name": "INTERAÇÃO HUMANO COMPUTADOR",
     "hours": 30,
+    "credits": 1,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0025"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0050",
@@ -1248,10 +1719,14 @@
     "name": "COMPUTAÇÃO GRÁFICA",
     "short_name": "COMPUTAÇÃO GRÁFICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0053"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0051",
@@ -1259,10 +1734,15 @@
     "name": "FUNDAMENTOS GEOMÉTRICOS PARA VISÃO COMPUTACIONAL",
     "short_name": "FUNDAMENTOS GEOMÉTRICOS PARA VISÃO COMPUTACIONAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0004",
+      "ec:cin0053"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0052",
@@ -1270,10 +1750,14 @@
     "name": "COMPUTAÇÃO MUSICAL E PROCESSAMENTO DE SOM",
     "short_name": "COMPUTAÇÃO MUSICAL E PROCESSAMENTO DE SOM",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0009"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0054",
@@ -1281,10 +1765,14 @@
     "name": "JOGOS DIGITAIS",
     "short_name": "JOGOS DIGITAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0009"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0055",
@@ -1292,10 +1780,14 @@
     "name": "TENDÊNCIAS EM MÍDIA E INTERAÇÃO",
     "short_name": "TENDÊNCIAS EM MÍDIA E INTERAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0028"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0112",
@@ -1303,10 +1795,14 @@
     "name": "SEGURANÇA DE COMPUTADORES",
     "short_name": "SEGURANÇA DE COMPUTADORES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0111",
@@ -1314,10 +1810,14 @@
     "name": "AUDITORIA E SEGURANÇA DE SISTEMAS DE INFORMAÇÃO",
     "short_name": "AUDITORIA E SEGURANÇA DE SISTEMAS DE INFORMAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0113",
@@ -1325,10 +1825,14 @@
     "name": "ASSINATURA DIGITAL E CERTIFICAÇÃO DIGITAL",
     "short_name": "ASSINATURA DIGITAL E CERTIFICAÇÃO DIGITAL",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0014"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0114",
@@ -1336,10 +1840,14 @@
     "name": "TÉCNICAS DE ATAQUE E DETECÇÃO DE INTRUSÃO",
     "short_name": "TÉCNICAS DE ATAQUE E DETECÇÃO DE INTRUSÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0014"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0115",
@@ -1347,10 +1855,14 @@
     "name": "SEGURANÇA EM COMPUTAÇÃO EM NUVEM",
     "short_name": "SEGURANÇA EM COMPUTAÇÃO EM NUVEM",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0018"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0117",
@@ -1358,10 +1870,14 @@
     "name": "SEMINÁRIOS EM SEGURANÇA",
     "short_name": "SEMINÁRIOS EM SEGURANÇA",
     "hours": 30,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0014"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0116",
@@ -1369,10 +1885,14 @@
     "name": "TENDÊNCIAS EM SEGURANÇA",
     "short_name": "TENDÊNCIAS EM SEGURANÇA",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0014"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0118",
@@ -1380,10 +1900,14 @@
     "name": "PROCESSAMENTO DE CADEIA DE CARACTERES",
     "short_name": "PROCESSAMENTO DE CADEIA DE CARACTERES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0009"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0119",
@@ -1391,10 +1915,14 @@
     "name": "ALGORITMOS E ESTRUTURA DE DADOS AVANÇADOS",
     "short_name": "ALGORITMOS E ESTRUTURA DE DADOS AVANÇADOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0009"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0120",
@@ -1402,9 +1930,11 @@
     "name": "ALGORITMOS PARA STREAMS DE DADOS",
     "short_name": "ALGORITMOS PARA STREAMS DE DADOS",
     "hours": 60,
+    "credits": null,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
+    "corequisite_ids": [],
     "prerequisite_status": "unverified"
   },
   {
@@ -1413,10 +1943,14 @@
     "name": "ÉTICA E ASPECTOS JURÍDICOS DA COMPUTAÇÃO",
     "short_name": "ÉTICA E ASPECTOS JURÍDICOS DA COMPUTAÇÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0013"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:in816",
@@ -1424,10 +1958,12 @@
     "name": "RELAÇÕES RACIAIS",
     "short_name": "RELAÇÕES RACIAIS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:le716",
@@ -1435,10 +1971,12 @@
     "name": "INTRODUÇÃO A LIBRAS",
     "short_name": "INTRODUÇÃO A LIBRAS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:le037",
@@ -1446,10 +1984,12 @@
     "name": "LÍNGUA INGLESA INSTRUMENTAL 1",
     "short_name": "LÍNGUA INGLESA INSTRUMENTAL 1",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:fi007",
@@ -1457,10 +1997,16 @@
     "name": "FÍSICA GERAL 2",
     "short_name": "FÍSICA GERAL 2",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:fi006"
+    ],
+    "corequisite_ids": [
+      "ec:ma027"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:fi109",
@@ -1468,10 +2014,16 @@
     "name": "FÍSICA GERAL 4",
     "short_name": "FÍSICA GERAL 4",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:fi108"
+    ],
+    "corequisite_ids": [
+      "ec:ma129"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:fi021",
@@ -1479,10 +2031,16 @@
     "name": "FÍSICA EXPERIMENTAL 1",
     "short_name": "FÍSICA EXPERIMENTAL 1",
     "hours": 45,
+    "credits": 1,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:fi006"
+    ],
+    "corequisite_ids": [
+      "ec:fi007"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:fi122",
@@ -1490,10 +2048,17 @@
     "name": "FÍSICA EXPERIMENTAL 2",
     "short_name": "FÍSICA EXPERIMENTAL 2",
     "hours": 45,
+    "credits": 1,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:fi021",
+      "ec:fi108"
+    ],
+    "corequisite_ids": [
+      "ec:fi109"
+    ],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0122",
@@ -1501,10 +2066,14 @@
     "name": "PROJETO DE BANCO DE DADOS",
     "short_name": "PROJETO DE BANCO DE DADOS",
     "hours": 60,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0019"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0123",
@@ -1512,10 +2081,14 @@
     "name": "DATA WAREHOUSING",
     "short_name": "DATA WAREHOUSING",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0019"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0124",
@@ -1523,10 +2096,14 @@
     "name": "INTRODUÇÃO À BIOINFORMÁTICA",
     "short_name": "INTRODUÇÃO À BIOINFORMÁTICA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0009"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0125",
@@ -1534,10 +2111,12 @@
     "name": "GESTÃO DE NEGÓCIOS",
     "short_name": "GESTÃO DE NEGÓCIOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0126",
@@ -1545,10 +2124,14 @@
     "name": "PROJETO DE COMPILADORES",
     "short_name": "PROJETO DE COMPILADORES",
     "hours": 60,
+    "credits": 2,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0031"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0127",
@@ -1556,10 +2139,14 @@
     "name": "ANÁLISE E PROJETO DE SISTEMAS",
     "short_name": "ANÁLISE E PROJETO DE SISTEMAS",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0025"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0128",
@@ -1567,10 +2154,14 @@
     "name": "INTRODUÇÃO AOS DISPOSITIVOS SEMICONDUTORES",
     "short_name": "INTRODUÇÃO AOS DISPOSITIVOS SEMICONDUTORES",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0022"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:if983",
@@ -1578,10 +2169,15 @@
     "name": "SISTEMAS DE APOIO À DECISÃO",
     "short_name": "SISTEMAS DE APOIO À DECISÃO",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0016",
+      "ec:cin0019"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0129",
@@ -1589,10 +2185,12 @@
     "name": "CRIATIVIDADE COMPUTACIONAL",
     "short_name": "CRIATIVIDADE COMPUTACIONAL",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
     "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:if1008",
@@ -1600,10 +2198,15 @@
     "name": "ENGENHARIA DE REQUISITOS",
     "short_name": "ENGENHARIA DE REQUISITOS",
     "hours": 60,
+    "credits": 4,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0019",
+      "ec:cin0025"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   },
   {
     "id": "ec:cin0043",
@@ -1611,9 +2214,13 @@
     "name": "APLICAÇÕES DE APRENDIZAGEM DE MÁQUINA",
     "short_name": "APLICAÇÕES DE APRENDIZAGEM DE MÁQUINA",
     "hours": 60,
+    "credits": 3,
     "period": null,
     "type": "elective",
-    "prerequisite_ids": [],
-    "prerequisite_status": "unverified"
+    "prerequisite_ids": [
+      "ec:cin0024"
+    ],
+    "corequisite_ids": [],
+    "prerequisite_status": "verified"
   }
 ]

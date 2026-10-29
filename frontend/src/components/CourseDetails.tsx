@@ -1,6 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { courseName } from "../display";
 import type { ActionKind, Course } from "../types";
 import { statusMeta } from "./CourseCard";
+
+type Tab = "summary" | "history" | "dependencies";
 
 export function CourseDetails({
   course,
@@ -12,6 +15,13 @@ export function CourseDetails({
   readOnly = false,
   official = false,
   planned = false,
+  allowPlanning = true,
+  readOnlyHint,
+  historySlot,
+  simulationSlot,
+  moveSlot,
+  impactSlot,
+  planLabel = "Planejar para próximo semestre",
 }: {
   course: Course | undefined;
   courses: Course[];
@@ -19,10 +29,27 @@ export function CourseDetails({
   readOnly?: boolean;
   official?: boolean;
   planned?: boolean;
+  /** Na grade pública só há simulação de aprovação, sem plano salvo. */
+  allowPlanning?: boolean;
+  readOnlyHint?: string;
+  /** Modo "Meu histórico": edição das tentativas reais no lugar das ações de simulação. */
+  historySlot?: ReactNode;
+  simulationSlot?: ReactNode;
+  /** Alternativa acessível ao arraste: escolher o período numa lista. */
+  moveSlot?: ReactNode;
+  /** "E se eu reprovar?", com base no histórico real. */
+  impactSlot?: ReactNode;
+  planLabel?: string;
   onAction: (kind: ActionKind) => void;
   onSelect: (id: string) => void;
   onClose: () => void;
 }) {
+  const [tab, setTab] = useState<Tab>(historySlot ? "history" : "summary");
+  const courseId = course?.id;
+  const hasHistory = !!historySlot;
+  useEffect(() => {
+    setTab(hasHistory ? "history" : "summary");
+  }, [courseId, hasHistory]);
   useEffect(() => {
     const close = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
@@ -36,26 +63,36 @@ export function CourseDetails({
   const references = (ids: string[]) => (
     <div className="mt-2 space-y-1.5">
       {ids.map((id) => {
-        const item = byId.get(id)!;
+        const item = byId.get(id);
+        if (!item) return null;
         return (
           <button
             key={id}
             type="button"
             onClick={() => onSelect(id)}
-            className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-xs hover:bg-slate-100"
+            className="reference-row"
           >
             <span
-              className={`rounded border px-1.5 py-0.5 ${statusMeta[item.status].style}`}
+              className="reference-status"
+              data-status={item.status}
               aria-label={statusMeta[item.status].label}
             >
               {statusMeta[item.status].icon}
             </span>
-            <span>{item.short_name}</span>
+            <span>{courseName(item)}</span>
           </button>
         );
       })}
     </div>
   );
+  const dependents = courses
+    .filter((item) => item.prerequisite_ids.includes(course?.id ?? ""))
+    .map((item) => item.id);
+  const tabs: [Tab, string][] = [
+    ["summary", "Resumo"],
+    ...(historySlot ? [["history", "Histórico"] as [Tab, string]] : []),
+    ["dependencies", "Dependências"],
+  ];
 
   return (
     <>
@@ -64,185 +101,217 @@ export function CourseDetails({
           type="button"
           aria-label="Fechar detalhes"
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-slate-950/25 lg:hidden"
+          className="fixed inset-0 z-40 bg-slate-950/25 min-[900px]:hidden"
         />
       )}
+      {/* Pop-up: só existe com uma disciplina selecionada; o mapa usa a largura toda. */}
       <aside
+        id="detalhes"
         aria-label="Detalhes da disciplina"
-        className={`details-panel ${course ? "fixed inset-x-0 bottom-0 z-50 max-h-[78dvh] rounded-t-2xl" : "hidden"} overflow-y-auto border border-slate-200 bg-white p-5 shadow-lg lg:sticky lg:top-5 lg:z-auto lg:block lg:max-h-[calc(100dvh-40px)] lg:self-start lg:rounded-xl lg:shadow-sm`}
+        className={`details-panel details-popup ${course ? "" : "hidden"}`}
       >
-        {!course ? (
-          <div className="py-8">
-            <span className="text-3xl text-slate-300" aria-hidden="true">
-              ↗
-            </span>
-            <h2 className="mt-4 text-base font-semibold">
-              Explore uma disciplina
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-slate-500">
-              Veja o que ela exige, o que libera e como uma aprovação muda seu
-              planejamento.
-            </p>
-          </div>
-        ) : (
+        {!course ? null : (
           <>
             <button
               type="button"
               aria-label="Fechar detalhes"
               onClick={onClose}
-              className="float-right ml-2 rounded px-2 py-1 text-xl text-slate-500 hover:bg-slate-100"
+              className="float-right ml-2 rounded px-2 py-1 text-xl text-slate-600 hover:bg-slate-100"
             >
               ×
             </button>
-            <p className="mb-2 text-[11px] font-medium tracking-wider text-slate-400 uppercase">
-              Detalhes da disciplina
+            <p className="details-eyebrow">
+              {course.source_code ? `${course.source_code} · ` : ""}
+              {course.type === "elective"
+                ? "Eletiva"
+                : `${course.period}º período`}
             </p>
-            <h2 className="text-lg leading-6 font-semibold">{course.name}</h2>
+            <h2 className="text-lg leading-6 font-semibold">
+              {courseName(course)}
+            </h2>
             <span
-              className={`mt-3 inline-block rounded-full border px-2.5 py-1 text-xs ${statusMeta[course.status].style}`}
+              className="status-badge mt-3 inline-block"
+              data-status={course.status}
             >
               {statusMeta[course.status].label}
             </span>
-            <dl className="mt-5 grid grid-cols-3 gap-2 border-y border-slate-100 py-4 text-sm">
+            <dl className="details-stats">
               <div>
-                <dt className="text-[11px] text-slate-500">Período</dt>
-                <dd className="mt-1 font-semibold">
-                  {course.period ? `${course.period}º` : "Eletiva"}
-                </dd>
+                <dt>Carga</dt>
+                <dd>{course.hours}h</dd>
               </div>
               <div>
-                <dt className="text-[11px] text-slate-500">Carga horária</dt>
-                <dd className="mt-1 font-semibold">{course.hours}h</dd>
+                <dt>Créditos</dt>
+                <dd>{course.credits ?? "—"}</dd>
               </div>
               <div>
-                <dt className="text-[11px] text-slate-500">Dependentes</dt>
-                <dd className="mt-1 font-semibold">
-                  {course.dependent_ids.length}
-                </dd>
+                <dt>Dependentes</dt>
+                <dd>{course.dependent_ids.length}</dd>
               </div>
             </dl>
-            {course.status === "locked" && (
-              <p className="mt-4 rounded-lg bg-amber-50 p-3 text-xs leading-5 text-amber-800">
-                Conclua os pré-requisitos pendentes para liberar esta
-                disciplina.
-              </p>
-            )}
-            {course.status === "planned" && (
-              <p className="mt-4 text-xs leading-5 text-violet-700">
-                Planejar não libera pré-requisitos. Simule a aprovação para
-                explorar o impacto.
-              </p>
-            )}
-            <section className="mt-5">
-              <h3 className="text-xs font-semibold text-slate-600">
-                Pré-requisitos
-              </h3>
-              {course.prerequisite_ids.length ? (
-                references(course.prerequisite_ids)
-              ) : (
-                <p className="mt-2 text-xs text-slate-500">
-                  Nenhum pré-requisito cadastrado.
+            <div className="details-tabs" role="tablist" aria-label="Seções">
+              {tabs.map(([key, label]) => (
+                <button
+                  key={key}
+                  type="button"
+                  role="tab"
+                  aria-selected={tab === key}
+                  onClick={() => setTab(key)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div role="tabpanel" hidden={tab !== "summary"}>
+              {course.status === "locked" && (
+                <p className="details-note warn">
+                  Conclua os pré-requisitos pendentes para liberar esta
+                  disciplina.
                 </p>
               )}
-            </section>
-            <section className="mt-5">
-              <h3 className="text-xs font-semibold text-slate-600">
-                Libera diretamente
-              </h3>
-              {references(
-                courses
-                  .filter((item) => item.prerequisite_ids.includes(course.id))
-                  .map((item) => item.id),
-              )}
-              {!courses.some((item) =>
-                item.prerequisite_ids.includes(course.id),
-              ) && (
-                <p className="mt-2 text-xs text-slate-500">
-                  Nenhum componente depende diretamente desta disciplina.
+              {course.status === "planned" && (
+                <p className="details-note plan">
+                  Planejar não libera pré-requisitos. Simule a aprovação para
+                  explorar o impacto.
                 </p>
               )}
-            </section>
-            {course.critical && (
-              <p className="mt-5 border-l-2 border-red-300 pl-3 text-xs leading-5 text-slate-600">
-                Disciplina crítica: {course.dependent_ids.length} componentes
-                dependem dela, direta ou indiretamente.
-              </p>
-            )}
-            <div className="mt-6 space-y-2">
-              {official && (
-                <p className="text-sm text-emerald-800">
-                  Aprovação informada · somente leitura
+              {course.critical && (
+                <p className="details-note critical">
+                  Disciplina crítica: {course.dependent_ids.length} componentes
+                  dependem dela, direta ou indiretamente.
                 </p>
               )}
-              {readOnly && !official && (
-                <div className="rounded-lg bg-blue-50 p-3">
-                  <p className="text-sm leading-6 text-slate-700">
-                    Para simular a conclusão desta disciplina, crie ou abra uma
-                    alternativa. Depois selecione a disciplina e clique em
-                    “Simular aprovação”.
+              <div className={`mt-4 space-y-2 ${historySlot ? "hidden" : ""}`}>
+                {official && (
+                  <p className="text-sm text-emerald-800">
+                    Aprovação informada · somente leitura
                   </p>
-                  <a
-                    href="#alternatives"
-                    onClick={onClose}
-                    className={`${buttonStyle} mt-3 block text-center text-blue-700`}
-                  >
-                    Criar ou abrir alternativa
-                  </a>
-                </div>
-              )}
-              {!readOnly && (
-                <>
-                  {!["completed", "simulated", "locked"].includes(
-                    course.status,
-                  ) && (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => onAction("approve")}
-                      className={`${buttonStyle} border-blue-700! bg-blue-700! text-white hover:bg-blue-800!`}
+                )}
+                {readOnly && !official && readOnlyHint && (
+                  <p className="details-note">{readOnlyHint}</p>
+                )}
+                {readOnly && !official && !readOnlyHint && (
+                  <div className="details-note">
+                    <p className="text-sm leading-6">
+                      Para simular a conclusão desta disciplina, crie ou abra
+                      uma alternativa. Depois selecione a disciplina e clique em
+                      “Simular aprovação”.
+                    </p>
+                    <a
+                      href="#alternatives"
+                      onClick={onClose}
+                      className={`${buttonStyle} mt-3 block text-center text-blue-700`}
                     >
-                      Simular aprovação
-                    </button>
-                  )}
-                  {["available", "pending"].includes(course.status) && (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => onAction("plan")}
-                      className={buttonStyle}
-                    >
-                      Planejar para próximo semestre
-                    </button>
-                  )}
-                  {(course.status === "planned" || planned) && (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => onAction("unplan")}
-                      className={buttonStyle}
-                    >
-                      Remover do planejamento
-                    </button>
-                  )}
-                  {(course.status === "simulated" ||
-                    (course.status === "completed" && !official)) && (
-                    <>
-                      <p className="text-xs leading-5 text-slate-500">
-                        Desfazer também remove aprovações e planos que dependam
-                        desta disciplina.
-                      </p>
+                      Criar ou abrir alternativa
+                    </a>
+                  </div>
+                )}
+                {!readOnly && (
+                  <>
+                    {!["completed", "simulated", "locked"].includes(
+                      course.status,
+                    ) && (
                       <button
                         type="button"
                         disabled={busy}
-                        onClick={() => onAction("revoke")}
-                        className={`${buttonStyle} text-amber-800`}
+                        onClick={() => onAction("approve")}
+                        className={`${buttonStyle} primary-button text-white`}
                       >
-                        Desfazer aprovação simulada
+                        Simular aprovação
                       </button>
-                    </>
+                    )}
+                    {allowPlanning &&
+                      ["available", "pending"].includes(course.status) && (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => onAction("plan")}
+                          className={buttonStyle}
+                        >
+                          {planLabel}
+                        </button>
+                      )}
+                    {allowPlanning &&
+                      (course.status === "planned" || planned) && (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => onAction("unplan")}
+                          className={buttonStyle}
+                        >
+                          Remover do plano
+                        </button>
+                      )}
+                    {(course.status === "simulated" ||
+                      (course.status === "completed" && !official)) && (
+                      <>
+                        <p className="text-xs leading-5 text-slate-600">
+                          Desfazer também remove aprovações e planos que
+                          dependam desta disciplina.
+                        </p>
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => onAction("revoke")}
+                          className={`${buttonStyle} text-amber-800`}
+                        >
+                          Desfazer aprovação simulada
+                        </button>
+                      </>
+                    )}
+                  </>
+                )}
+                {simulationSlot}
+              </div>
+              {impactSlot}
+              {moveSlot}
+            </div>
+
+            {historySlot && (
+              <div role="tabpanel" hidden={tab !== "history"}>
+                {historySlot}
+              </div>
+            )}
+
+            <div role="tabpanel" hidden={tab !== "dependencies"}>
+              <section className="mt-4">
+                <h3 className="details-section-title">Pré-requisitos</h3>
+                {course.prerequisite_ids.length ? (
+                  references(course.prerequisite_ids)
+                ) : (
+                  <p className="mt-2 text-xs text-slate-600">
+                    {course.prerequisite_status === "unverified"
+                      ? "Pré-requisitos ainda não confirmados para esta matriz."
+                      : "Nenhum pré-requisito cadastrado."}
+                  </p>
+                )}
+                {course.prerequisite_ids.length > 0 &&
+                  course.prerequisite_status === "unverified" && (
+                    <p className="mt-2 text-[11px] text-amber-800">
+                      Pré-requisitos não confirmados pela coordenação.
+                    </p>
                   )}
-                </>
+              </section>
+              {(course.corequisite_ids ?? []).length > 0 && (
+                <section className="mt-5">
+                  <h3 className="details-section-title">Co-requisitos</h3>
+                  <p className="mt-1 text-[11px] text-slate-600">
+                    Cursar no mesmo semestre ou antes.
+                  </p>
+                  {references(course.corequisite_ids ?? [])}
+                </section>
               )}
+              <section className="mt-5">
+                <h3 className="details-section-title">Libera diretamente</h3>
+                {dependents.length ? (
+                  references(dependents)
+                ) : (
+                  <p className="mt-2 text-xs text-slate-600">
+                    Nenhum componente depende diretamente desta disciplina.
+                  </p>
+                )}
+              </section>
             </div>
           </>
         )}

@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { goHistory } from "./drag";
 
 async function signIn(
   page: import("@playwright/test").Page,
@@ -11,6 +12,15 @@ async function signIn(
   await expect(
     page.getByRole("button", { name: "Sair", exact: true }),
   ).toBeVisible();
+  await goHistory(page);
+}
+
+async function goSimulation(page: import("@playwright/test").Page) {
+  await page
+    .getByRole("navigation", { name: "Navegação principal" })
+    .getByRole("link", { name: "Simulação" })
+    .click();
+  await expect(page.getByLabel("Alternativa salva")).toBeVisible();
 }
 
 test("history, two alternatives, hypothetical draft, save and recovery after login", async ({
@@ -30,8 +40,8 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     .getByRole("button", { name: "Fechar detalhes", exact: true })
     .last()
     .click();
+  await goSimulation(page);
   await page.getByLabel("Nome da alternativa").fill("Alternativa A");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await expect(
     page.getByText("Cenário hipotético", { exact: true }),
@@ -49,11 +59,13 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     page.getByText("Alterações pendentes", { exact: false }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Salvar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("Plano salvo");
+  await expect(
+    page.locator('[role="status"]:not([id^="DndLiveRegion"])'),
+  ).toContainText("Plano salvo");
   await page.reload();
   await page
     .getByLabel("Alternativa salva")
-    .selectOption({ label: "Alternativa A · 2026.2" });
+    .selectOption({ label: "Alternativa A" });
   await expect(
     page.getByRole("button", {
       name: "Estruturas de Dados Orientadas a Objetos",
@@ -61,16 +73,16 @@ test("history, two alternatives, hypothetical draft, save and recovery after log
     }),
   ).toContainText("Aprovação simulada");
   await page.getByLabel("Nome da alternativa").fill("Alternativa B");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await page.getByRole("button", { name: "Sair", exact: true }).click();
   await signIn(page);
+  await goSimulation(page);
   await expect(
     page.getByLabel("Alternativa salva").locator("option"),
   ).toHaveCount(3);
   await page
     .getByLabel("Alternativa salva")
-    .selectOption({ label: "Alternativa A · 2026.2" });
+    .selectOption({ label: "Alternativa A" });
   await expect(
     page.getByRole("button", {
       name: "Estruturas de Dados Orientadas a Objetos",
@@ -83,6 +95,7 @@ test("the official map directs pending courses to an alternative", async ({
   page,
 }) => {
   await signIn(page);
+  await goSimulation(page);
   await page
     .getByRole("button", {
       name: "Matemática Discreta para Computação",
@@ -92,7 +105,6 @@ test("the official map directs pending courses to an alternative", async ({
   await page.getByRole("link", { name: "Criar ou abrir alternativa" }).click();
   await expect(page.getByLabel("Alternativa salva")).toBeInViewport();
   await page.getByLabel("Nome da alternativa").fill("Simulação de conclusão");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await page
     .getByRole("button", {
@@ -119,6 +131,7 @@ test("empty history, student isolation and mobile layout", async ({
   await expect(
     page.getByText("Nenhuma cadeira registrada", { exact: true }),
   ).toBeVisible();
+  await goSimulation(page);
   await expect(
     page.getByLabel("Alternativa salva").locator("option"),
   ).toHaveCount(1);
@@ -134,8 +147,8 @@ test("save failure and conflict do not claim success or discard draft", async ({
   page,
 }) => {
   await signIn(page);
+  await goSimulation(page);
   await page.getByLabel("Nome da alternativa").fill("Falha");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await page.getByLabel("Nome do plano").fill("Rascunho local");
   await page.route("**/api/plans/*", async (route) => {
@@ -159,6 +172,7 @@ test("save failure and conflict do not claim success or discard draft", async ({
 
 test("expired session clears personal content", async ({ page }) => {
   await signIn(page);
+  await goSimulation(page);
   await page.route("**/api/plans", (route) =>
     route.fulfill({
       status: 401,
@@ -166,7 +180,6 @@ test("expired session clears personal content", async ({ page }) => {
     }),
   );
   await page.getByLabel("Nome da alternativa").fill("Expirada");
-  await page.getByLabel("Semestre-alvo").fill("2026.2");
   await page.getByRole("button", { name: "Criar alternativa" }).click();
   await expect(page.getByLabel("E-mail")).toBeVisible();
   await expect(

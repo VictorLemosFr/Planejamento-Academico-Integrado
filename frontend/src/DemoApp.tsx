@@ -280,7 +280,7 @@ export default function App() {
                 ))}
               </div>
             )}
-            <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+            <div className="grid min-w-0 gap-6">
               {isPlan ? (
                 <section>
                   <div className="mb-5 flex items-start justify-between gap-3">

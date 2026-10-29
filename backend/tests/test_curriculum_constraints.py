@@ -23,7 +23,9 @@ def test_published_catalogs_are_complete_and_have_stable_ids(program, year, coun
     assert all(course["id"].startswith(program + ":") for course in courses)
     assert any(course["type"] == "mandatory" for course in courses)
     assert any(course["type"] == "elective" for course in courses)
-    assert all(course["prerequisite_status"] == "unverified" for course in courses)
+    # Requisitos conferidos no PPC; ficam pendentes só os casos sem fonte suficiente.
+    pending = {"ia": {"ia:cin0121"}, "ec": {"ec:cin0120"}, "cc": set()}[program]
+    assert {c["id"] for c in courses if c["prerequisite_status"] == "unverified"} == pending
 
 
 def test_seed_loads_separate_curricula_without_overwriting_local_data():
@@ -34,7 +36,7 @@ def test_seed_loads_separate_curricula_without_overwriting_local_data():
         assert len(list_courses(session, "CC-2024")) == 101
         assert len(list_courses(session, "IA-2025")) == 70
         assert len(list_courses(session, "EC-2024")) == 147
-        assert len(list_courses(session, "SI-demo")) == 56
+        assert len(list_courses(session, "SI-2024")) == 56
         assert session.get(Course, "ia:cin0123").name == "MATEMÁTICA DISCRETA PARA COMPUTAÇÃO"
         session.get(Course, "cc:cin0133").name = "Local edit"
         session.commit()

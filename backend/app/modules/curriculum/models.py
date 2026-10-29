@@ -13,6 +13,14 @@ class Curriculum(Base):
     program: Mapped[str] = mapped_column(String(2))
     valid_from: Mapped[str] = mapped_column(String(6))
     source_url: Mapped[str] = mapped_column(String(512))
+    # Requisitos publicados pela fonte; ausentes ficam nulos em vez de estimados.
+    official_mandatory_hours: Mapped[int | None] = mapped_column(nullable=True)
+    profile_elective_hours: Mapped[int | None] = mapped_column(nullable=True)
+    free_elective_hours: Mapped[int | None] = mapped_column(nullable=True)
+    complementary_hours: Mapped[int | None] = mapped_column(nullable=True)
+    extension_hours: Mapped[int | None] = mapped_column(nullable=True)
+    total_hours: Mapped[int | None] = mapped_column(nullable=True)
+    standard_semesters: Mapped[int | None] = mapped_column(nullable=True)
 
 
 class Course(Base):
@@ -31,12 +39,13 @@ class Course(Base):
         ),
     )
     id: Mapped[str] = mapped_column(String(40), primary_key=True)
-    curriculum_id: Mapped[str] = mapped_column(ForeignKey("curricula.id"), default="SI-demo")
+    curriculum_id: Mapped[str] = mapped_column(ForeignKey("curricula.id"), default="SI-2024")
     source_code: Mapped[str | None] = mapped_column(String(40), nullable=True)
     prerequisite_status: Mapped[str] = mapped_column(String(12), default="unverified")
     name: Mapped[str] = mapped_column(String(255))
     short_name: Mapped[str] = mapped_column(String(100))
     hours: Mapped[int]
+    credits: Mapped[int | None] = mapped_column(nullable=True)
     period: Mapped[int | None]
     type: Mapped[str] = mapped_column(String(20))
 
@@ -46,3 +55,12 @@ class Prerequisite(Base):
     __table_args__ = (CheckConstraint("course_id <> prerequisite_id", name="no_self_prerequisite"),)
     course_id: Mapped[str] = mapped_column(ForeignKey("courses.id"), primary_key=True)
     prerequisite_id: Mapped[str] = mapped_column(ForeignKey("courses.id"), primary_key=True)
+
+
+class Corequisite(Base):
+    """Componente que deve ser cursado junto ou antes; não bloqueia como pré-requisito."""
+
+    __tablename__ = "corequisites"
+    __table_args__ = (CheckConstraint("course_id <> corequisite_id", name="no_self_corequisite"),)
+    course_id: Mapped[str] = mapped_column(ForeignKey("courses.id"), primary_key=True)
+    corequisite_id: Mapped[str] = mapped_column(ForeignKey("courses.id"), primary_key=True)

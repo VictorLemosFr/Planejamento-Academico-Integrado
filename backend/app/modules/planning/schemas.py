@@ -1,6 +1,6 @@
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CourseView(BaseModel):
@@ -51,3 +51,22 @@ class Scenario(BaseModel):
     completed_ids: list[str]
     planned_ids: list[str]
     trail_ids: list[str]
+
+
+class PublicEvaluation(BaseModel):
+    """Simulação sem conta: nada é gravado e as aprovações são apenas hipotéticas."""
+
+    model_config = ConfigDict(extra="forbid")
+    current_period: int = Field(default=1, ge=1, le=20)
+    start_term: str | None = Field(default=None, pattern=r"^\d{4}\.[12]$")
+    hypothetical_ids: list[str] = Field(default_factory=list, max_length=500)
+    action: Literal["approve", "revoke"] | None = None
+    course_id: str | None = Field(default=None, min_length=1, max_length=40)
+    simulated_grades: dict[str, float] = Field(default_factory=dict, max_length=500)
+
+    @field_validator("simulated_grades")
+    @classmethod
+    def grade_range(cls, value):
+        if any(not 0 <= grade <= 10 for grade in value.values()):
+            raise ValueError("Notas simuladas devem ficar entre 0 e 10.")
+        return value

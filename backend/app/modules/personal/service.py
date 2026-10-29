@@ -8,6 +8,8 @@ from sqlalchemy import select
 
 from app.modules.constraints.service import CurriculumGraph
 from app.modules.personal.models import AcademicRecord, HistoryImport
+from app.modules.planning.forecast import failure_impact, summarize
+from app.modules.progression.rules import FAILURE_LIMIT, RULE_SOURCE, coefficient, failure_level
 from app.modules.progression.service import course_status
 
 WARNING = (
@@ -17,6 +19,12 @@ UNVERIFIED_PREREQUISITES = (
     "Os pré-requisitos desta matriz ainda não foram confirmados; "
     "o planejamento não comprova elegibilidade para matrícula."
 )
+PARTIALLY_VERIFIED = (
+    "Pré-requisitos conferidos no PPC do curso, exceto em {count} disciplina(s) sinalizada(s); "
+    "o planejamento não substitui a validação da matrícula no SIGAA."
+)
+COREQUISITE = "Co-requisito precisa ser cursado no mesmo semestre ou antes."
+REFUSED = f"Matrícula recusada nesta disciplina após {FAILURE_LIMIT} reprovações ({RULE_SOURCE})."
 
 
 def history_view(session, student):
@@ -60,11 +68,10 @@ def official_sets(history):
     return completed, ongoing
 
 
-def import_history(session, student, author, payload, courses):
-    data = payload.model_dump(exclude_none=True)
-    graph = CurriculumGraph(courses)
+def validate_records(records, graph):
+    """Disciplinas da matriz, sem tentativa duplicada e sem tentativa após a recusa."""
     seen = set()
-    for index, record in enumerate(data["records"]):
+    for index, record in enumerate(records):
         field = ["body", "records", index]
         if record["course_id"] not in graph.courses:
             raise HTTPException(
@@ -76,6 +83,26 @@ def import_history(session, student, author, payload, courses):
                 422, [{"loc": field, "msg": "Tentativa duplicada ou contraditória."}]
             )
         seen.add(key)
+    attempts = {}
+    for record in records:
+        attempts.setdefault(record["course_id"], []).append(record)
+    for course_id, items in attempts.items():
+        failures = 0
+        for record in sorted(items, key=lambda r: r["academic_term"]):
+            if failures >= FAILURE_LIMIT:
+                name = graph.courses[course_id]["name"]
+                raise HTTPException(
+                    422,
+                    f"{name}: após {FAILURE_LIMIT} reprovações a matrícula é recusada "
+                    f"({RULE_SOURCE}); não há tentativa seguinte.",
+                )
+            failures += record["status"] == "failed"
+
+
+def import_history(session, student, author, payload, courses):
+    data = payload.model_dump(exclude_none=True)
+    graph = CurriculumGraph(courses)
+    validate_records(data["records"], graph)
     # Canonical order makes equivalent full files idempotent.
     data["records"].sort(key=lambda r: (r["course_id"], r["academic_term"]))
     digest = sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
@@ -125,11 +152,23 @@ def import_history(session, student, author, payload, courses):
 
 
 def evaluate(
-    courses, history, hypothetical_ids=(), planned_ids=(), action=None, course_layout=None
+    courses,
+    history,
+    hypothetical_ids=(),
+    planned_ids=(),
+    action=None,
+    course_layout=None,
+    requirements=None,
+    simulated_grades=None,
 ):
     graph = CurriculumGraph(courses)
     official, ongoing = official_sets(history)
     hypothetical, planned = set(hypothetical_ids), set(planned_ids)
+    attempts = {}
+    for record in sorted(history["records"], key=lambda r: r["academic_term"]):
+        attempts.setdefault(record["course_id"], []).append(record)
+    failures = {cid: sum(r["status"] == "failed" for r in items) for cid, items in attempts.items()}
+    refused = {cid for cid, count in failures.items() if count >= FAILURE_LIMIT} - official
     layout = {cid: dict(position) for cid, position in (course_layout or {}).items()}
     graph.require_known(hypothetical | planned | layout.keys())
     if action:
@@ -138,7 +177,11 @@ def evaluate(
         if kind in {"approve", "revoke"} and course_id in official:
             raise ValueError("Aprovações oficiais são somente leitura.")
         if kind in {"approve", "plan"}:
-            if graph.missing(course_id, official | hypothetical):
+            if course_id in refused:
+                raise ValueError(REFUSED)
+            # Planejar para o próximo semestre aceita pré-requisito em andamento agora.
+            satisfied = official | hypothetical | (ongoing if kind == "plan" else set())
+            if graph.missing(course_id, satisfied):
                 raise ValueError("Conclua os pré-requisitos antes de simular esta ação.")
             if kind == "approve":
                 hypothetical.add(course_id)
@@ -155,15 +198,26 @@ def evaluate(
             planned.discard(course_id)
     # Placement is a visual arrangement; it never grants academic completion.
     by_id = {course["id"]: course for course in courses}
-    if action and action["kind"] == "unplan" and by_id[action["course_id"]]["type"] == "elective":
+    # Tirar do plano devolve a disciplina à posição da matriz (eletivas, ao catálogo).
+    if action and action["kind"] == "unplan":
         layout.pop(action["course_id"], None)
-    next_period = min(history["current_period"] + 1, 20)
+    current = history["current_period"]
+    next_period = min(current + 1, 20)
     next_order = (
         max((pos["order"] for pos in layout.values() if pos["period"] == next_period), default=-1)
         + 1
     )
+
+    def period_of(cid):
+        position = layout.get(cid)
+        return position["period"] if position else by_id[cid]["period"]
+
+    # Cada coluna é um semestre: planejar é pôr a disciplina numa coluna futura.
+    # "Planejar para o próximo semestre" e planos sem coluna futura vão para a seguinte.
     for cid in sorted(planned):
-        if by_id[cid]["type"] == "elective" and cid not in layout:
+        explicit = action and action["kind"] == "plan" and action["course_id"] == cid
+        period = period_of(cid)
+        if explicit or period is None or period <= current:
             layout[cid] = {"period": next_period, "order": next_order}
             next_order += 1
     completed = official | hypothetical
@@ -176,10 +230,34 @@ def evaluate(
             issues.append("Disciplina em andamento no histórico registrado.")
         if cid in hypothetical & planned:
             issues.append("Disciplina simultaneamente planejada e aprovada na hipótese.")
-        if graph.missing(cid, completed):
+        if cid in hypothetical and graph.missing(cid, completed):
             issues.append("Pré-requisitos não satisfeitos.")
+        if cid in planned:
+            # Pré-requisito: aprovado, em andamento agora ou planejado num semestre anterior.
+            here = period_of(cid)
+            late = [
+                p
+                for p in graph.missing(cid, completed)
+                if not (p in ongoing and here > current)
+                and not (p in planned and period_of(p) < here)
+            ]
+            if late:
+                names = ", ".join(by_id[p]["short_name"] for p in late)
+                issues.append(f"Pré-requisitos não satisfeitos: {names} precisa vir antes.")
+            if any(
+                co not in completed | ongoing and not (co in planned and period_of(co) <= here)
+                for co in graph.corequisites(cid)
+            ):
+                issues.append(COREQUISITE)
+        if cid in refused:
+            issues.append(REFUSED)
         if issues:
             problems[cid] = issues
+    grades = {
+        cid: round(float(grade), 2)
+        for cid, grade in (simulated_grades or {}).items()
+        if cid in hypothetical | planned
+    }
     result = []
     for course in courses:
         cid = course["id"]
@@ -191,16 +269,44 @@ def evaluate(
             status = "simulated"
         elif cid in ongoing:
             status = "in_progress"
+        elif cid in planned:
+            # Planejada num semestre futuro, mesmo que o pré-requisito venha antes no plano.
+            status = "planned"
+        course_attempts = [
+            {
+                "academic_term": r["academic_term"],
+                "status": r["status"],
+                "grade": r.get("grade"),
+            }
+            for r in attempts.get(cid, [])
+        ]
+        approved = [a for a in course_attempts if a["status"] == "completed"]
         result.append(
             {
                 **course,
+                "attempts": course_attempts,
+                "failures": failures.get(cid, 0),
+                "failure_level": failure_level(failures.get(cid, 0)),
+                "grade": approved[-1]["grade"] if approved else None,
+                "simulated_grade": grades.get(cid),
                 "status": status,
                 "missing_prerequisite_ids": missing,
                 "dependent_ids": sorted(graph.descendants(cid)),
                 "critical": len(graph.descendants(cid)) >= 6,
             }
         )
+    integralization, forecast = (
+        summarize(courses, completed, ongoing, requirements, history)
+        if requirements is not None
+        else (None, None)
+    )
     return {
+        "integralization": integralization,
+        "forecast": forecast,
+        "cr": coefficient(history["records"], by_id, grades),
+        "simulated_grades": grades,
+        "failure_limit": FAILURE_LIMIT,
+        "failure_rule": RULE_SOURCE,
         "course_layout": layout,
         "current_period": history["current_period"],
         "history_revision": history["revision"],
@@ -226,21 +332,26 @@ def evaluate(
         },
         "valid": not problems,
         "problems": problems,
-        "warnings": [WARNING]
-        + (
-            [UNVERIFIED_PREREQUISITES]
-            if any(course.get("prerequisite_status") == "unverified" for course in courses)
-            else []
-        ),
+        "warnings": [WARNING] + verification_warning(courses),
     }
 
 
-def plan_view(session, student, plan, courses):
+def verification_warning(courses):
+    unverified = sum(course.get("prerequisite_status") == "unverified" for course in courses)
+    if not unverified:
+        return []
+    if unverified == len(courses):
+        return [UNVERIFIED_PREREQUISITES]
+    return [PARTIALLY_VERIFIED.format(count=unverified)]
+
+
+def plan_view(session, student, plan, courses, requirements=None):
     return {
         "id": plan.id,
         "name": plan.name,
         "target_term": plan.target_term,
         "version": plan.version,
+        "share_token": plan.share_token,
         "created_at": plan.created_at,
         "updated_at": plan.updated_at,
         **evaluate(
@@ -249,5 +360,69 @@ def plan_view(session, student, plan, courses):
             plan.hypothetical_ids,
             plan.planned_ids,
             course_layout=plan.course_layout,
+            requirements=requirements,
+            simulated_grades=plan.simulated_grades,
         ),
+    }
+
+
+def failure_impact_view(courses, history, requirements, course_id):
+    """E se eu reprovar? Compara a previsão real com a reprovação em `course_id`."""
+    CurriculumGraph(courses).require_known({course_id})
+    official, ongoing = official_sets(history)
+    failures = sum(
+        r["status"] == "failed" for r in history["records"] if r["course_id"] == course_id
+    )
+    return failure_impact(courses, official, ongoing, requirements, history, course_id, failures)
+
+
+# O link compartilhado mostra o plano, nunca notas, CR, reprovações ou identidade.
+SHARED_COURSE_FIELDS = {
+    "id",
+    "name",
+    "short_name",
+    "type",
+    "period",
+    "hours",
+    "credits",
+    "source_code",
+    "status",
+    "prerequisite_ids",
+    "prerequisite_status",
+    "corequisite_ids",
+    "dependent_ids",
+    "missing_prerequisite_ids",
+    "critical",
+}
+SHARED_FIELDS = {
+    "name",
+    "target_term",
+    "updated_at",
+    "course_layout",
+    "integralization",
+    "forecast",
+    "counts",
+    "planned_hours",
+    "planned_ids",
+    "hypothetical_ids",
+    "current_period",
+    "warnings",
+}
+
+
+def shared_view(view, curriculum):
+    return {
+        **{key: view[key] for key in SHARED_FIELDS},
+        "curriculum": {"id": curriculum.id, "program": curriculum.program},
+        "courses": [
+            {
+                **{key: course.get(key) for key in SHARED_COURSE_FIELDS},
+                "attempts": [],
+                "failures": 0,
+                "failure_level": None,
+                "grade": None,
+                "simulated_grade": None,
+            }
+            for course in view["courses"]
+        ],
     }

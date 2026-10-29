@@ -8,6 +8,12 @@ import type {
   Plan,
   Progression,
   Draft,
+  Program,
+  PublicCurriculum,
+  PublicGrid,
+  TranscriptProposal,
+  FailureImpact,
+  SharedPlan,
 } from "./types";
 
 let csrf = "";
@@ -29,7 +35,8 @@ export async function request<T>(
   let response: Response;
   const headers = new Headers(options?.headers);
   if (options?.method && options.method !== "GET") {
-    headers.set("Content-Type", "application/json");
+    if (!headers.has("Content-Type"))
+      headers.set("Content-Type", "application/json");
     if (csrf) headers.set("X-CSRF-Token", csrf);
   }
   try {
@@ -80,13 +87,15 @@ export const register = (payload: {
   registration: string;
   current_period: number;
   start_term: string;
-  program: "CC" | "SI" | "IA" | "EC";
+  program: Program;
 }) => request<Identity>("/auth/register", body("POST", payload));
 export const logout = () => request("/auth/logout", body("POST"));
 export const getHistory = () => request<History>("/me/history");
 export const saveHistory = (payload: HistoryUpdate) =>
   request<{ revision: number }>("/me/history", body("PUT", payload));
 export const getProgression = () => request<Progression>("/me/progression");
+export const previewHistory = (payload: HistoryUpdate) =>
+  request<Progression>("/me/history/preview", body("POST", payload));
 export const getPlans = () => request<Plan[]>("/plans");
 export const getPlan = (id: string) => request<Plan>(`/plans/${id}`);
 export const createPlan = (name: string, target_term: string) =>
@@ -104,7 +113,42 @@ export const savePlan = (plan: Plan) =>
       planned_ids: plan.planned_ids,
       hypothetical_ids: plan.hypothetical_ids,
       course_layout: plan.course_layout,
+      simulated_grades: plan.simulated_grades ?? {},
     }),
   );
 export const deletePlan = (id: string, version: number) =>
   request(`/plans/${id}?version=${version}`, body("DELETE"));
+export const readTranscript = (file: File) =>
+  request<TranscriptProposal>("/me/history/pdf", {
+    method: "POST",
+    body: file,
+    headers: { "Content-Type": "application/pdf" },
+  });
+export const getPublicCurricula = () =>
+  request<PublicCurriculum[]>("/public/curricula");
+export const getPublicGrid = (id: string) =>
+  request<PublicGrid>(`/public/curricula/${encodeURIComponent(id)}`);
+export const simulatePublic = (
+  id: string,
+  payload: {
+    current_period: number;
+    start_term?: string | null;
+    hypothetical_ids: string[];
+    action?: "approve" | "revoke";
+    course_id?: string;
+  },
+) =>
+  request<PublicGrid>(
+    `/public/curricula/${encodeURIComponent(id)}/simulations`,
+    body("POST", payload),
+  );
+export const getFailureImpact = (courseId: string) =>
+  request<FailureImpact>(
+    `/me/progression/failure-impact/${encodeURIComponent(courseId)}`,
+  );
+export const sharePlan = (id: string) =>
+  request<{ token: string }>(`/plans/${id}/share`, body("POST"));
+export const unsharePlan = (id: string) =>
+  request(`/plans/${id}/share`, body("DELETE"));
+export const getSharedPlan = (token: string) =>
+  request<SharedPlan>(`/public/shared/${encodeURIComponent(token)}`);
