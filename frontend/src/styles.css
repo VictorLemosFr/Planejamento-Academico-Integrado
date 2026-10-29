@@ -2479,6 +2479,16 @@ kbd {
   font-weight: 600;
   color: var(--accent);
 }
+.banner.notice {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  margin-bottom: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.banner.notice > svg {
+  margin-top: 2px;
+}
 .banner.warn {
   border-color: color-mix(in srgb, var(--warn-ink) 25%, transparent);
   background: var(--warn-bg);

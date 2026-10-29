@@ -149,7 +149,28 @@ TEST_DATABASE_URL=postgresql+psycopg://pai:pai@127.0.0.1:54329/pai npm test
 
 Os testes criam esquemas aleatórios e removem somente esses esquemas ao terminar. Cobrem banco vazio e grade existente, seed repetido, dois salvamentos concorrentes, importações simultâneas idênticas e reconexão do pool. Sem `TEST_DATABASE_URL`, os testes específicos de PostgreSQL são marcados como ignorados; a suíte de API usa SQLite em memória. Os testes de navegador incluem o fluxo persistido, duas alternativas, novo login, sessão expirada, conflito, histórico ausente e tela móvel, além das demonstrações antigas.
 
-Na validação local desta entrega, os 109 testes do backend passaram com PostgreSQL real, incluindo migrações (inclusive as correções de dados da 0008 e os requisitos dos PPCs da 0009), concorrência, isolamento entre matrizes, previsão, integralização, grade pública e leitura de PDF fictício. Os 3 testes de componentes e os 25 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem cadastro, histórico e planos nos quatro cursos, distribuição de disciplinas e eletivas por alternativa, ordem dos cards, recuperação após novo login, grade pública, filtro de eletivas, resumo de integralização e importação de um histórico fictício em PDF (`frontend/tests/fixtures/`).
+Na validação local desta entrega, os 124 testes do backend passaram com PostgreSQL real, incluindo migrações (inclusive as correções de dados da 0008 e os requisitos dos PPCs da 0009), concorrência, isolamento entre matrizes, previsão, integralização, grade pública e leitura de PDF fictício. Os 3 testes de componentes e os 42 testes de navegador também passaram. Ruff, formatação e build/TypeScript passaram. Os testes de navegador cobrem cadastro, histórico e planos nos quatro cursos, distribuição de disciplinas e eletivas por alternativa, ordem dos cards, recuperação após novo login, grade pública, filtro de eletivas, resumo de integralização e importação de um histórico fictício em PDF (`frontend/tests/fixtures/`).
+
+## Versão online de testes (Render)
+
+O `Dockerfile` da raiz gera uma imagem única: compila o React e o FastAPI entrega a API em `/api` e o site nas demais rotas, na mesma origem (sem CORS). A cada início, a imagem roda `alembic upgrade head` e o seed, ambos idempotentes, e depois o `uvicorn` na porta `$PORT`.
+
+1. Crie uma conta em [render.com](https://render.com) e autorize o acesso ao repositório no GitHub.
+2. No painel, escolha **New → Blueprint**, selecione o repositório e a branch. O `render.yaml` cria o serviço web `pai` e o banco `pai-db`, ambos no plano gratuito, e liga `DATABASE_URL` ao banco.
+3. Ao fim do deploy, o site fica em `https://pai-XXXX.onrender.com`. A URL pública (`RENDER_EXTERNAL_URL`) é aceita como origem automaticamente, e o cookie de sessão usa `Secure`.
+
+Limites do plano gratuito: o serviço dorme após 15 minutos sem acesso, e o primeiro acesso seguinte leva cerca de 1 minuto. O PostgreSQL gratuito expira 30 dias após a criação. O build da imagem liga `VITE_PUBLIC_DEMO`, que exibe no login e na importação o aviso para usar **apenas dados fictícios**. Não importe históricos reais na versão online.
+
+Para testar a imagem localmente, com o banco do Compose ativo:
+
+```bash
+docker build -t pai .
+docker run --rm -p 10000:10000 --add-host=host.docker.internal:host-gateway \
+  -e DATABASE_URL=postgres://pai:pai@host.docker.internal:54329/pai \
+  -e RENDER_EXTERNAL_URL=http://localhost:10000 pai
+```
+
+Em seguida, acesse http://localhost:10000.
 
 ## Executar somente o protótipo original
 
@@ -185,7 +206,7 @@ prototipo/
 compose.yaml
 ```
 
-O backend segue um monolito modular. Oferta e Administrativo serão adicionados quando seus fluxos forem implementados. Provedor de hospedagem e configuração de produção ainda não foram escolhidos.
+O backend segue um monolito modular. Oferta e Administrativo serão adicionados quando seus fluxos forem implementados. A versão online de testes usa a Render (veja acima). A hospedagem definitiva ainda não foi escolhida.
 
 ## Licença
 
