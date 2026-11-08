@@ -4,6 +4,7 @@ class CurriculumGraph:
         self.children = {course_id: set() for course_id in self.courses}
         for course in courses:
             self.require_known(set(course["prerequisite_ids"]))
+            self.require_known(set(course.get("corequisite_ids", [])))
             for prerequisite in course["prerequisite_ids"]:
                 self.children[prerequisite].add(course["id"])
         # Eliminação topológica detecta ciclos sem depender de limite de recursão.
@@ -34,3 +35,6 @@ class CurriculumGraph:
                 found.add(current)
                 pending.extend(self.children[current])
         return found
+
+    def corequisites(self, course_id):
+        return list(self.courses[course_id].get("corequisite_ids", []))

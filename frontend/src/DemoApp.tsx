@@ -60,6 +60,9 @@ export default function App() {
           unplan: "Disciplina removida do plano.",
           revoke:
             "Aprovação desfeita. Os componentes dependentes foram recalculados.",
+          // A demonstração antiga não tem disciplinas em andamento para reprovar.
+          fail: "Reprovação simulada.",
+          unfail: "Reprovação simulada desfeita.",
         }[kind],
       );
     },
@@ -280,7 +283,7 @@ export default function App() {
                 ))}
               </div>
             )}
-            <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_300px]">
+            <div className="grid min-w-0 gap-6">
               {isPlan ? (
                 <section>
                   <div className="mb-5 flex items-start justify-between gap-3">

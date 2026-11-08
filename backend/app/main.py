@@ -1,8 +1,12 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.api import router
+from app.core.config import get_settings
+from app.frontend import mount_frontend
 from app.modules.personal.api import router as personal_router
 
 app = FastAPI(title="Planejamento Acadêmico Integrado", version="0.1.0")
@@ -26,3 +30,8 @@ def database_error(request, exception):
             "detail": "Não foi possível consultar o banco. Verifique a conexão e as migrações."
         },
     )
+
+
+# Registrado por último: a rota coringa do site não pode encobrir a API.
+if get_settings().static_dir:
+    mount_frontend(app, Path(get_settings().static_dir))

@@ -44,11 +44,15 @@ O mapeamento exato fornecido pela proposta é: F1 em Progressão; F2 e F7 em Pr�
 
 ## Primeira entrega funcional
 
-A aplicação React/Tailwind consulta o FastAPI e persiste dados no PostgreSQL. Estudantes podem criar contas para CC, SI, IA e EC e informar seu histórico sem aprovação manual da matrícula. SI usa grade demonstrativa; CC e EC usam transcrições das matrizes atuais para ingressantes desde 2024.1, e IA para ingressantes desde 2025.1. Cada conta usa somente disciplinas do próprio curso. Aprovações informadas, aprovações hipotéticas e andamento têm estados distintos.
+A aplicação React/Tailwind consulta o FastAPI e persiste dados no PostgreSQL. Estudantes podem criar contas para CC, SI, IA e EC e informar seu histórico sem aprovação manual da matrícula. SI, CC e EC usam transcrições das matrizes atuais para ingressantes desde 2024.1, e IA para ingressantes desde 2025.1. Cada conta usa somente disciplinas do próprio curso. Aprovações informadas, aprovações hipotéticas e andamento têm estados distintos.
 
 Planos são rascunhos até salvar. Nome, semestre, escolhas e hipóteses são persistidos por estudante, com controle de versão e revisão do histórico. Cada salvamento do histórico informado substitui a versão vigente atomicamente, conserva versões anteriores e revalida os planos sem apagar escolhas. Planos incompatíveis ficam acessíveis para ajuste ou exclusão. A importação pela coordenação permanece apenas para contas criadas administrativamente.
 
-As grades ainda dependem de conferência institucional. Os pré-requisitos de CC, IA e EC não foram confirmados e não são inventados; o sistema avisa que não pode comprovar elegibilidade. Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, recomendação personalizada, comparação lado a lado e previsão de conclusão permanecem fora desta entrega. A tabela anterior descreve o protótipo HTML preservado.
+As grades ainda dependem de conferência institucional. Pré-requisitos e co-requisitos foram conferidos nos PPCs das quatro matrizes. Duas disciplinas eletivas continuam sem confirmação e são sinalizadas. O sistema não substitui a validação da matrícula no SIGAA.
+
+O histórico real e a simulação ficam em abas separadas. O histórico registra tentativas com nota final, aplica a regra de reprovações da Res. nº 09/2009-CCEPE (recusa de matrícula na 3ª) e calcula o CR ponderado por créditos; a simulação aceita notas simuladas e mostra o CR simulado. A integralização acompanha horas de obrigatórias e eletivas de perfil contra os requisitos publicados de cada curso. A previsão de conclusão é o maior entre a cadeia de pré-requisitos pendente e a carga restante no ritmo médio da matriz; não considera oferta, choque de horários nem reprovações futuras. A grade pública permite explorar e simular as quatro matrizes sem conta. O histórico pode ser preenchido a partir do PDF do SIGAA, sempre com revisão antes de salvar.
+
+Oferta, administração completa, integração automática com SIGAA, planejamento de vários semestres, recomendação personalizada e comparação lado a lado permanecem fora desta entrega. A tabela anterior descreve o protótipo HTML preservado.
 
 ## Decisões ainda abertas
 

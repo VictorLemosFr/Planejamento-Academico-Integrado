@@ -18,7 +18,7 @@ def test_signup_creates_student_and_session(client):
     assert result.status_code == 201, result.text
     assert result.json()["user"]["email"] == "new.student@example.org"
     assert result.json()["student"]["program"] == "SI"
-    assert result.json()["student"]["curriculum"]["id"] == "SI-demo"
+    assert result.json()["student"]["curriculum"]["id"] == "SI-2024"
     assert result.json()["csrf_token"]
     assert client.get("/api/auth/me").json()["student"] == result.json()["student"]
     assert client.get("/api/me/progression").status_code == 200

@@ -52,13 +52,13 @@ def client(monkeypatch):
     if not url:
         Base.metadata.create_all(engine)
     with Session(engine) as session:
-        if session.get(Curriculum, "SI-demo") is None:
+        if session.get(Curriculum, "SI-2024") is None:
             session.add(
                 Curriculum(
-                    id="SI-demo",
+                    id="SI-2024",
                     program="SI",
                     valid_from="0000.1",
-                    source_url="app/data/curriculum.json",
+                    source_url="https://portal.cin.ufpe.br/graduacao/sistemas-de-informacao/",
                 )
             )
         session.add_all(
