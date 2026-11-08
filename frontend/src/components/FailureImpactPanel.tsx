@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { TriangleAlert } from "lucide-react";
+import { CalendarClock, TriangleAlert } from "lucide-react";
 import * as api from "../api";
 import { courseShortName } from "../display";
 import type { Course } from "../types";
@@ -16,10 +16,20 @@ export function FailureImpactPanel({
   course,
   courses,
   revision,
+  onSimulate,
+  simulateLabel = "Planejar com essa reprovação",
+  applied = false,
+  busy = false,
 }: {
   course: Course;
   courses: Course[];
   revision: number;
+  /** Leva a reprovação para um plano: refaz a disciplina e adia as dependentes. */
+  onSimulate?: () => void;
+  simulateLabel?: string;
+  /** A reprovação já está simulada no plano aberto. */
+  applied?: boolean;
+  busy?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const impact = useQuery({
@@ -113,6 +123,30 @@ export function FailureImpactPanel({
                   .
                 </p>
               )}
+              {data.in_progress &&
+                onSimulate &&
+                (applied ? (
+                  <p className="details-note plan">
+                    Esta reprovação já está simulada no plano aberto.
+                  </p>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="impact-simulate"
+                      disabled={busy}
+                      onClick={onSimulate}
+                    >
+                      <CalendarClock size={15} aria-hidden="true" />{" "}
+                      {simulateLabel}
+                    </button>
+                    <p className="small muted">
+                      {data.refused_after
+                        ? "Na Simulação, a disciplina fica fora do plano (matrícula recusada) e você vê o que trava."
+                        : "Na Simulação, ela é refeita no próximo semestre e o que depende dela é adiado. Seu histórico não muda."}
+                    </p>
+                  </>
+                ))}
             </>
           )}
         </>

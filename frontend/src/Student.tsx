@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { celebrate } from "./fx/confetti";
 import { useQuery } from "@tanstack/react-query";
 import {
   NavLink,
@@ -10,6 +11,8 @@ import { BookOpen, Download, FilePlus2 } from "lucide-react";
 import * as api from "./api";
 import type {
   ActionKind,
+  Course,
+  Draft,
   HistoryRecord,
   HistoryUpdate,
   Identity,
@@ -34,8 +37,8 @@ import { Overview } from "./pages/Overview";
 import { Suggestions, type SuggestedPick } from "./pages/Suggestions";
 import { ComparePlans } from "./pages/ComparePlans";
 import { coursePeriod, moveCourse } from "./courseLayout";
-import { planCompletion } from "./planner";
-import { courseName } from "./display";
+import { planCompletion, projectSemesters } from "./planner";
+import { courseName, courseShortName } from "./display";
 import {
   formatGrade,
   historyLayout,
@@ -69,7 +72,25 @@ const snapshot = (p: Plan | null) =>
     Object.entries(p.simulated_grades ?? {}).sort(([a], [b]) =>
       a.localeCompare(b),
     ),
+    Object.entries(p.simulated_failures ?? {}).sort(([a], [b]) =>
+      a.localeCompare(b),
+    ),
   ]);
+/** Corpo da avaliação de um rascunho: o estado do plano mais a mudança pedida. */
+const evaluation = (base: Plan, change: Partial<Draft> = {}): Draft => ({
+  version: base.version,
+  history_revision: base.history_revision,
+  planned_ids: base.planned_ids,
+  hypothetical_ids: base.hypothetical_ids,
+  course_layout: base.course_layout,
+  simulated_grades: base.simulated_grades ?? {},
+  simulated_failures: base.simulated_failures ?? {},
+  ...change,
+});
+/** Disciplinas em andamento que o plano reprova: deixam de ocupar o semestre atual. */
+const failedIn = (plan: Plan | null) =>
+  new Set(Object.keys(plan?.simulated_failures ?? {}));
+const loads = [180, 240, 300, 360, 420, 480];
 
 type Page = "overview" | "history" | "simulation" | "next" | "compare";
 const titles: Record<Page, string> = {
@@ -303,11 +324,16 @@ export function Student({
     return { plan, created: true };
   }
   /** Na Simulação, o que já foi cursado fica onde foi cursado; o resto segue o plano. */
+  function planRecords(base: Plan | null) {
+    const failed = failedIn(base);
+    return records.filter((r) => !failed.has(r.course_id));
+  }
   function planLayout(base: Plan | null, courses = base?.courses ?? []) {
+    const kept = planRecords(base);
     const fromHistory = startTerm
-      ? historyLayout(courses, records, startTerm)
+      ? historyLayout(courses, kept, startTerm)
       : {};
-    const taken = new Set(records.map((r) => r.course_id));
+    const taken = new Set(kept.map((r) => r.course_id));
     const own = Object.fromEntries(
       Object.entries(base?.course_layout ?? {}).filter(
         ([id]) => !taken.has(id),
@@ -324,7 +350,7 @@ export function Student({
     const shown = planLayout(base);
     const moved = moveCourse(base.courses, shown, courseId, period, beforeId);
     if (moved === shown) return false;
-    const taken = new Set(records.map((r) => r.course_id));
+    const taken = new Set(planRecords(base).map((r) => r.course_id));
     const course_layout = Object.fromEntries(
       Object.entries(moved).filter(([id]) => !taken.has(id)),
     );
@@ -335,14 +361,10 @@ export function Student({
         : base.planned_ids.filter((id) => id !== courseId);
     setDraft({ ...base, course_layout, planned_ids });
     void run(async () => {
-      const result = await api.evaluatePlan(base.id, {
-        version: base.version,
-        history_revision: base.history_revision,
-        planned_ids,
-        hypothetical_ids: base.hypothetical_ids,
-        course_layout,
-        simulated_grades: base.simulated_grades ?? {},
-      });
+      const result = await api.evaluatePlan(
+        base.id,
+        evaluation(base, { planned_ids, course_layout }),
+      );
       setDraft({ ...base, ...result });
     });
     return true;
@@ -442,14 +464,7 @@ export function Student({
   async function refreshSimulatedCr() {
     if (!draft) return;
     await run(async () => {
-      const result = await api.evaluatePlan(draft.id, {
-        version: draft.version,
-        history_revision: draft.history_revision,
-        planned_ids: draft.planned_ids,
-        hypothetical_ids: draft.hypothetical_ids,
-        course_layout: draft.course_layout,
-        simulated_grades: draft.simulated_grades ?? {},
-      });
+      const result = await api.evaluatePlan(draft.id, evaluation(draft));
       setDraft({ ...draft, ...result });
     });
   }
@@ -466,18 +481,145 @@ export function Student({
   }
   async function action(kind: ActionKind) {
     if (!draft || !selectedId) return;
+    if (kind === "fail") return simulateFailure(selectedId);
     await run(async () => {
-      const result = await api.evaluatePlan(draft.id, {
-        version: draft.version,
-        history_revision: draft.history_revision,
-        planned_ids: draft.planned_ids,
-        hypothetical_ids: draft.hypothetical_ids,
-        course_layout: draft.course_layout,
-        simulated_grades: draft.simulated_grades ?? {},
-        action: { kind, course_id: selectedId },
-      });
+      const result = await api.evaluatePlan(
+        draft.id,
+        evaluation(draft, { action: { kind, course_id: selectedId } }),
+      );
       setDraft({ ...draft, ...result });
-      setNotice("Rascunho recalculado. Clique em Salvar para persistir.");
+      setNotice(
+        kind === "unfail"
+          ? "Reprovação simulada desfeita: a disciplina volta a contar como em andamento. As disciplinas adiadas ficam onde estão; arraste para ajustar e clique em Salvar."
+          : "Rascunho recalculado. Clique em Salvar para persistir.",
+      );
+    });
+  }
+  /** Formatura para mensagens: a do plano, se completo, ou a previsão mínima. */
+  function graduation(plan: Plan) {
+    const done = planCompletion({
+      ...plan,
+      course_layout: planLayout(plan, plan.courses),
+    });
+    if (done.complete && done.lastPeriod) return termLabel(done.lastPeriod);
+    return plan.forecast?.estimated_completion_term ?? null;
+  }
+  /**
+   * "E se eu reprovar?" vira plano. Com uma alternativa aberta na Simulação, a
+   * reprovação entra nela: a disciplina é refeita no próximo semestre e o que
+   * depende dela é adiado. Fora dela, cria uma alternativa nova com um caminho
+   * até a formatura que já considera a reprovação.
+   */
+  function simulateFailure(courseId: string) {
+    const source = real ?? data;
+    const course = source?.courses.find((c) => c.id === courseId);
+    if (busy || !course || !source) return;
+    const reuse = page === "simulation" ? draft : null;
+    if (!reuse && !discard()) return;
+    const name = courseShortName(course);
+    const before = source.forecast?.estimated_completion_term ?? null;
+    const limit = source.failure_limit ?? 3;
+    const refused = (course.failures ?? 0) + 1 >= limit;
+    void run(async () => {
+      if (reuse) {
+        const result = await api.evaluatePlan(
+          reuse.id,
+          evaluation(reuse, { action: { kind: "fail", course_id: courseId } }),
+        );
+        setDraft({ ...reuse, ...result });
+        setSelectedId(courseId);
+        setScrollTo(courseId);
+        const moved = result.rescheduled_ids?.length ?? 0;
+        const retake = result.course_layout[courseId]?.period;
+        setNotice(
+          [
+            refused
+              ? `Reprovação simulada em ${name}: seria a ${limit}ª, e a matrícula nessa disciplina é recusada.`
+              : `Reprovação simulada em ${name}: refazer em ${retake ? termLabel(retake) : "um semestre futuro"}.`,
+            moved === 1 ? "1 disciplina que dependia dela foi adiada." : "",
+            moved > 1
+              ? `${moved} disciplinas que dependiam dela foram adiadas.`
+              : "",
+            "Clique em Salvar para guardar este plano.",
+          ]
+            .filter(Boolean)
+            .join(" "),
+        );
+        return;
+      }
+      const plan = await api.createPlan(`Se eu reprovar em ${name}`, nextTerm);
+      // Um caminho até a formatura sem contar a disciplina como aprovada.
+      const firstPeriod = currentPeriod + 1;
+      const pace = source.forecast?.pace_hours_per_semester ?? 360;
+      const budget = loads.reduce((best, h) =>
+        Math.abs(h - pace) < Math.abs(best - pace) ? h : best,
+      );
+      const courses: Course[] = source.courses.map((c) =>
+        c.id === courseId && refused
+          ? { ...c, failure_level: "refused" as const }
+          : c,
+      );
+      const { semesters } = projectSemesters(courses, {
+        budget,
+        assumed: new Set([
+          ...source.official_completed_ids,
+          ...source.in_progress_ids.filter((id) => id !== courseId),
+        ]),
+        period: firstPeriod,
+        profileRemaining:
+          source.forecast?.remaining_profile_elective_hours ?? 0,
+        includeElectives: true,
+      });
+      const picks = semesters.flatMap((s) =>
+        s.picks.map((p) => ({
+          id: p.course.id,
+          period: firstPeriod + s.index,
+        })),
+      );
+      const failing: Plan = {
+        ...plan,
+        simulated_failures: { [courseId]: null },
+      };
+      let course_layout = planLayout(failing);
+      for (const { id, period } of picks)
+        course_layout = moveCourse(plan.courses, course_layout, id, period);
+      const taken = new Set(planRecords(failing).map((r) => r.course_id));
+      course_layout = Object.fromEntries(
+        Object.entries(course_layout).filter(([id]) => !taken.has(id)),
+      );
+      const result = await api.evaluatePlan(
+        plan.id,
+        evaluation(failing, {
+          planned_ids: picks.map((p) => p.id),
+          course_layout,
+        }),
+      );
+      const next: Plan = { ...failing, ...result };
+      // Um plano coerente já fica salvo, como nas Sugestões; senão fica o rascunho.
+      if (result.valid) open(await api.savePlan(next));
+      else {
+        open(plan);
+        setDraft(next);
+      }
+      await plans.refetch();
+      navigate("/simulacao");
+      setSelectedId(courseId);
+      setScrollTo(courseId);
+      const after = graduation(next);
+      setNotice(
+        [
+          `Criamos a alternativa “${plan.name}”.`,
+          refused
+            ? `Seria a ${limit}ª reprovação: a matrícula em ${name} é recusada e ela fica fora do plano.`
+            : `${name} é refeita e o que depende dela vem depois.`,
+          after
+            ? `Formatura${before && before !== after ? ` de ${before}` : ""} para ${after}.`
+            : "",
+          "Seu histórico não muda; arraste para ajustar.",
+        ]
+          .filter(Boolean)
+          .join(" "),
+      );
     });
   }
   /** Obrigatórias de um período já cursado que ainda não têm registro. */
@@ -551,7 +693,15 @@ export function Student({
         hypothetical_ids: [],
         course_layout,
       });
-      open(await api.savePlan({ ...plan, ...result }));
+      const saved = await api.savePlan({ ...plan, ...result });
+      open(saved);
+      if (
+        planCompletion({
+          ...saved,
+          course_layout: planLayout(saved, saved.courses),
+        }).complete
+      )
+        void celebrate();
       await plans.refetch();
       navigate("/simulacao");
       const terms = new Set(picks.map((p) => p.period)).size;
@@ -586,17 +736,34 @@ export function Student({
     !["completed", "in_progress", "simulated"].includes(course.status);
   // Cursadas ou em andamento no histórico (inclusive alterações ainda não salvas)
   // nunca ficam "sem semestre": já têm o semestre delas.
+  const simFailed = mode === "simulation" ? failedIn(draft) : new Set<string>();
   const taken = new Set(
-    records.filter((r) => r.status !== "failed").map((r) => r.course_id),
-  );
-  const failedOnly = new Set(
     records
-      .filter((r) => r.status === "failed" && !taken.has(r.course_id))
+      .filter((r) => r.status !== "failed" && !simFailed.has(r.course_id))
       .map((r) => r.course_id),
   );
+  const failedOnly = new Set([
+    ...records
+      .filter((r) => r.status === "failed" && !taken.has(r.course_id))
+      .map((r) => r.course_id),
+    ...simFailed,
+  ]);
   const completion = draft
     ? planCompletion({ ...draft, course_layout: mapLayout }, taken)
     : null;
+  // Comemora quando o plano aberto passa a chegar à formatura.
+  const celebrated = useRef<{ id: string | null; complete: boolean }>({
+    id: null,
+    complete: false,
+  });
+  useEffect(() => {
+    const id = draft?.id ?? null;
+    const complete = !!completion?.complete;
+    const before = celebrated.current;
+    if (id && id === before.id && complete && !before.complete)
+      void celebrate();
+    celebrated.current = { id, complete };
+  }, [draft?.id, completion?.complete]);
   const query = search.toLocaleLowerCase("pt-BR");
   const visible =
     data?.courses.filter(
@@ -858,6 +1025,9 @@ export function Student({
                     { label: "em andamento", value: data.counts.in_progress },
                   ]
                 : [
+                    ...(simFailed.size
+                      ? [{ label: "reprov. simuladas", value: simFailed.size }]
+                      : []),
                     { label: "aprov. simuladas", value: data.counts.simulated },
                     {
                       label: "carga planejada",
@@ -1154,12 +1324,13 @@ export function Student({
                               disabled={busy}
                               onClick={() =>
                                 void run(async () => {
+                                  const simulated_failures = {
+                                    ...(draft.simulated_failures ?? {}),
+                                  };
+                                  delete simulated_failures[id];
                                   const result = await api.evaluatePlan(
                                     draft.id,
-                                    {
-                                      version: draft.version,
-                                      history_revision: draft.history_revision,
-                                      course_layout: draft.course_layout,
+                                    evaluation(draft, {
                                       planned_ids: draft.planned_ids.filter(
                                         (x) => x !== id,
                                       ),
@@ -1167,7 +1338,8 @@ export function Student({
                                         draft.hypothetical_ids.filter(
                                           (x) => x !== id,
                                         ),
-                                    },
+                                      simulated_failures,
+                                    }),
                                   );
                                   setDraft({ ...draft, ...result });
                                 })
@@ -1355,6 +1527,16 @@ export function Student({
                     }
                     courses={real.courses}
                     revision={history.data?.revision ?? 0}
+                    busy={busy}
+                    onSimulate={() => simulateFailure(selected.id)}
+                    simulateLabel={
+                      mode === "simulation" && draft
+                        ? `Aplicar ao plano “${draft.name}”`
+                        : "Planejar com essa reprovação"
+                    }
+                    applied={
+                      mode === "simulation" && failedIn(draft).has(selected.id)
+                    }
                   />
                 ) : undefined
               }
@@ -1464,27 +1646,63 @@ export function Student({
                 draft &&
                 selected &&
                 (draft.planned_ids.includes(selected.id) ||
-                  draft.hypothetical_ids.includes(selected.id)) ? (
-                  <label className="mt-3 block text-xs text-slate-600">
-                    Nota simulada (entra no CR simulado)
-                    <input
-                      className={input}
-                      type="number"
-                      min="0"
-                      max="10"
-                      step="0.1"
-                      inputMode="decimal"
-                      disabled={busy}
-                      value={draft.simulated_grades?.[selected.id] ?? ""}
-                      onChange={(e) => {
-                        const value = e.target.value.replace(",", ".");
-                        const grade = value === "" ? null : Number(value);
-                        if (grade === null || (grade >= 0 && grade <= 10))
-                          setSimulatedGrade(selected.id, grade);
-                      }}
-                      onBlur={() => void refreshSimulatedCr()}
-                    />
-                  </label>
+                  draft.hypothetical_ids.includes(selected.id) ||
+                  failedIn(draft).has(selected.id)) ? (
+                  <>
+                    {failedIn(draft).has(selected.id) && (
+                      <label className="mt-3 block text-xs text-slate-600">
+                        Nota da reprovação (entra no CR simulado)
+                        <input
+                          className={input}
+                          type="number"
+                          min="0"
+                          max="10"
+                          step="0.1"
+                          inputMode="decimal"
+                          disabled={busy}
+                          value={draft.simulated_failures?.[selected.id] ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(",", ".");
+                            const grade = value === "" ? null : Number(value);
+                            if (grade === null || (grade >= 0 && grade <= 10))
+                              setDraft({
+                                ...draft,
+                                simulated_failures: {
+                                  ...(draft.simulated_failures ?? {}),
+                                  [selected.id]: grade,
+                                },
+                              });
+                          }}
+                          onBlur={() => void refreshSimulatedCr()}
+                        />
+                      </label>
+                    )}
+                    {(draft.planned_ids.includes(selected.id) ||
+                      draft.hypothetical_ids.includes(selected.id)) && (
+                      <label className="mt-3 block text-xs text-slate-600">
+                        {failedIn(draft).has(selected.id)
+                          ? "Nota simulada ao refazer (entra no CR simulado)"
+                          : "Nota simulada (entra no CR simulado)"}
+                        <input
+                          className={input}
+                          type="number"
+                          min="0"
+                          max="10"
+                          step="0.1"
+                          inputMode="decimal"
+                          disabled={busy}
+                          value={draft.simulated_grades?.[selected.id] ?? ""}
+                          onChange={(e) => {
+                            const value = e.target.value.replace(",", ".");
+                            const grade = value === "" ? null : Number(value);
+                            if (grade === null || (grade >= 0 && grade <= 10))
+                              setSimulatedGrade(selected.id, grade);
+                          }}
+                          onBlur={() => void refreshSimulatedCr()}
+                        />
+                      </label>
+                    )}
+                  </>
                 ) : undefined
               }
             />

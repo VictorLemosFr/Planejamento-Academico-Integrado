@@ -1,4 +1,6 @@
-/** Número grande com as casas decimais menores, como os saldos do Mercury. */
+import { useCountUp } from "../fx/Effects";
+
+/** Número grande com as casas decimais menores; rola até o valor ao aparecer. */
 export function BigValue({
   value,
   digits = 2,
@@ -8,9 +10,10 @@ export function BigValue({
   digits?: number;
   suffix?: string;
 }) {
-  if (value === null || value === undefined)
+  const shown = useCountUp(value, 1100);
+  if (value === null || value === undefined || shown === null)
     return <span className="big-value">—</span>;
-  const text = value.toLocaleString("pt-BR", {
+  const text = shown.toLocaleString("pt-BR", {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   });

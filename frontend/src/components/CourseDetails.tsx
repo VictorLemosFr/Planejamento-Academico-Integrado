@@ -176,6 +176,13 @@ export function CourseDetails({
                   explorar o impacto.
                 </p>
               )}
+              {course.simulated_failure && (
+                <p className="details-note warn">
+                  Reprovação simulada neste plano: o histórico continua com a
+                  disciplina em andamento. Aqui ela é refeita num semestre
+                  futuro e o que depende dela vem depois.
+                </p>
+              )}
               {course.critical && (
                 <p className="details-note critical">
                   Disciplina crítica: {course.dependent_ids.length} componentes
@@ -243,6 +250,26 @@ export function CourseDetails({
                           Remover do plano
                         </button>
                       )}
+                    {allowPlanning && course.status === "in_progress" && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => onAction("fail")}
+                        className={`${buttonStyle} text-red-800`}
+                      >
+                        Simular reprovação e replanejar
+                      </button>
+                    )}
+                    {course.simulated_failure && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => onAction("unfail")}
+                        className={`${buttonStyle} text-amber-800`}
+                      >
+                        Desfazer reprovação simulada
+                      </button>
+                    )}
                     {(course.status === "simulated" ||
                       (course.status === "completed" && !official)) && (
                       <>

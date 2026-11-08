@@ -151,6 +151,37 @@ def import_history(session, student, author, payload, courses):
     return {"revision": revision, "warnings": warnings, "unchanged": False}
 
 
+def reschedule(graph, planned, layout, period_of, completed, ongoing, current):
+    """Empurra para depois o que ficou antes dos próprios pré-requisitos no plano.
+
+    Só move disciplinas planejadas e só para semestres posteriores: pré-requisito
+    planejado exige o semestre seguinte ao dele; co-requisito planejado, o mesmo
+    semestre ou depois. Devolve as disciplinas que mudaram de semestre.
+    """
+    moved = set()
+    for _ in range(len(planned) + 1):
+        changed = False
+        for cid in sorted(planned, key=lambda c: (period_of(c), c)):
+            need = current + 1
+            for parent in graph.courses[cid]["prerequisite_ids"]:
+                if parent in planned and parent not in completed | ongoing:
+                    need = max(need, period_of(parent) + 1)
+            for partner in graph.corequisites(cid):
+                if partner in planned and partner not in completed | ongoing:
+                    need = max(need, period_of(partner))
+            need = min(need, 20)
+            if period_of(cid) < need:
+                order = max(
+                    (p["order"] for p in layout.values() if p["period"] == need), default=-1
+                )
+                layout[cid] = {"period": need, "order": order + 1}
+                moved.add(cid)
+                changed = True
+        if not changed:
+            break
+    return moved
+
+
 def evaluate(
     courses,
     history,
@@ -160,23 +191,59 @@ def evaluate(
     course_layout=None,
     requirements=None,
     simulated_grades=None,
+    simulated_failures=None,
 ):
     graph = CurriculumGraph(courses)
-    official, ongoing = official_sets(history)
+    official, taking_now = official_sets(history)
     hypothetical, planned = set(hypothetical_ids), set(planned_ids)
     attempts = {}
     for record in sorted(history["records"], key=lambda r: r["academic_term"]):
         attempts.setdefault(record["course_id"], []).append(record)
-    failures = {cid: sum(r["status"] == "failed" for r in items) for cid, items in attempts.items()}
-    refused = {cid for cid, count in failures.items() if count >= FAILURE_LIMIT} - official
+    recorded_failures = {
+        cid: sum(r["status"] == "failed" for r in items) for cid, items in attempts.items()
+    }
+    # Reprovação simulada: a disciplina em andamento não é concluída neste semestre.
+    failed_sim = {
+        cid: None if grade is None else round(float(grade), 2)
+        for cid, grade in (simulated_failures or {}).items()
+    }
     layout = {cid: dict(position) for cid, position in (course_layout or {}).items()}
-    graph.require_known(hypothetical | planned | layout.keys())
+    graph.require_known(hypothetical | planned | layout.keys() | failed_sim.keys())
+    ongoing = taking_now - failed_sim.keys()
+
+    def failure_counts():
+        """Reprovações registradas mais a simulada neste plano, quando houver."""
+        counts = {
+            cid: recorded_failures.get(cid, 0) + (cid in failed_sim and cid in taking_now)
+            for cid in recorded_failures.keys() | failed_sim.keys()
+        }
+        return counts, {cid for cid, n in counts.items() if n >= FAILURE_LIMIT} - official
+
+    failures, refused = failure_counts()
+    rescheduled = set()
     if action:
         course_id, kind = action["course_id"], action["kind"]
         graph.require_known({course_id})
         if kind in {"approve", "revoke"} and course_id in official:
             raise ValueError("Aprovações oficiais são somente leitura.")
-        if kind in {"approve", "plan"}:
+        if kind == "fail":
+            if course_id not in taking_now:
+                raise ValueError(
+                    "Só é possível simular a reprovação de uma disciplina em andamento."
+                )
+            failed_sim.setdefault(course_id, None)
+            ongoing = taking_now - failed_sim.keys()
+            # O que dependia dela deixa de estar aprovado na hipótese.
+            hypothetical -= graph.descendants(course_id) | {course_id}
+            # Na 3ª reprovação a matrícula é recusada: não há como refazer.
+            if recorded_failures.get(course_id, 0) + 1 < FAILURE_LIMIT:
+                planned.add(course_id)
+        elif kind == "unfail":
+            failed_sim.pop(course_id, None)
+            ongoing = taking_now - failed_sim.keys()
+            planned.discard(course_id)
+            layout.pop(course_id, None)
+        elif kind in {"approve", "plan"}:
             if course_id in refused:
                 raise ValueError(REFUSED)
             # Planejar para o próximo semestre aceita pré-requisito em andamento agora.
@@ -196,6 +263,7 @@ def evaluate(
             planned -= affected
         elif kind == "unplan":
             planned.discard(course_id)
+    failures, refused = failure_counts()
     # Placement is a visual arrangement; it never grants academic completion.
     by_id = {course["id"]: course for course in courses}
     # Tirar do plano devolve a disciplina à posição da matriz (eletivas, ao catálogo).
@@ -215,15 +283,24 @@ def evaluate(
     # Cada coluna é um semestre: planejar é pôr a disciplina numa coluna futura.
     # "Planejar para o próximo semestre" e planos sem coluna futura vão para a seguinte.
     for cid in sorted(planned):
-        explicit = action and action["kind"] == "plan" and action["course_id"] == cid
+        explicit = action and action["kind"] in {"plan", "fail"} and action["course_id"] == cid
         period = period_of(cid)
         if explicit or period is None or period <= current:
             layout[cid] = {"period": next_period, "order": next_order}
             next_order += 1
     completed = official | hypothetical
+    if action and action["kind"] == "fail":
+        # Replanejar: refazer no próximo semestre e adiar o que dependia dela.
+        rescheduled = reschedule(graph, planned, layout, period_of, completed, ongoing, current) - {
+            action["course_id"]
+        }
     problems = {}
-    for cid in hypothetical | planned:
+    for cid in hypothetical | planned | failed_sim.keys():
         issues = []
+        if cid in failed_sim and cid not in taking_now:
+            issues.append(
+                "Reprovação simulada só vale para disciplina em andamento no histórico registrado."
+            )
         if cid in official:
             issues.append("Disciplina já concluída no histórico registrado.")
         if cid in planned & ongoing:
@@ -249,7 +326,7 @@ def evaluate(
                 for co in graph.corequisites(cid)
             ):
                 issues.append(COREQUISITE)
-        if cid in refused:
+        if cid in refused and cid in hypothetical | planned:
             issues.append(REFUSED)
         if issues:
             problems[cid] = issues
@@ -289,6 +366,7 @@ def evaluate(
                 "failure_level": failure_level(failures.get(cid, 0)),
                 "grade": approved[-1]["grade"] if approved else None,
                 "simulated_grade": grades.get(cid),
+                "simulated_failure": cid in failed_sim,
                 "status": status,
                 "missing_prerequisite_ids": missing,
                 "dependent_ids": sorted(graph.descendants(cid)),
@@ -296,15 +374,21 @@ def evaluate(
             }
         )
     integralization, forecast = (
-        summarize(courses, completed, ongoing, requirements, history)
+        # Reprovar o que está em andamento: o semestre atual continua ocupado e a
+        # disciplina volta às pendentes.
+        summarize(
+            courses, completed, taking_now, requirements, history, failed_sim.keys() & taking_now
+        )
         if requirements is not None
         else (None, None)
     )
     return {
         "integralization": integralization,
         "forecast": forecast,
-        "cr": coefficient(history["records"], by_id, grades),
+        "cr": coefficient(history["records"], by_id, grades, failed_sim),
         "simulated_grades": grades,
+        "simulated_failures": failed_sim,
+        "rescheduled_ids": sorted(rescheduled),
         "failure_limit": FAILURE_LIMIT,
         "failure_rule": RULE_SOURCE,
         "course_layout": layout,
@@ -332,7 +416,13 @@ def evaluate(
         },
         "valid": not problems,
         "problems": problems,
-        "warnings": [WARNING] + verification_warning(courses),
+        "warnings": [WARNING]
+        + verification_warning(courses)
+        + [
+            f"Reprovação simulada em {by_id[cid]['short_name']}: seria a "
+            f"{FAILURE_LIMIT}ª e a matrícula nessa disciplina é recusada ({RULE_SOURCE})."
+            for cid in sorted(failed_sim.keys() & refused)
+        ],
     }
 
 
@@ -362,6 +452,7 @@ def plan_view(session, student, plan, courses, requirements=None):
             course_layout=plan.course_layout,
             requirements=requirements,
             simulated_grades=plan.simulated_grades,
+            simulated_failures=plan.simulated_failures,
         ),
     }
 

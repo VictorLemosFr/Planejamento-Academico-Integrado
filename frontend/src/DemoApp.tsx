@@ -60,6 +60,9 @@ export default function App() {
           unplan: "Disciplina removida do plano.",
           revoke:
             "Aprovação desfeita. Os componentes dependentes foram recalculados.",
+          // A demonstração antiga não tem disciplinas em andamento para reprovar.
+          fail: "Reprovação simulada.",
+          unfail: "Reprovação simulada desfeita.",
         }[kind],
       );
     },

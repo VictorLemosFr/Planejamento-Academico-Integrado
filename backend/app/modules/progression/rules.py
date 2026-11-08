@@ -36,7 +36,7 @@ def weighted_average(entries, digits=4):
     return round(sum(weight * grade for weight, grade in entries) / total, digits)
 
 
-def coefficient(records, by_id, simulated=None):
+def coefficient(records, by_id, simulated=None, failed=None):
     """CR e MC como o SIGAA da UFPE calcula.
 
     A Res. nº 09/2009-CCEPE fala em ponderar pelos créditos, mas o SIGAA pondera pela
@@ -44,6 +44,9 @@ def coefficient(records, by_id, simulated=None):
     impressos só fecham com a CH.
     - CR: todas as tentativas com nota, inclusive reprovações (falta vale zero).
     - MC (média de conclusão): só as aprovações.
+
+    `simulated` e `failed` são notas de tentativas imaginadas (aprovação e reprovação);
+    entram só no CR simulado. Uma disciplina pode ter as duas: reprovar agora e refazer.
     """
     graded = [
         r
@@ -60,7 +63,8 @@ def coefficient(records, by_id, simulated=None):
     ]
     simulated_entries = [
         (hour_weight(by_id[course_id]), float(grade))
-        for course_id, grade in (simulated or {}).items()
+        for source in (simulated, failed)
+        for course_id, grade in (source or {}).items()
         if course_id in by_id and grade is not None
     ]
     ungraded = sum(

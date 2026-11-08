@@ -52,6 +52,16 @@ const baseMetrics: Metric[] = [
     value: (p) => p.hypothetical_ids.length,
     format: (v) => String(v ?? 0),
   },
+  {
+    label: "Reprovações simuladas",
+    value: (p) => Object.keys(p.simulated_failures ?? {}).length,
+    format: (v, p) => {
+      const names = p.courses
+        .filter((c) => c.simulated_failure)
+        .map(courseShortName);
+      return names.length ? names.join(", ") : String(v ?? 0);
+    },
+  },
 ];
 
 /** Alternativas lado a lado, com a melhor de cada linha destacada. */

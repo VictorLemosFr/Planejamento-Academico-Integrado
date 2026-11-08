@@ -2749,6 +2749,39 @@ kbd {
 .impact-headline[data-delay="0"] {
   color: var(--good);
 }
+.impact-simulate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin: 10px 0 6px;
+  border: 1px solid var(--bad);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bad);
+  background: color-mix(in srgb, var(--bad) 6%, var(--surface));
+}
+.impact-simulate:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--bad) 12%, var(--surface));
+}
+.impact-simulate:disabled {
+  opacity: 0.6;
+}
+
+/* Reprovação simulada no plano: a disciplina será refeita. */
+.chip-sim-failure {
+  border-style: dashed;
+  border-color: var(--bad);
+  color: var(--bad);
+  font-weight: 650;
+}
+.course-card[data-sim-failure] {
+  box-shadow: inset 3px 0 0 var(--bad);
+}
+
 .details-note[data-level="critical"],
 .details-note[data-level="refused"] {
   background: color-mix(in srgb, var(--bad) 9%, var(--surface));

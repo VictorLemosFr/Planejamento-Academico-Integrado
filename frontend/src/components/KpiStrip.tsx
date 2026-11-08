@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { formatGrade } from "../academicTerms";
 import type { Forecast, Integralization } from "../types";
 import { trackedPercent } from "./ProgressSummary";
+import { useCountUp } from "../fx/Effects";
 
 /**
  * Faixa fixa no topo: os números que o estudante consulta o tempo todo ficam
@@ -34,6 +35,8 @@ export function KpiStrip({
 }) {
   const percent = trackedPercent(integralization);
   const showSimulated = mode === "simulation" && simulatedCr != null;
+  const crShown = useCountUp(showSimulated ? simulatedCr : cr);
+  const percentShown = Math.round(useCountUp(percent) ?? 0);
   return (
     <section
       className="kpi-strip"
@@ -51,7 +54,7 @@ export function KpiStrip({
       </span>
       {(mode === "history" || mode === "simulation") && (
         <div className="kpi" data-kpi="cr">
-          <strong>{formatGrade(showSimulated ? simulatedCr : cr)}</strong>
+          <strong>{formatGrade(crShown)}</strong>
           <span>
             {showSimulated ? "CR simulado" : "CR"}
             {!showSimulated && ungraded > 0 ? ` · ${ungraded} sem nota` : ""}
@@ -59,7 +62,7 @@ export function KpiStrip({
         </div>
       )}
       <div className="kpi" data-kpi="progress">
-        <strong>{percent}%</strong>
+        <strong>{percentShown}%</strong>
         <span>integralizado</span>
         <i className="kpi-bar" aria-hidden="true">
           <b style={{ width: `${percent}%` }} />
@@ -67,7 +70,9 @@ export function KpiStrip({
       </div>
       {plan && (
         <div className="kpi" data-kpi="plan">
-          <strong>{plan.term ?? "Plano parcial"}</strong>
+          <strong className="kpi-pop" key={plan.term ?? "parcial"}>
+            {plan.term ?? "Plano parcial"}
+          </strong>
           <span>
             {plan.term
               ? "formatura neste plano"
@@ -86,7 +91,10 @@ export function KpiStrip({
       )}
       {forecast && !plan && (
         <div className="kpi" data-kpi="forecast">
-          <strong>
+          <strong
+            className="kpi-pop"
+            key={`${forecast.estimated_semesters}-${forecast.estimated_completion_term}`}
+          >
             {forecast.estimated_semesters} sem.
             {forecast.estimated_completion_term && (
               <small> · {forecast.estimated_completion_term}</small>

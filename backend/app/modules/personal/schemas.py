@@ -109,6 +109,8 @@ class CoursePosition(StrictModel):
 class Draft(StrictModel):
     course_layout: dict[CourseId, CoursePosition] | None = Field(default=None, max_length=500)
     simulated_grades: dict[CourseId, Grade] | None = Field(default=None, max_length=500)
+    # Reprovação simulada de disciplina em andamento, com a nota da reprovação (opcional).
+    simulated_failures: dict[CourseId, Grade | None] | None = Field(default=None, max_length=100)
     hypothetical_ids: list[CourseId] = Field(default_factory=list, max_length=500)
     planned_ids: list[CourseId] = Field(default_factory=list, max_length=500)
 

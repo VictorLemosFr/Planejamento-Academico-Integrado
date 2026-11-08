@@ -6,7 +6,8 @@ export type Status =
   | "available"
   | "pending"
   | "locked";
-export type ActionKind = "approve" | "revoke" | "plan" | "unplan";
+export type ActionKind =
+  "approve" | "revoke" | "plan" | "unplan" | "fail" | "unfail";
 export type FailureLevel = "attention" | "critical" | "refused" | null;
 export interface Attempt {
   academic_term: string;
@@ -41,6 +42,8 @@ export interface Course {
   failure_level?: FailureLevel;
   grade?: number | null;
   simulated_grade?: number | null;
+  /** Em andamento no histórico, mas reprovada neste plano: será refeita. */
+  simulated_failure?: boolean;
   status: Status;
   missing_prerequisite_ids: string[];
   dependent_ids: string[];
@@ -185,6 +188,10 @@ export interface TranscriptIssue {
 export interface Progression extends Simulation {
   cr?: CoefficientSummary;
   simulated_grades?: Record<string, number>;
+  /** Reprovações simuladas do plano, com a nota da reprovação (opcional). */
+  simulated_failures?: Record<string, number | null>;
+  /** Disciplinas que a última reprovação simulada adiou de semestre. */
+  rescheduled_ids?: string[];
   failure_limit?: number;
   failure_rule?: string;
   integralization?: Integralization | null;
@@ -248,6 +255,7 @@ export interface SharedPlan {
 export interface Draft {
   course_layout?: CourseLayout;
   simulated_grades?: Record<string, number>;
+  simulated_failures?: Record<string, number | null>;
   planned_ids: string[];
   hypothetical_ids: string[];
   version: number;

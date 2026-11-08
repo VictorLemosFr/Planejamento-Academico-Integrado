@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 import {
   ChevronsLeft,
   ChevronsRight,
@@ -15,7 +15,8 @@ import {
 } from "lucide-react";
 import { CommandPalette, type Command } from "./CommandPalette";
 import { ThemeToggle } from "./ThemeToggle";
-import { Logo } from "./Logo";
+import { BrandLockup } from "./brand/Brand";
+import { Aurora } from "../fx/Effects";
 
 const KEY = "pai-sidebar-collapsed";
 
@@ -44,7 +45,19 @@ const isMac =
   typeof navigator !== "undefined" &&
   /Mac|iPhone|iPad/.test(navigator.platform);
 
-/** Moldura inspirada no Mercury: barra lateral retrátil, topo enxuto e rodapé. */
+/** Destaca a última palavra do título em vermelho, como nas peças do CIn. */
+function accentTitle(title: string) {
+  const cut = title.lastIndexOf(" ");
+  if (cut < 0) return <span className="title-accent">{title}</span>;
+  return (
+    <>
+      {title.slice(0, cut)}{" "}
+      <span className="title-accent">{title.slice(cut + 1)}</span>
+    </>
+  );
+}
+
+/** Moldura: barra lateral retrátil com as marcas, topo enxuto e rodapé. */
 export function AppShell({
   title,
   subtitle,
@@ -73,6 +86,7 @@ export function AppShell({
 }) {
   const [collapsed, setCollapsed] = useState(readCollapsed);
   const [palette, setPalette] = useState(false);
+  const location = useLocation();
   useEffect(() => {
     const open = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
@@ -94,13 +108,21 @@ export function AppShell({
   };
   return (
     <div className="shell" data-collapsed={collapsed || undefined}>
+      <Aurora intensity={0.35} />
       <aside className="sidebar">
         <Link
           to="/"
           className="sidebar-brand"
           aria-label="pai · Planejamento Acadêmico Integrado, página inicial"
         >
-          <Logo size={34} compact={collapsed} />
+          <BrandLockup size={34} compact={collapsed} />
+          {!collapsed && (
+            <span className="sidebar-product">
+              Planejamento
+              <br />
+              Acadêmico Integrado
+            </span>
+          )}
         </Link>
         <nav aria-label="Navegação principal" className="sidebar-nav">
           {nav.map(({ to, label, icon: Icon, end }) => (
@@ -145,7 +167,7 @@ export function AppShell({
       <div className="shell-main">
         <header className="topbar">
           <div className="topbar-title">
-            <h1>{title}</h1>
+            <h1>{accentTitle(title)}</h1>
             {subtitle && <p>{subtitle}</p>}
           </div>
           <div className="topbar-actions">
@@ -176,7 +198,10 @@ export function AppShell({
             )}
           </div>
         </header>
-        <div className="shell-content">{children}</div>
+        {/* A chave reinicia a animação de entrada a cada página. */}
+        <div className="shell-content page-enter" key={location.pathname}>
+          {children}
+        </div>
         {footer && <footer className="site-footer">{footer}</footer>}
       </div>
       <CommandPalette

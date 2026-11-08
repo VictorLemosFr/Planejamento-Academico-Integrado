@@ -114,6 +114,7 @@ export const savePlan = (plan: Plan) =>
       hypothetical_ids: plan.hypothetical_ids,
       course_layout: plan.course_layout,
       simulated_grades: plan.simulated_grades ?? {},
+      simulated_failures: plan.simulated_failures ?? {},
     }),
   );
 export const deletePlan = (id: string, version: number) =>

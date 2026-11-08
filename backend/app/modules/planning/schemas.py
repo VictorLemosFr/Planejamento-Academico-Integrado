@@ -15,7 +15,7 @@ class CourseView(BaseModel):
 
 class SimulationAction(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    kind: Literal["approve", "revoke", "plan", "unplan"]
+    kind: Literal["approve", "revoke", "plan", "unplan", "fail", "unfail"]
     course_id: str = Field(min_length=1, max_length=40)
 
 

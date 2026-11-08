@@ -1,4 +1,13 @@
-import type { HTMLAttributes, Ref } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type HTMLAttributes,
+  type PointerEvent,
+  type Ref,
+} from "react";
+import { motionAllowed } from "../fx/motion";
 import { GripVertical } from "lucide-react";
 import { formatGrade } from "../academicTerms";
 import { courseName, courseShortName } from "../display";
@@ -72,6 +81,61 @@ export function FailureDots({
   );
 }
 
+type Fx = "approved" | "unlocked" | "failed" | null;
+
+/**
+ * Efeito da última mudança: aprovar solta partículas, liberar acende o card e
+ * reprovar (na simulação) faz o card tremer em vermelho.
+ */
+function useStatusFx(course: Course): Fx {
+  const previous = useRef({
+    status: course.status,
+    failed: !!course.simulated_failure,
+  });
+  const [fx, setFx] = useState<Fx>(null);
+  const timer = useRef<number | undefined>(undefined);
+  useEffect(() => {
+    const before = previous.current;
+    const failed = !!course.simulated_failure;
+    previous.current = { status: course.status, failed };
+    if (!motionAllowed()) return;
+    let next: Fx = null;
+    if (failed && !before.failed) next = "failed";
+    else if (
+      ["simulated", "completed"].includes(course.status) &&
+      !["simulated", "completed"].includes(before.status)
+    )
+      next = "approved";
+    else if (before.status === "locked" && course.status !== "locked")
+      next = "unlocked";
+    if (!next) return;
+    setFx(next);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setFx(null), 1100);
+  }, [course.status, course.simulated_failure]);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  return fx;
+}
+
+/** Inclinação 3D que acompanha o ponteiro (só mouse; toque arrasta). */
+function tilt(event: PointerEvent<HTMLButtonElement>) {
+  if (event.pointerType !== "mouse" || !motionAllowed()) return;
+  const box = event.currentTarget.getBoundingClientRect();
+  const x = (event.clientX - box.left) / box.width - 0.5;
+  const y = (event.clientY - box.top) / box.height - 0.5;
+  // rotate: eixo (tx, ty, 0) e ângulo proporcional à distância do centro.
+  event.currentTarget.style.setProperty("--tx", y.toFixed(3));
+  event.currentTarget.style.setProperty("--ty", (-x).toFixed(3));
+  event.currentTarget.style.setProperty("--ta", `${Math.hypot(x, y) * 16}deg`);
+  event.currentTarget.style.setProperty("--gx", `${(x + 0.5) * 100}%`);
+  event.currentTarget.style.setProperty("--gy", `${(y + 0.5) * 100}%`);
+}
+function untilt(event: PointerEvent<HTMLButtonElement>) {
+  event.currentTarget.style.setProperty("--ta", "0deg");
+}
+
+const sparks = Array.from({ length: 12 }, (_, i) => i);
+
 export function CourseCard({
   course,
   selected,
@@ -103,6 +167,7 @@ export function CourseCard({
 }) {
   const meta = statusMeta[course.status];
   const failures = course.failures ?? 0;
+  const fx = useStatusFx(course);
   return (
     <button
       ref={buttonRef}
@@ -118,8 +183,20 @@ export function CourseCard({
       data-critical-path={onCriticalPath || undefined}
       data-draggable={dragHandle ? true : undefined}
       data-gap={gap || undefined}
+      data-sim-failure={course.simulated_failure || undefined}
+      data-fx={fx || undefined}
+      onPointerMove={tilt}
+      onPointerLeave={untilt}
       className={`course-card w-full text-left ${selected ? "is-selected" : ""}`}
     >
+      <i className="card-glare" aria-hidden="true" />
+      {fx === "approved" && (
+        <span className="card-sparks" aria-hidden="true">
+          {sparks.map((i) => (
+            <i key={i} style={{ "--a": `${i * 30}deg` } as CSSProperties} />
+          ))}
+        </span>
+      )}
       <div className="card-top">
         <span className="status-pill">
           <span aria-hidden="true">{meta.icon}</span> {meta.label}
@@ -138,6 +215,13 @@ export function CourseCard({
         )}
         {!needsInfo && gap === "late" && (
           <span className="chip chip-warn">Não cursada</span>
+        )}
+        {course.simulated_failure && (
+          <span className="chip chip-sim-failure">
+            {course.status === "planned"
+              ? "Reprovação simulada · refazer aqui"
+              : "Reprovação simulada"}
+          </span>
         )}
         {!needsInfo && gap === "retake" && (
           <span className="chip chip-warn">

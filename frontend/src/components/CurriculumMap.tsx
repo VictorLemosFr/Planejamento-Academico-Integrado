@@ -19,9 +19,11 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type CSSProperties,
   type HTMLAttributes,
   type ReactNode,
 } from "react";
+import { motionAllowed } from "../fx/motion";
 import type { Course, CourseLayout, Status } from "../types";
 import {
   coursePeriod,
@@ -107,18 +109,21 @@ function Droppable({
   className,
   children,
   label,
+  style,
 }: {
   id: string;
   disabled?: boolean;
   className: string;
   children: ReactNode;
   label: string;
+  style?: CSSProperties;
 }) {
   const { setNodeRef, isOver } = useDroppable({ id, disabled });
   return (
     <section
       ref={setNodeRef}
       aria-label={label}
+      style={style}
       className={`${className} ${isOver && !disabled ? "drop-active" : ""}`}
     >
       {children}
@@ -130,10 +135,13 @@ function MovableCard({
   course,
   enabled,
   register,
+  index = 0,
   children,
 }: {
   course: Course;
   enabled: boolean;
+  /** Posição na coluna: a entrada em cascata usa como atraso. */
+  index?: number;
   register: (id: string, node: HTMLElement | null) => void;
   children: (props: {
     handle?: HTMLAttributes<HTMLButtonElement>;
@@ -150,6 +158,7 @@ function MovableCard({
         register(course.id, node);
       }}
       className={`movable-course ${draggable.isDragging ? "is-dragging" : ""} ${droppable.isOver && !draggable.isDragging ? "drop-before" : ""}`}
+      style={{ "--i": Math.min(index, 12) } as CSSProperties}
     >
       {children({
         handle: enabled
@@ -317,6 +326,45 @@ export function CurriculumMap({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [arrowKey]);
 
+  // Depois das setas: elas medem a posição final, antes do deslize começar.
+  // FLIP: guarda onde cada card estava (relativo à grade, que rola junto) e,
+  // depois de cada renderização, faz quem mudou de lugar deslizar até o novo.
+  const positions = useRef(new Map<string, { x: number; y: number }>());
+  useLayoutEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+    const origin = grid.getBoundingClientRect();
+    const animate = motionAllowed();
+    const next = new Map<string, { x: number; y: number }>();
+    for (const [id, node] of nodes.current) {
+      if (!grid.contains(node)) continue;
+      const box = node.getBoundingClientRect();
+      const here = { x: box.left - origin.left, y: box.top - origin.top };
+      next.set(id, here);
+      const before = positions.current.get(id);
+      if (!animate || !before) continue;
+      const dx = before.x - here.x;
+      const dy = before.y - here.y;
+      if (Math.abs(dx) < 2 && Math.abs(dy) < 2) continue;
+      const far = Math.abs(dx) > 40;
+      node.animate(
+        [
+          {
+            transform: `translate(${dx}px, ${dy}px)`,
+            filter: far
+              ? "drop-shadow(0 18px 24px rgba(160,20,30,.35))"
+              : "none",
+          },
+          { transform: "none", filter: "none" },
+        ],
+        {
+          duration: far ? 720 : 380,
+          easing: "cubic-bezier(.2,.9,.25,1.15)",
+        },
+      );
+    }
+    positions.current = next;
+  });
   function target(overId: string): [number | null, string | undefined] | null {
     if (overId === "catalog") return [null, undefined];
     if (overId.startsWith("period-"))
@@ -345,7 +393,7 @@ export function CurriculumMap({
     onMove?.(id, period, beforeId);
   }
 
-  const card = (course: Course) => {
+  const card = (course: Course, index = 0) => {
     const enabled = editable && canMove(course);
     return (
       <MovableCard
@@ -353,6 +401,7 @@ export function CurriculumMap({
         course={course}
         enabled={enabled}
         register={register}
+        index={index}
       >
         {({ handle }) => (
           <>
@@ -533,11 +582,15 @@ export function CurriculumMap({
                   key={`${arrow.kind}-${arrow.from}-${arrow.to}`}
                   d={arrow.d}
                   className={`arrow arrow-${arrow.kind}`}
+                  // Comprimento 1: pré-requisitos e dependentes "se desenham".
+                  pathLength={
+                    arrow.kind === "pre" || arrow.kind === "dep" ? 1 : undefined
+                  }
                   markerEnd={`url(#arrow-${arrow.kind})`}
                 />
               ))}
             </svg>
-            {periods.map((period) => {
+            {periods.map((period, column) => {
               const items = orderedCourses(courses, layout, period);
               const hours = allCourses
                 .filter((c) => coursePeriod(c, layout) === period)
@@ -550,6 +603,7 @@ export function CurriculumMap({
                     !editable || period > maxPeriod || period < minPeriod
                   }
                   label={`${period}º período`}
+                  style={{ "--col": column } as CSSProperties}
                   className={`period-column ${editable && (period > maxPeriod || period < minPeriod) ? "is-locked-period" : ""}`}
                 >
                   <div className="period-head">
@@ -571,7 +625,7 @@ export function CurriculumMap({
                     {periodAction?.(period)}
                   </div>
                   <div className="period-cards">
-                    {items.map(card)}
+                    {items.map((course, i) => card(course, i))}
                     {!items.length && (
                       <p className="empty-period">
                         {editable && period <= maxPeriod && period >= minPeriod
@@ -634,7 +688,9 @@ export function CurriculumMap({
               Arraste uma eletiva para um período ou de volta para cá.
             </p>
           )}
-          <div className="elective-grid">{electives.map(card)}</div>
+          <div className="elective-grid">
+            {electives.map((course, i) => card(course, i))}
+          </div>
           {!electives.length && (
             <p className="text-sm text-slate-600">
               {electiveFilter === "locked" && unverified

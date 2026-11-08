@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type CSSProperties } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "react-router";
 import * as api from "./api";
@@ -6,20 +6,40 @@ import type { Identity } from "./types";
 import DemoApp from "./DemoApp";
 import { PublicExplorer } from "./components/PublicExplorer";
 import { ThemeToggle } from "./components/ThemeToggle";
-import { Logo } from "./components/Logo";
 import { Student, programNames } from "./Student";
 import { SharedPlanView } from "./pages/SharedPlanView";
-import { TriangleAlert } from "lucide-react";
+import {
+  ArrowRight,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+  TriangleAlert,
+} from "lucide-react";
+import { BrandLockup } from "./components/brand/Brand";
+import { Aurora, Curtain, Loader, Splash, Symbol3D } from "./fx/Effects";
+import { motionAllowed } from "./fx/motion";
 import { publicDemo, publicDemoNotice } from "./deploy";
 
 const input =
   "glass-input mt-1 block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900";
 const button =
   "glass-button rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium hover:bg-slate-50";
-const primary = `${button} primary-button border-blue-700! bg-blue-700! text-white hover:bg-blue-800!`;
+const primary = `${button} primary-button text-white`;
 
 export default function App() {
+  return (
+    <>
+      <Splash />
+      <Routes />
+    </>
+  );
+}
+
+function Routes() {
   const [identity, setIdentity] = useState<Identity | null>(null);
+  const [curtain, setCurtain] = useState(false);
+  const endCurtain = useCallback(() => setCurtain(false), []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const client = useQueryClient();
@@ -58,12 +78,7 @@ export default function App() {
     import.meta.env.VITE_DEMO_ENABLED === "true"
   )
     return <DemoApp />;
-  if (loading)
-    return (
-      <p className="p-8" role="status">
-        Carregando sessão…
-      </p>
-    );
+  if (loading) return <Loader label="Carregando sessão…" />;
   if (location.pathname.startsWith("/grades"))
     return <PublicExplorer identity={identity} />;
   if (location.pathname.startsWith("/compartilhado/"))
@@ -77,6 +92,7 @@ export default function App() {
           api.setCsrf(result.csrf_token);
           setIdentity(result);
           setError("");
+          if (motionAllowed()) setCurtain(true);
         }}
       />
     );
@@ -93,16 +109,19 @@ export default function App() {
       />
     );
   return (
-    <Student
-      key={identity.user.id}
-      identity={identity}
-      onLogout={() => {
-        api.setCsrf("");
-        client.clear();
-        setIdentity(null);
-        setError("");
-      }}
-    />
+    <>
+      {curtain && <Curtain onDone={endCurtain} />}
+      <Student
+        key={identity.user.id}
+        identity={identity}
+        onLogout={() => {
+          api.setCsrf("");
+          client.clear();
+          setIdentity(null);
+          setError("");
+        }}
+      />
+    </>
   );
 }
 
@@ -120,7 +139,7 @@ function PendingProgram({
     <div className="app-shell min-h-dvh">
       <header className="app-header flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-5 py-5 sm:px-8">
         <div>
-          <Logo size={36} />
+          <BrandLockup size={36} />
           <p className="mt-2 text-xs text-slate-500">{programNames[program]}</p>
           <h1 className="sr-only">Planejamento Acadêmico Integrado</h1>
         </div>
@@ -180,11 +199,23 @@ function Login({
   const [registering, setRegistering] = useState(false);
   const [failure, setFailure] = useState("");
   const [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <main className="login-layout">
+      <Aurora />
       <section className="login-story" aria-label="Sua trajetória acadêmica">
         <div className="brand-lockup">
-          <Logo size={52} />
+          <BrandLockup size={46} tilt />
+        </div>
+        <div className="login-hero">
+          <Symbol3D className="login-symbol" />
+          <div className="login-orbit" aria-hidden="true">
+            {["CC", "SI", "IA", "EC"].map((code, i) => (
+              <span key={code} style={{ "--i": i } as CSSProperties}>
+                {code}
+              </span>
+            ))}
+          </div>
         </div>
         <div className="login-headline">
           <p className="eyebrow">SUA TRAJETÓRIA, SUAS POSSIBILIDADES</p>
@@ -193,53 +224,10 @@ function Login({
             para o seu <em>futuro.</em>
           </h2>
           <p>
-            Conecte o que você já conquistou às possibilidades do próximo
-            semestre.
+            Simule a matrícula, veja o impacto de cada escolha e descubra quando
+            você se forma.
           </p>
         </div>
-        <div className="trajectory-art" aria-hidden="true">
-          <svg viewBox="0 0 600 240" fill="none">
-            <defs>
-              <linearGradient id="trajectory" x1="0" y1="240" x2="600" y2="0">
-                <stop stopColor="#22a69b" />
-                <stop offset="1" stopColor="#5072df" />
-              </linearGradient>
-            </defs>
-            <path
-              className="trajectory-shadow"
-              d="M20 205 C130 205 90 135 205 135 S310 185 365 95 S475 40 580 25"
-            />
-            <path
-              className="trajectory-line"
-              d="M20 205 C130 205 90 135 205 135 S310 185 365 95 S475 40 580 25"
-            />
-            {[
-              [20, 205],
-              [205, 135],
-              [365, 95],
-              [580, 25],
-            ].map(([x, y], i) => (
-              <g key={x}>
-                <circle cx={x} cy={y} r="15" fill="white" />
-                <circle
-                  cx={x}
-                  cy={y}
-                  r="6"
-                  fill={i === 3 ? "#5072df" : "#22a69b"}
-                />
-              </g>
-            ))}
-          </svg>
-          <span className="trajectory-note note-start">
-            Cada conquista conta
-          </span>
-          <span className="trajectory-note note-end">
-            O próximo passo é seu ↗
-          </span>
-        </div>
-        <p className="login-caption">
-          CC <span>·</span> SI <span>·</span> IA <span>·</span> EC
-        </p>
       </section>
       <form
         className="login-panel glass-panel"
@@ -279,7 +267,9 @@ function Login({
           <span className="login-badge">PORTAL DO ESTUDANTE</span>
           <ThemeToggle />
         </div>
-        <h1 className="login-title">Planejamento Acadêmico Integrado</h1>
+        <h1 className="login-title">
+          Planejamento Acadêmico <span>Integrado</span>
+        </h1>
         <p className="mt-3 text-sm text-slate-600">
           {registering
             ? "Crie sua conta e escolha seu curso para começar."
@@ -299,27 +289,47 @@ function Login({
             {failure || error}
           </p>
         )}
-        <label className="mt-6 block text-sm">
+        <label className="field-icon mt-6 block text-sm">
           E-mail
-          <input
-            className={input}
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <span className="field-wrap">
+            <Mail size={17} aria-hidden="true" />
+            <input
+              className={input}
+              type="email"
+              autoComplete="email"
+              placeholder="voce@exemplo.com"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </span>
         </label>
-        <label className="mt-4 block text-sm">
+        <label className="field-icon mt-4 block text-sm">
           Senha
-          <input
-            className={input}
-            type="password"
-            autoComplete={registering ? "new-password" : "current-password"}
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <span className="field-wrap">
+            <Lock size={17} aria-hidden="true" />
+            <input
+              className={input}
+              type={showPassword ? "text" : "password"}
+              autoComplete={registering ? "new-password" : "current-password"}
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              className="reveal-password"
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              aria-pressed={showPassword}
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? (
+                <EyeOff size={17} aria-hidden="true" />
+              ) : (
+                <Eye size={17} aria-hidden="true" />
+              )}
+            </button>
+          </span>
         </label>
         {registering && (
           <>
@@ -383,7 +393,10 @@ function Login({
             </label>
           </>
         )}
-        <button className={`${primary} mt-5 w-full`} disabled={busy}>
+        <button
+          className={`${primary} shine-button mt-5 w-full`}
+          disabled={busy}
+        >
           {busy
             ? registering
               ? "Cadastrando…"
@@ -391,10 +404,11 @@ function Login({
             : registering
               ? "Cadastrar"
               : "Entrar"}
+          {!busy && <ArrowRight size={18} aria-hidden="true" />}
         </button>
         <button
           type="button"
-          className="mt-4 w-full text-sm font-medium text-blue-700"
+          className="link-button mt-4 w-full text-sm font-semibold"
           onClick={() => {
             setRegistering(!registering);
             setFailure("");
@@ -407,10 +421,10 @@ function Login({
             ? "Após entrar, informe as cadeiras que você já cursou."
             : "A redefinição de senha é feita pela coordenação."}
         </p>
-        <Link
-          to="/grades"
-          className="mt-3 block text-center text-sm font-medium text-blue-700 underline"
-        >
+        <p className="login-or" aria-hidden="true">
+          <span>ou</span>
+        </p>
+        <Link to="/grades" className="outline-cta">
           Explorar as grades sem entrar
         </Link>
       </form>

@@ -147,5 +147,6 @@ test("dark theme is remembered across reloads", async ({ page }) => {
   const background = await page.evaluate(
     () => getComputedStyle(document.documentElement).backgroundColor,
   );
-  expect(background).toBe("rgb(15, 18, 24)");
+  // Fundo escuro da identidade CIn (--bg em theme-cin.css).
+  expect(background).toBe("rgb(17, 11, 12)");
 });

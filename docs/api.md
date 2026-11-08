@@ -113,7 +113,9 @@ Todos os recursos são do estudante identificado pela sessão. Recursos de outra
 }
 ```
 
-`action` é opcional; `kind` aceita `approve`, `revoke`, `plan` e `unplan`. Aprovações registradas no histórico são somente leitura dentro de uma alternativa; o aluno as altera no editor do histórico. Aprovações hipotéticas precisam de pré-requisitos coerentes; planejar não libera dependentes. `revoke` remove aprovações hipotéticas e escolhas planejadas dependentes, sem tocar no histórico.
+`action` é opcional; `kind` aceita `approve`, `revoke`, `plan` e `unplan`.
+
+**Reprovação simulada.** `kind: "fail"` só vale para disciplina em andamento no histórico: ela entra em `simulated_failures` (`{course_id: nota da reprovação ou null}`), conta como mais uma reprovação (nível e recusa pela Res. nº 09/2009), deixa de contar como em andamento na previsão e é planejada no próximo semestre. Disciplinas planejadas que ficaram antes dos próprios pré-requisitos são adiadas em cascata e listadas em `rescheduled_ids`. Na 3ª reprovação a disciplina não é replanejada e um aviso explica a recusa. `kind: "unfail"` desfaz a reprovação e tira a disciplina do plano; as adiadas ficam onde estão. Cada disciplina traz `simulated_failure`. A nota da reprovação entra só no CR simulado. O link compartilhado não expõe reprovações simuladas. Se o histórico mudar e a disciplina deixar de estar em andamento, o plano fica inválido até a reprovação ser removida. Aprovações registradas no histórico são somente leitura dentro de uma alternativa; o aluno as altera no editor do histórico. Aprovações hipotéticas precisam de pré-requisitos coerentes; planejar não libera dependentes. `revoke` remove aprovações hipotéticas e escolhas planejadas dependentes, sem tocar no histórico.
 
 - `PUT /api/plans/{id}` grava o estado completo:
 
